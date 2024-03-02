@@ -9,8 +9,8 @@ public class Main {
         window.setResizable(true);
         window.setTitle("Racoon Rush");
 
-        Game game = new Game();
-        window.add(game);
+        GamePanel gamePanel = new GamePanel();
+        window.add(gamePanel);
 
         window.pack();
 
