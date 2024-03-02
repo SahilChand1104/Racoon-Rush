@@ -1,11 +1,10 @@
-package game;
+package RacoonRush.game;
 
 import javax.swing.*;
 import java.awt.*;
 
 //import static java.lang.Math.max;
 
-import static java.lang.Long.max;
 
 public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16;

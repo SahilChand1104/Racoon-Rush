@@ -1,4 +1,4 @@
-package game;
+package RacoonRush.game;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

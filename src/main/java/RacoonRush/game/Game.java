@@ -1,4 +1,4 @@
-package game;
+package RacoonRush.game;
 
 import javax.swing.*;
 import java.awt.*;

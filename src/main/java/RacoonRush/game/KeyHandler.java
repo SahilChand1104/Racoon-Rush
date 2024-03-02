@@ -1,11 +1,9 @@
-package game;
+package RacoonRush.game;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 
 public class KeyHandler implements KeyListener {
     private EnumMap<Move, Boolean> movesPressed = new EnumMap<>(Move.class);
