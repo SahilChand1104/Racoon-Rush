@@ -2,6 +2,7 @@ package RacoonRush.entity;
 
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.KeyHandler;
+import RacoonRush.game.Move;
 
 import java.awt.*;
 
@@ -22,13 +23,13 @@ public class Player extends Entity {
     }
 
     public void update() {
-        if (keyH.upPressed) {
+        if (keyH.get(Move.UP)) {
             y -= speed;
-        } else if (keyH.downPressed) {
+        } else if (keyH.get(Move.DOWN)) {
             y += speed;
-        } else if (keyH.leftPressed) {
+        } else if (keyH.get(Move.LEFT)) {
             x -= speed;
-        } else if (keyH.rightPressed) {
+        } else if (keyH.get(Move.RIGHT)) {
             x += speed;
         }
     }

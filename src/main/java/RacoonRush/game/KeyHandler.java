@@ -1,12 +1,17 @@
 package RacoonRush.game;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.EnumMap;
 
 public class KeyHandler implements KeyListener {
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
+    // Stores which keys are pressed
+    private final EnumMap<Move, Boolean> pressed = new EnumMap<>(Move.class);
+
+    public boolean get(Move move) {
+        return pressed.get(move);
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -17,16 +22,16 @@ public class KeyHandler implements KeyListener {
         int code = e.getKeyCode();
 
         if (code == KeyEvent.VK_W) {
-            upPressed = true;
+            pressed.put(Move.UP, true);
         }
         if (code == KeyEvent.VK_S) {
-            downPressed = true;
+            pressed.put(Move.DOWN, true);
         }
         if (code == KeyEvent.VK_A) {
-            leftPressed = true;
+            pressed.put(Move.LEFT, true);
         }
         if (code == KeyEvent.VK_D) {
-            rightPressed = true;
+            pressed.put(Move.RIGHT, true);
         }
     }
 
@@ -35,16 +40,16 @@ public class KeyHandler implements KeyListener {
         int code = e.getKeyCode();
 
         if (code == KeyEvent.VK_W) {
-            upPressed = false;
+            pressed.put(Move.UP, false);
         }
         if (code == KeyEvent.VK_S) {
-            downPressed = false;
+            pressed.put(Move.DOWN, false);
         }
         if (code == KeyEvent.VK_A) {
-            leftPressed = false;
+            pressed.put(Move.LEFT, false);
         }
         if (code == KeyEvent.VK_D) {
-            rightPressed = false;
+            pressed.put(Move.RIGHT, false);
         }
     }
 }
