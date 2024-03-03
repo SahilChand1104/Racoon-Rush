@@ -6,9 +6,7 @@ import java.awt.event.KeyListener;
 import java.util.EnumMap;
 
 public class KeyHandler implements KeyListener {
-    private EnumMap<Move, Boolean> movesPressed = new EnumMap<>(Move.class);
-    private Point vectorSum = new Point(0, 0);
-
+    public boolean upPressed, downPressed, leftPressed, rightPressed;
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -16,23 +14,37 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Move move = Move.fromKeyCode(e.getKeyCode());
-        if (move != null) {
-            movesPressed.put(move, true);
-            vectorSum.translate(move.getDirection().x, move.getDirection().y);
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_W) {
+            upPressed = true;
+        }
+        if (code == KeyEvent.VK_S) {
+            downPressed = true;
+        }
+        if (code == KeyEvent.VK_A) {
+            leftPressed = true;
+        }
+        if (code == KeyEvent.VK_D) {
+            rightPressed = true;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        Move move = Move.fromKeyCode(e.getKeyCode());
-        if (move != null) {
-            movesPressed.put(move, false);
-            vectorSum.translate(-move.getDirection().x, -move.getDirection().y);
-        }
-    }
+        int code = e.getKeyCode();
 
-    public Point getVectorSum() {
-        return new Point(vectorSum);
+        if (code == KeyEvent.VK_W) {
+            upPressed = false;
+        }
+        if (code == KeyEvent.VK_S) {
+            downPressed = false;
+        }
+        if (code == KeyEvent.VK_A) {
+            leftPressed = false;
+        }
+        if (code == KeyEvent.VK_D) {
+            rightPressed = false;
+        }
     }
 }
