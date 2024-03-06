@@ -29,7 +29,7 @@ public class Player extends Entity {
 
     public void getPlayerImage() {
         try {
-            down = ImageIO.read(getClass().getResourceAsStream("/player/racoon_v2.png"));
+            down = ImageIO.read(getClass().getResourceAsStream("/entity/racoon_v2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public class Player extends Entity {
     }
 
     public void draw(Graphics2D g2) {
-        BufferedImage image = null;
+        BufferedImage image;
 
         // Currently only down image is available
         image = down;
