@@ -8,6 +8,12 @@ public class KeyHandler implements KeyListener {
     // Stores which keys are pressed
     private final EnumMap<Move, Boolean> pressed = new EnumMap<>(Move.class);
 
+    public KeyHandler() {
+        for (Move move : Move.values()) {
+            pressed.put(move, false);
+        }
+    }
+
     public boolean get(Move move) {
         return pressed.get(move);
     }
