@@ -13,17 +13,23 @@ public class Player extends Entity {
     GamePanel gp;
     KeyHandler keyH;
 
+    public final int screenX, screenY;
+
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        // Centered in the middle of the map
+        screenX = gp.screenWidth / 2 - gp.tileSize / 2;
+        screenY = gp.screenHeight / 2 - gp.tileSize / 2;
 
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        worldX = gp.tileSize * 8 - gp.tileSize / 2;
+        worldY = gp.tileSize * 6 - gp.tileSize / 2;
         speed = 4;
     }
 
@@ -37,13 +43,13 @@ public class Player extends Entity {
 
     public void update() {
         if (keyH.get(Move.UP)) {
-            y -= speed;
+            worldY -= speed;
         } else if (keyH.get(Move.DOWN)) {
-            y += speed;
+            worldY += speed;
         } else if (keyH.get(Move.LEFT)) {
-            x -= speed;
+            worldX -= speed;
         } else if (keyH.get(Move.RIGHT)) {
-            x += speed;
+            worldX += speed;
         }
     }
 
@@ -53,6 +59,6 @@ public class Player extends Entity {
         // Currently only down image is available
         image = down;
 
-        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 }
