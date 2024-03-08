@@ -44,4 +44,8 @@ public class TileFactory {
     public Tile getTile(TileType type) {
         return tile.get(type);
     }
+
+    public boolean hasCollision(TileType type) {
+        return tile.get(type).collision;
+    }
 }

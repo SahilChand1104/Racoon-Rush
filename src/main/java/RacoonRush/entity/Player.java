@@ -23,6 +23,8 @@ public class Player extends Entity {
         screenX = gp.screenWidth / 2 - gp.tileSize / 2;
         screenY = gp.screenHeight / 2 - gp.tileSize / 2;
 
+        hitbox = new Rectangle(gp.tileSize / 6, gp.tileSize / 3, gp.tileSize * 2 / 3, gp.tileSize * 2 / 3);
+
         setDefaultValues();
         getPlayerImage();
     }
@@ -41,14 +43,34 @@ public class Player extends Entity {
         }
     }
 
+    public int leftColumn() {
+        return (worldX + hitbox.x) / gp.tileSize;
+    }
+
+    public int rightColumn() {
+        return (worldX + hitbox.x + hitbox.width) / gp.tileSize;
+    }
+
+    public int topRow() {
+        return (worldY + hitbox.y) / gp.tileSize;
+    }
+
+    public int bottomRow() {
+        return (worldY + hitbox.y + hitbox.height) / gp.tileSize;
+    }
+
     public void update() {
-        if (keyH.get(Move.UP)) {
+        if (!keyH.get(Move.UP) && !keyH.get(Move.DOWN) && !keyH.get(Move.LEFT) && !keyH.get(Move.RIGHT)) {
+            return;
+        }
+
+        if (keyH.get(Move.UP) && gp.isNotColliding(this, Move.UP)) {
             worldY -= speed;
-        } else if (keyH.get(Move.DOWN)) {
+        } else if (keyH.get(Move.DOWN) && gp.isNotColliding(this, Move.DOWN)) {
             worldY += speed;
-        } else if (keyH.get(Move.LEFT)) {
+        } else if (keyH.get(Move.LEFT) && gp.isNotColliding(this, Move.LEFT)) {
             worldX -= speed;
-        } else if (keyH.get(Move.RIGHT)) {
+        } else if (keyH.get(Move.RIGHT) && gp.isNotColliding(this, Move.RIGHT)) {
             worldX += speed;
         }
     }

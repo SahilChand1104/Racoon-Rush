@@ -50,4 +50,8 @@ public class TileManager {
     public void loadMap(String filePath) {
         map = mapLoader.loadMap(filePath);
     }
+
+    public boolean hasCollision(int row, int column) {
+        return tileFactory.hasCollision(map[row][column]);
+    }
 }

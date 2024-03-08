@@ -1,5 +1,6 @@
 package RacoonRush.game;
 
+import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
 import RacoonRush.tile.TileManager;
 
@@ -28,12 +29,14 @@ public class GamePanel extends JPanel implements Runnable {
 
     private final TileManager tileManager;
     private final KeyHandler keyHandler;
+    private final CollisionDetector collisionDetector;
     private Thread gameThread;
     public Player player;
 
     public GamePanel() {
         tileManager = new TileManager(this);
         keyHandler = new KeyHandler();
+        collisionDetector = new CollisionDetector(this);
         player = new Player(this, keyHandler);
 
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -50,6 +53,14 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    public boolean hasCollision(int row, int column) {
+        return tileManager.hasCollision(row, column);
+    }
+
+    public boolean isNotColliding(Entity entity, Move direction) {
+        return !collisionDetector.checkCollision(entity, direction);
     }
 
     @Override
