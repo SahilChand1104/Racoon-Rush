@@ -17,6 +17,7 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
+        gamePanel.loadMap("/maps/world_map.txt");
         gamePanel.startGameThread();
     }
 }

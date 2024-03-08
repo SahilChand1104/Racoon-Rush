@@ -26,18 +26,25 @@ public class GamePanel extends JPanel implements Runnable {
     // FPS
     final int FPS = 60;
 
-    TileManager tileM = new TileManager(this);
-    KeyHandler keyHandler = new KeyHandler();
-    Thread gameThread;
-    public Player player = new Player(this, keyHandler);
+    private final TileManager tileManager;
+    private final KeyHandler keyHandler;
+    private Thread gameThread;
+    public Player player;
 
     public GamePanel() {
+        tileManager = new TileManager(this);
+        keyHandler = new KeyHandler();
+        player = new Player(this, keyHandler);
+
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
-        tileM.loadMap("/maps/world_map.txt");
+    }
+
+    public void loadMap(String filePath) {
+        tileManager.loadMap(filePath);
     }
 
     public void startGameThread() {
@@ -73,7 +80,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        tileM.draw(g2);
+        tileManager.draw(g2);
         player.draw(g2);
         g2.dispose();
     }
