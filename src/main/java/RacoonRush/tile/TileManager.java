@@ -1,57 +1,51 @@
 package RacoonRush.tile;
 
-import RacoonRush.game.GamePanel;
-
-import java.awt.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.util.EnumMap;
+import java.util.HashMap;
 
 public class TileManager {
-    private final GamePanel gp;
-    private final TileFactory tileFactory;
-    private final MapLoader mapLoader;
-    private TileType[][] map;
+    private final HashMap<Integer, TileType> tileTypes;
+    private final EnumMap<TileType, Tile> tile;
 
-    public TileManager(GamePanel gp) {
-        this.gp = gp;
-        tileFactory = new TileFactory();
-        mapLoader = new MapLoader(gp, tileFactory);
+    public TileManager() {
+        tileTypes = new HashMap<>();
+        tile = new EnumMap<>(TileType.class);
+        loadTileImages();
     }
 
-    private int getScreenCoordinate(int index, int world, int screen) {
-        return index * gp.tileSize - world + screen;
+    private void loadTileImages() {
+        loadTileImage(0, TileType.FLOOR, "/tile/floor_v1.png", false);
+        loadTileImage(1, TileType.WALL, "/tile/wall_v1.png", true);
     }
 
-    private void drawTile(Graphics2D g2, int i, int j) {
-        int screenX = getScreenCoordinate(j, gp.player.worldX, gp.player.screenX);
-        int screenY = getScreenCoordinate(i, gp.player.worldY, gp.player.screenY);
-        g2.drawImage(tileFactory.getTileImage(map[i][j]), screenX, screenY, gp.tileSize, gp.tileSize, null);
-    }
-
-    private int getStart(int world, int screen) {
-        return Math.max((world - screen - gp.screenWidth) / gp.tileSize, 0);
-    }
-
-    private int getEnd(int world, int screen, int max) {
-        return Math.min((world + screen + gp.screenWidth) / gp.tileSize, max);
-    }
-
-    public void draw(Graphics2D g2) {
-        int startX = getStart(gp.player.worldX, gp.player.screenX);
-        int startY = getStart(gp.player.worldY, gp.player.screenY);
-        int endX = getEnd(gp.player.worldX, gp.player.screenX, gp.maxWorldCol);
-        int endY = getEnd(gp.player.worldY, gp.player.screenY, gp.maxWorldRow);
-
-        for (int i = startY; i < endY; i++) {
-            for (int j = startX; j < endX; j++) {
-                drawTile(g2, i, j);
-            }
+    private void loadTileImage(int value, TileType type, String filePath, boolean isSolid) {
+        try {
+            tileTypes.put(value, type);
+            tile.put(type, new Tile(ImageIO.read(getClass().getResourceAsStream(filePath)), isSolid));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void loadMap(String filePath) {
-        map = mapLoader.loadMap(filePath);
+    public BufferedImage getTileImage(int value) {
+        return getTileImage(getTileType(value));
     }
 
-    public boolean hasCollision(int row, int column) {
-        return tileFactory.hasCollision(map[row][column]);
+    public BufferedImage getTileImage(TileType type) {
+        return tile.get(type).image;
+    }
+
+    public TileType getTileType(int value) {
+        return tileTypes.get(value);
+    }
+
+    public Tile getTile(TileType type) {
+        return tile.get(type);
+    }
+
+    public boolean hasCollision(TileType type) {
+        return tile.get(type).collision;
     }
 }

@@ -2,7 +2,7 @@ package RacoonRush.game;
 
 import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
-import RacoonRush.tile.TileManager;
+import RacoonRush.tile.MapManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,14 +27,14 @@ public class GamePanel extends JPanel implements Runnable {
     // FPS
     final int FPS = 60;
 
-    private final TileManager tileManager;
+    private final MapManager mapManager;
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
     private Thread gameThread;
     public Player player;
 
     public GamePanel() {
-        tileManager = new TileManager(this);
+        mapManager = new MapManager(this);
         keyHandler = new KeyHandler();
         collisionDetector = new CollisionDetector(this);
         player = new Player(this, keyHandler);
@@ -47,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void loadMap(String filePath) {
-        tileManager.loadMap(filePath);
+        mapManager.loadMap(filePath);
     }
 
     public void startGameThread() {
@@ -56,7 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public boolean hasCollision(int row, int column) {
-        return tileManager.hasCollision(row, column);
+        return mapManager.hasCollision(row, column);
     }
 
     public boolean isNotColliding(Entity entity, Move direction) {
@@ -91,7 +91,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        tileManager.draw(g2);
+        mapManager.draw(g2);
         player.draw(g2);
         g2.dispose();
     }

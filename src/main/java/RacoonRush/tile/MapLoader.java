@@ -8,9 +8,9 @@ import java.io.InputStreamReader;
 
 public class MapLoader {
     private final GamePanel gp;
-    private final TileFactory tf;
+    private final TileManager tf;
 
-    public MapLoader(GamePanel gp, TileFactory tf) {
+    public MapLoader(GamePanel gp, TileManager tf) {
         this.gp = gp;
         this.tf = tf;
     }
