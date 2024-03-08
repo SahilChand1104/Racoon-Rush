@@ -37,6 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        tileM.loadMap("/maps/world_map.txt");
     }
 
     public void startGameThread() {
