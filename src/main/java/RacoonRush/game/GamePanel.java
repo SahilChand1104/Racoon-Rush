@@ -2,6 +2,7 @@ package RacoonRush.game;
 
 import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
+import RacoonRush.tile.BGManager;
 import RacoonRush.tile.MapManager;
 
 import javax.swing.*;
@@ -19,8 +20,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenHeight = tileSize * maxScreenRow;
 
     // World Settings
-    public final int maxWorldCol = 16;
-    public final int maxWorldRow = 16;
+    public final int maxWorldCol = 32;
+    public final int maxWorldRow = 32;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
@@ -28,6 +29,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int FPS = 60;
 
     private final MapManager mapManager;
+
+    private final BGManager bgManager;
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
     private Thread gameThread;
@@ -35,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() {
         mapManager = new MapManager(this);
+        bgManager = new BGManager(this);
         keyHandler = new KeyHandler();
         collisionDetector = new CollisionDetector(this);
         player = new Player(this, keyHandler);
@@ -91,8 +95,44 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
+        bgManager.draw(g2);
         mapManager.draw(g2);
         player.draw(g2);
         g2.dispose();
+    }
+
+    public int getPlayerWorldX() {
+        return player.worldX;
+    }
+
+    public int getPlayerWorldY() {
+        return player.worldY;
+    }
+
+    public int getPlayerScreenX() {
+        return player.screenX;
+    }
+
+    public int getPlayerScreenY() {
+        return player.screenY;
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public int getTileSize() {
+        return tileSize;
+    }
+
+    public int getMaxWorldRow() {
+        return maxWorldRow;
+    }
+    public int getMaxWorldCol() {
+        return maxWorldCol;
     }
 }

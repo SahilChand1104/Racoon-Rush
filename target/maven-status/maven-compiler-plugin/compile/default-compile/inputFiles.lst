@@ -5,7 +5,9 @@
 /Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/tile/TileType.java
 /Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/game/KeyHandler.java
 /Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/entity/Player.java
+/Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/tile/BGManager.java
 /Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/game/CollisionDetector.java
+/Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/tile/Map.java
 /Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/tile/TileManager.java
 /Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/tile/Tile.java
 /Users/jonathanpeters/Documents/CMPT276/CMPT276S24_group12/src/main/java/RacoonRush/tile/MapLoader.java

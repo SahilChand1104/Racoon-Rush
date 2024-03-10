@@ -6,54 +6,45 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class MapManager {
-    private final GamePanel gp;
+public class MapManager extends Map{
+
     private final TileManager tileManager;
     private final MapLoader mapLoader;
     private TileType[][] map;
 
-    private BufferedImage background;
+
 
     public MapManager(GamePanel gp) {
-        this.gp = gp;
+        super(gp);
         tileManager = new TileManager();
         mapLoader = new MapLoader(gp, tileManager);
     }
 
-    private int getScreenCoordinate(int index, int world, int screen) {
-        return index * gp.tileSize - world + screen;
-    }
+
 
     private void drawTile(Graphics2D g2, int i, int j) {
-        int screenX = getScreenCoordinate(j, gp.player.worldX, gp.player.screenX);
-        int screenY = getScreenCoordinate(i, gp.player.worldY, gp.player.screenY);
+        int screenX = getScreenCoordinate(j, getPlayerWorldX(), getPlayerScreenX());
+        int screenY = getScreenCoordinate(i, getPlayerWorldY(), getPlayerScreenY());
         if ( !map[i][j].equals(TileType.EMPTY) ) {
-            g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, gp.tileSize, gp.tileSize, null);
-        } else {
-            // do nothing
+            g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, getTileSize(), getTileSize(), null);
         }
     }
 
     private int getStart(int world, int screen) {
-        return Math.max((world - screen - gp.screenWidth) / gp.tileSize, 0);
+        return Math.max((world - screen - getScreenWidth()) / getTileSize(), 0);
     }
 
     private int getEnd(int world, int screen, int max) {
-        return Math.min((world + screen + gp.screenWidth) / gp.tileSize, max);
+        return Math.min((world + screen + getScreenWidth()) / getTileSize(), max);
     }
 
     public void draw(Graphics2D g2) {
-        try {
-            background = ImageIO.read(getClass().getResourceAsStream("/maps/background_img.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        int startX = getStart(gp.player.worldX, gp.player.screenX);
-        int startY = getStart(gp.player.worldY, gp.player.screenY);
-        int endX = getEnd(gp.player.worldX, gp.player.screenX, gp.maxWorldCol);
-        int endY = getEnd(gp.player.worldY, gp.player.screenY, gp.maxWorldRow);
 
-        g2.drawImage(background, getScreenCoordinate(0, gp.player.worldX, gp.player.screenX), getScreenCoordinate(0, gp.player.worldY, gp.player.screenY), 768, 768, null);
+        int startX = getStart(getPlayerWorldX(), getPlayerScreenX());
+        int startY = getStart(getPlayerWorldY(), getPlayerScreenY());
+        int endX = getEnd(getPlayerWorldX(), getPlayerScreenX(), getMaxWorldCol());
+        int endY = getEnd(getPlayerWorldY(), getPlayerScreenY(), getMaxWorldRow());
+
 
         for (int i = startY; i < endY; i++) {
             for (int j = startX; j < endX; j++) {
