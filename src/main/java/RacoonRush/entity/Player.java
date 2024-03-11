@@ -30,7 +30,7 @@ public class Player extends Entity {
         hitbox = new Rectangle(gp.tileSize / 6, gp.tileSize / 3, gp.tileSize * 2 / 3, gp.tileSize * 2 / 3);
 
         setDefaultValues();
-        getPlayerImage();
+        getPlayerImages();
     }
 
     public void setDefaultValues() {
@@ -41,7 +41,7 @@ public class Player extends Entity {
         dir = Move.DOWN;
     }
 
-    public void getPlayerImage() {
+    public void getPlayerImages() {
         try {
             images[0][0] = ImageIO.read(getClass().getResourceAsStream("/entity/player/player_down_0.png")); // down_0
             images[0][1] = ImageIO.read(getClass().getResourceAsStream("/entity/player/player_down_1.png")); // down_1
@@ -78,6 +78,24 @@ public class Player extends Entity {
             isMoving = false;
             //dir = Move.DOWN;
             return;
+        }
+
+        // If the player is colliding with a wall, move the player back
+        if (!gp.isNotColliding(this, dir)) {
+            switch (dir) {
+                case UP:
+                    worldY += speed;
+                    break;
+                case DOWN:
+                    worldY -= speed;
+                    break;
+                case LEFT:
+                    worldX += speed;
+                    break;
+                case RIGHT:
+                    worldX -= speed;
+                    break;
+            }
         }
 
         if (keyH.get(Move.UP) && gp.isNotColliding(this, Move.UP)) {
