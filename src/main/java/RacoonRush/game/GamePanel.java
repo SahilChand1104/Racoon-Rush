@@ -113,19 +113,19 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public int getPlayerWorldX() {
-        return player.worldX;
+        return player.getWorldX();
     }
 
     public int getPlayerWorldY() {
-        return player.worldY;
+        return player.getWorldY();
     }
 
     public int getPlayerScreenX() {
-        return player.screenX;
+        return player.getScreenX();
     }
 
     public int getPlayerScreenY() {
-        return player.screenY;
+        return player.getScreenY();
     }
 
     public int getScreenWidth() {
