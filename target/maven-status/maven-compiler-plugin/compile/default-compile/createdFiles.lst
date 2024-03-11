@@ -1,13 +1,11 @@
 RacoonRush/game/Main.class
 RacoonRush/game/Move.class
-RacoonRush/tile/BGManager.class
 RacoonRush/tile/MapManager.class
 RacoonRush/game/GamePanel.class
 RacoonRush/entity/Enemy.class
 RacoonRush/tile/TileManager.class
 RacoonRush/entity/Player$1.class
 RacoonRush/game/CollisionDetector$1.class
-RacoonRush/tile/Map.class
 RacoonRush/entity/Entity.class
 RacoonRush/entity/Player.class
 RacoonRush/game/KeyHandler.class

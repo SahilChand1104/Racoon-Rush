@@ -2,7 +2,6 @@ package RacoonRush.game;
 
 import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
-import RacoonRush.tile.BGManager;
 import RacoonRush.tile.MapManager;
 
 import javax.swing.*;
@@ -33,7 +32,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     private final MapManager mapManager;
 
-    private final BGManager bgManager;
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
     private Thread gameThread;
@@ -41,7 +39,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() {
         mapManager = new MapManager(this);
-        bgManager = new BGManager(this);
         keyHandler = new KeyHandler();
         collisionDetector = new CollisionDetector(this);
         player = new Player(this, keyHandler);
@@ -110,7 +107,6 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        bgManager.draw(g2);
         mapManager.draw(g2);
         player.draw(g2, animationFrame);
         g2.dispose();
