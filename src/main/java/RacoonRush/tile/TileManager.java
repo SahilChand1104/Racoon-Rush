@@ -16,7 +16,7 @@ public class TileManager {
     }
 
     private void loadTileImages() {
-        loadTileImage(0, TileType.FLOOR, "/tile/floor_v1.png", false);
+        loadTileImage(0, TileType.EMPTY, "/tile/floor_v1.png", false);
         loadTileImage(1, TileType.WALL, "/tile/wall_v1.png", true);
     }
 

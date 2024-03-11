@@ -19,15 +19,19 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenHeight = tileSize * maxScreenRow;
 
     // World Settings
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
+    public final int maxWorldCol = 32;
+    public final int maxWorldRow = 32;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
     // FPS
     final int FPS = 60;
+    final int animFPS = 12;
+
+    private int animationFrame;
 
     private final MapManager mapManager;
+
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
     private Thread gameThread;
@@ -69,15 +73,27 @@ public class GamePanel extends JPanel implements Runnable {
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
+        int animationCounter = 0;
+        animationFrame = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             if (delta >= 1) {
+                animationCounter++;
+                if (animationCounter%animFPS == 0) {
+                    if (animationFrame == 0) {
+                        animationFrame = 1;
+                    } else {
+                        animationFrame = 0;
+                    }
+                    animationCounter = 0;
+                }
                 update();
                 repaint();
                 delta--;
+
             }
 
         }
@@ -92,7 +108,42 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
         mapManager.draw(g2);
-        player.draw(g2);
+        player.draw(g2, animationFrame);
         g2.dispose();
+    }
+
+    public int getPlayerWorldX() {
+        return player.getWorldX();
+    }
+
+    public int getPlayerWorldY() {
+        return player.getWorldY();
+    }
+
+    public int getPlayerScreenX() {
+        return player.getScreenX();
+    }
+
+    public int getPlayerScreenY() {
+        return player.getScreenY();
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public int getTileSize() {
+        return tileSize;
+    }
+
+    public int getMaxWorldRow() {
+        return maxWorldRow;
+    }
+    public int getMaxWorldCol() {
+        return maxWorldCol;
     }
 }
