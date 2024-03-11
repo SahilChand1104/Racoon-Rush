@@ -105,3 +105,6 @@ fabric.properties
 
 # Mac Stuff
 .DS_Store
+
+# Build files
+target/
