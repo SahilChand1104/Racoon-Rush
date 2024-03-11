@@ -27,6 +27,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     // FPS
     final int FPS = 60;
+    final int animFPS = 12;
+
+    private int animationFrame;
 
     private final MapManager mapManager;
 
@@ -73,15 +76,27 @@ public class GamePanel extends JPanel implements Runnable {
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
+        int animationCounter = 0;
+        animationFrame = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             if (delta >= 1) {
+                animationCounter++;
+                if (animationCounter%animFPS == 0) {
+                    if (animationFrame == 0) {
+                        animationFrame = 1;
+                    } else {
+                        animationFrame = 0;
+                    }
+                    animationCounter = 0;
+                }
                 update();
                 repaint();
                 delta--;
+
             }
 
         }
@@ -97,7 +112,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         bgManager.draw(g2);
         mapManager.draw(g2);
-        player.draw(g2);
+        player.draw(g2, animationFrame);
         g2.dispose();
     }
 
