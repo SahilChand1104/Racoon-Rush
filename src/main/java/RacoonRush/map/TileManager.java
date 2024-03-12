@@ -1,4 +1,4 @@
-package RacoonRush.tile;
+package RacoonRush.map;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

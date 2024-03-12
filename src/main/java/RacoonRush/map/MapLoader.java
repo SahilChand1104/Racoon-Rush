@@ -1,4 +1,4 @@
-package RacoonRush.tile;
+package RacoonRush.map;
 
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;

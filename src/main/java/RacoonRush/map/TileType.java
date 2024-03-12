@@ -1,4 +1,4 @@
-package RacoonRush.tile;
+package RacoonRush.map;
 
 public enum TileType {
     EMPTY, WALL
