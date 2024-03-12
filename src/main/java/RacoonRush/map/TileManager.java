@@ -1,32 +1,33 @@
 package RacoonRush.map;
 
-import javax.imageio.ImageIO;
+import RacoonRush.game.GamePanel;
+import RacoonRush.game.ImageLoader;
+
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 import java.util.HashMap;
 
 public class TileManager {
+    private final GamePanel gamePanel;
     private final HashMap<Integer, TileType> tileTypes;
     private final EnumMap<TileType, Tile> tile;
 
-    public TileManager() {
+    public TileManager(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
         tileTypes = new HashMap<>();
         tile = new EnumMap<>(TileType.class);
-        loadTileImages();
+        createTiles();
     }
 
-    private void loadTileImages() {
-        loadTileImage(0, TileType.EMPTY, "/tile/floor_v1.png", false);
-        loadTileImage(1, TileType.WALL, "/tile/wall_v1.png", true);
+    private void createTiles() {
+        createTile(0, TileType.EMPTY, false);
+        createTile(1, TileType.WALL, true);
     }
 
-    private void loadTileImage(int value, TileType type, String filePath, boolean isSolid) {
-        try {
-            tileTypes.put(value, type);
-            tile.put(type, new Tile(ImageIO.read(getClass().getResourceAsStream(filePath)), isSolid));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void createTile(int value, TileType type, boolean isSolid) {
+        ImageLoader imageLoader = gamePanel.getImageLoader();
+        tileTypes.put(value, type);
+        tile.put(type, new Tile(imageLoader.getTileImage(type), isSolid));
     }
 
     public BufferedImage getTileImage(int value) {

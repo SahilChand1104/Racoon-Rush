@@ -4,7 +4,6 @@ import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -17,20 +16,14 @@ public class MapManager{
     private final MapLoader mapLoader;
     private TileType[][] map;
 
-    private BufferedImage background;
-
-
+    private final BufferedImage background;
 
     public MapManager(GamePanel gp) {
         this.gp = gp;
         config = gp.getConfig();
-        tileManager = new TileManager();
+        tileManager = new TileManager(gp);
         mapLoader = new MapLoader(gp, tileManager);
-        try {
-            background = ImageIO.read(getClass().getResourceAsStream("/maps/background_img.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        background = gp.getImageLoader().getBackground();
     }
 
     public int getScreenCoordinate(int index, int world, int screen) {
@@ -45,9 +38,9 @@ public class MapManager{
         int screenY = player.getScreenY();
 
         g2.drawImage(background, getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX)+768, getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY)+768, 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX)+768, getScreenCoordinate(0, worldY, screenY)+768, 768, 768, null);
+        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY), 768, 768, null);
+        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
+        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
     }
 
     private void drawTile(Graphics2D g2, int i, int j) {

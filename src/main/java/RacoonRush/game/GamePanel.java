@@ -1,14 +1,14 @@
 package RacoonRush.game;
 
-import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
-import RacoonRush.tile.MapManager;
+import RacoonRush.map.MapManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
     private final Config config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
+    private final ImageLoader imageLoader;
     private final MapManager mapManager;
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
@@ -17,8 +17,9 @@ public class GamePanel extends JPanel implements Runnable {
     private int animationFrame;
 
     public GamePanel() {
-        mapManager = new MapManager(this);
+        imageLoader = new ImageLoader(this);
         keyHandler = new KeyHandler();
+        mapManager = new MapManager(this);
         collisionDetector = new CollisionDetector(this);
         player = new Player(this);
 
@@ -36,14 +37,6 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
-    }
-
-    public boolean hasCollision(int row, int column) {
-        return mapManager.hasCollision(row, column);
-    }
-
-    public boolean isNotColliding(Entity entity, Move direction) {
-        return !collisionDetector.checkCollision(entity, direction);
     }
 
     @Override
@@ -91,8 +84,20 @@ public class GamePanel extends JPanel implements Runnable {
         return config;
     }
 
+    public ImageLoader getImageLoader() {
+        return imageLoader;
+    }
+
     public KeyHandler getKeyHandler() {
         return keyHandler;
+    }
+
+    public MapManager getMapManager() {
+        return mapManager;
+    }
+
+    public CollisionDetector getCollisionDetector() {
+        return collisionDetector;
     }
 
     public Player getPlayer() {
