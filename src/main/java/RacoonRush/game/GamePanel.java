@@ -8,42 +8,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    // Screen settings
-    private final int originalTileSize = 16;
-    private final int scale = 3;
-
-    public final int tileSize = originalTileSize * scale;
-    public final int maxScreenCol = 16;
-    public final int maxScreenRow = 12;
-    public final int screenWidth = tileSize * maxScreenCol;
-    public final int screenHeight = tileSize * maxScreenRow;
-
-    // World Settings
-    public final int maxWorldCol = 32;
-    public final int maxWorldRow = 32;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
-
-    // FPS
-    final int FPS = 60;
-    final int animFPS = 12;
-
-    private int animationFrame;
-
+    private final Config config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
     private final MapManager mapManager;
-
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
+    private final Player player;
     private Thread gameThread;
-    public Player player;
+    private int animationFrame;
 
     public GamePanel() {
         mapManager = new MapManager(this);
         keyHandler = new KeyHandler();
         collisionDetector = new CollisionDetector(this);
-        player = new Player(this, keyHandler);
+        player = new Player(this);
 
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
@@ -69,11 +48,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1_000_000_000.0 / FPS;
+        double drawInterval = 1_000_000_000.0 / config.FPS();
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
         int animationCounter = 0;
+        int animationInterval = config.FPS() / config.animationFPS();
         animationFrame = 0;
 
         while (gameThread != null) {
@@ -82,18 +62,13 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
             if (delta >= 1) {
                 animationCounter++;
-                if (animationCounter%animFPS == 0) {
-                    if (animationFrame == 0) {
-                        animationFrame = 1;
-                    } else {
-                        animationFrame = 0;
-                    }
+                if (animationCounter % animationInterval == 0) {
+                    animationFrame = (animationFrame == 0) ? 1 : 0;
                     animationCounter = 0;
                 }
                 update();
                 repaint();
                 delta--;
-
             }
 
         }
@@ -112,38 +87,15 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-    public int getPlayerWorldX() {
-        return player.getWorldX();
+    public Config getConfig() {
+        return config;
     }
 
-    public int getPlayerWorldY() {
-        return player.getWorldY();
+    public KeyHandler getKeyHandler() {
+        return keyHandler;
     }
 
-    public int getPlayerScreenX() {
-        return player.getScreenX();
-    }
-
-    public int getPlayerScreenY() {
-        return player.getScreenY();
-    }
-
-    public int getScreenWidth() {
-        return screenWidth;
-    }
-
-    public int getScreenHeight() {
-        return screenHeight;
-    }
-
-    public int getTileSize() {
-        return tileSize;
-    }
-
-    public int getMaxWorldRow() {
-        return maxWorldRow;
-    }
-    public int getMaxWorldCol() {
-        return maxWorldCol;
+    public Player getPlayer() {
+        return player;
     }
 }
