@@ -1,5 +1,6 @@
 package RacoonRush.entity;
 
+import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.KeyHandler;
 import RacoonRush.game.Move;
@@ -10,32 +11,32 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Player extends Entity {
-    GamePanel gp;
-    KeyHandler keyH;
+    private final GamePanel gp;
+    private final Config config;
 
     public final int screenX, screenY;
 
     private boolean isMoving;
 
-    public Player(GamePanel gp, KeyHandler keyH) {
+    public Player(GamePanel gp) {
         this.gp = gp;
-        this.keyH = keyH;
+        this.config = gp.getConfig();
 
         images = new BufferedImage[4][2];
 
         // Centered in the middle of the map
-        screenX = gp.screenWidth / 2 - gp.tileSize / 2;
-        screenY = gp.screenHeight / 2 - gp.tileSize / 2;
+        screenX = config.screenWidth() / 2 - config.tileSize() / 2;
+        screenY = config.screenHeight() / 2 - config.tileSize() / 2;
 
-        hitbox = new Rectangle(gp.tileSize / 6, gp.tileSize / 3, gp.tileSize * 2 / 3, gp.tileSize * 2 / 3);
+        hitbox = new Rectangle(config.tileSize() / 6, config.tileSize() / 3, config.tileSize() * 2 / 3, config.tileSize() * 2 / 3);
 
         setDefaultValues();
         getPlayerImages();
     }
 
     public void setDefaultValues() {
-        worldX = gp.tileSize * 8 - gp.tileSize / 2;
-        worldY = gp.tileSize * 6 - gp.tileSize / 2;
+        worldX = config.tileSize() * (config.maxScreenCol() / 2) - config.tileSize() / 2;
+        worldY = config.tileSize() * (config.maxScreenRow() / 2) - config.tileSize() / 2;
         speed = 4;
 
         dir = Move.DOWN;
@@ -58,23 +59,24 @@ public class Player extends Entity {
     }
 
     public int leftColumn() {
-        return (worldX + hitbox.x) / gp.tileSize;
+        return (worldX + hitbox.x) / config.tileSize();
     }
 
     public int rightColumn() {
-        return (worldX + hitbox.x + hitbox.width) / gp.tileSize;
+        return (worldX + hitbox.x + hitbox.width) / config.tileSize();
     }
 
     public int topRow() {
-        return (worldY + hitbox.y) / gp.tileSize;
+        return (worldY + hitbox.y) / config.tileSize();
     }
 
     public int bottomRow() {
-        return (worldY + hitbox.y + hitbox.height) / gp.tileSize;
+        return (worldY + hitbox.y + hitbox.height) / config.tileSize();
     }
 
     public void update() {
-        if (!keyH.get(Move.UP) && !keyH.get(Move.DOWN) && !keyH.get(Move.LEFT) && !keyH.get(Move.RIGHT)) {
+        KeyHandler keyHandler = gp.getKeyHandler();
+        if (!keyHandler.get(Move.UP) && !keyHandler.get(Move.DOWN) && !keyHandler.get(Move.LEFT) && !keyHandler.get(Move.RIGHT)) {
             isMoving = false;
             //dir = Move.DOWN;
             return;
@@ -98,19 +100,19 @@ public class Player extends Entity {
             }
         }
 
-        if (keyH.get(Move.UP) && gp.isNotColliding(this, Move.UP)) {
+        if (keyHandler.get(Move.UP) && gp.isNotColliding(this, Move.UP)) {
             isMoving = true;
             dir = Move.UP;
             worldY -= speed;
-        } else if (keyH.get(Move.DOWN) && gp.isNotColliding(this, Move.DOWN)) {
+        } else if (keyHandler.get(Move.DOWN) && gp.isNotColliding(this, Move.DOWN)) {
             isMoving = true;
             dir = Move.DOWN;
             worldY += speed;
-        } else if (keyH.get(Move.LEFT) && gp.isNotColliding(this, Move.LEFT)) {
+        } else if (keyHandler.get(Move.LEFT) && gp.isNotColliding(this, Move.LEFT)) {
             isMoving = true;
             dir = Move.LEFT;
             worldX -= speed;
-        } else if (keyH.get(Move.RIGHT) && gp.isNotColliding(this, Move.RIGHT)) {
+        } else if (keyHandler.get(Move.RIGHT) && gp.isNotColliding(this, Move.RIGHT)) {
             isMoving = true;
             dir = Move.RIGHT;
             worldX += speed;
@@ -160,7 +162,7 @@ public class Player extends Entity {
 
         //System.out.println("Player is facing " + dir.toString());
 
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, config.tileSize(), config.tileSize(), null);
     }
 
     public int getWorldX() {
