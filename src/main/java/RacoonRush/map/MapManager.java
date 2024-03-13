@@ -1,6 +1,6 @@
 package RacoonRush.map;
 
-import RacoonRush.entity.Collectible;
+import RacoonRush.entity.Donut;
 import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
@@ -52,8 +52,8 @@ public class MapManager{
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
 
         if ( map[i][j].equals(TileType.DONUT) ) {
-            Collectible collectible = new Collectible(gp, screenX, screenY);
-            collectible.draw(g2, screenX, screenY, gp.getCollectibleAnimationFrame());
+            Donut donut = new Donut(gp, screenX, screenY);
+            donut.draw(g2, screenX, screenY, gp.getCollectibleAnimationFrame());
 
         } else if ( !map[i][j].equals(TileType.EMPTY) ) {
             g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, config.tileSize(), config.tileSize(), null);

@@ -4,16 +4,15 @@ import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.ImageLoader;
 import RacoonRush.game.Move;
-import RacoonRush.map.Tile;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Collectible extends Entity{
+public class Donut extends Entity{
+    final GamePanel gp;
+    final Config config;
 
-    private final GamePanel gp;
-    private final Config config;
-    public Collectible(GamePanel gp, int x, int y) {
+    public Donut(GamePanel gp, int x, int y) {
         this.config = gp.getConfig();
         this.gp = gp;
         this.worldX = x;
@@ -28,6 +27,4 @@ public class Collectible extends Entity{
         BufferedImage image = imageLoader.getDonutImage(animationFrame);
         g2.drawImage(image, x, y, config.tileSize(), config.tileSize(), null);
     }
-
-
 }
