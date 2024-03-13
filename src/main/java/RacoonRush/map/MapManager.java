@@ -1,5 +1,6 @@
 package RacoonRush.map;
 
+import RacoonRush.entity.Collectible;
 import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
@@ -15,6 +16,7 @@ public class MapManager{
     private final TileManager tileManager;
     private final MapLoader mapLoader;
     private TileType[][] map;
+
 
     private final BufferedImage background;
 
@@ -45,9 +47,15 @@ public class MapManager{
 
     private void drawTile(Graphics2D g2, int i, int j) {
         Player player = gp.getPlayer();
+
         int screenX = getScreenCoordinate(j, player.getWorldX(), player.getScreenX());
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
-        if ( !map[i][j].equals(TileType.EMPTY) ) {
+
+        if ( map[i][j].equals(TileType.DONUT) ) {
+            Collectible collectible = new Collectible(gp, screenX, screenY);
+            collectible.draw(g2, screenX, screenY, gp.getCollectibleAnimationFrame());
+
+        } else if ( !map[i][j].equals(TileType.EMPTY) ) {
             g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, config.tileSize(), config.tileSize(), null);
         }
     }

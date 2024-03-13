@@ -1,5 +1,6 @@
 package RacoonRush.map;
 
+import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.ImageLoader;
 
@@ -22,6 +23,7 @@ public class TileManager {
     private void createTiles() {
         createTile(0, TileType.EMPTY, false);
         createTile(1, TileType.WALL, true);
+        createTile(2, TileType.DONUT, false);
     }
 
     private void createTile(int value, TileType type, boolean isSolid) {
@@ -35,6 +37,7 @@ public class TileManager {
     }
 
     public BufferedImage getTileImage(TileType type) {
+        Config config = gamePanel.getConfig();
         return tile.get(type).image;
     }
 

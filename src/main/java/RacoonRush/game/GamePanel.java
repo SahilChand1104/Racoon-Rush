@@ -14,7 +14,8 @@ public class GamePanel extends JPanel implements Runnable {
     private final CollisionDetector collisionDetector;
     private final Player player;
     private Thread gameThread;
-    private int animationFrame;
+    private int playerAnimationFrame;
+    private int collectibleAnimationFrame;
 
     public GamePanel() {
         imageLoader = new ImageLoader(this);
@@ -47,7 +48,8 @@ public class GamePanel extends JPanel implements Runnable {
         long currentTime;
         int animationCounter = 0;
         int animationInterval = config.FPS() / config.animationFPS();
-        animationFrame = 0;
+        playerAnimationFrame = 0;
+        collectibleAnimationFrame = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
@@ -56,8 +58,13 @@ public class GamePanel extends JPanel implements Runnable {
             if (delta >= 1) {
                 animationCounter++;
                 if (animationCounter % animationInterval == 0) {
-                    animationFrame = (animationFrame == 0) ? 1 : 0;
+                    playerAnimationFrame = (playerAnimationFrame == 0) ? 1 : 0;
                     animationCounter = 0;
+                    if (collectibleAnimationFrame < 11) {
+                        collectibleAnimationFrame++;
+                    } else {
+                        collectibleAnimationFrame = 0;
+                    }
                 }
                 update();
                 repaint();
@@ -76,7 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
         mapManager.draw(g2);
-        player.draw(g2, animationFrame);
+        player.draw(g2, playerAnimationFrame);
         g2.dispose();
     }
 
@@ -103,4 +110,13 @@ public class GamePanel extends JPanel implements Runnable {
     public Player getPlayer() {
         return player;
     }
+
+    public int getPlayerAnimationFrame() {
+        return playerAnimationFrame;
+    }
+
+    public int getCollectibleAnimationFrame() {
+        return collectibleAnimationFrame;
+    }
+
 }
