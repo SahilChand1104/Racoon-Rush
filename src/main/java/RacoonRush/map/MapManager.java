@@ -18,14 +18,18 @@ public class MapManager{
     private TileType[][] map;
 
 
-    private final BufferedImage background;
+    private final BufferedImage[] background;
 
     public MapManager(GamePanel gp) {
         this.gp = gp;
         config = gp.getConfig();
         tileManager = new TileManager(gp);
         mapLoader = new MapLoader(gp, tileManager);
-        background = gp.getImageLoader().getBackground();
+        background = new BufferedImage[4];
+        for (int i = 0; i < 4; i++) {
+            background[i] = gp.getImageLoader().getBackground(i);
+        }
+
     }
 
     public int getScreenCoordinate(int index, int world, int screen) {
@@ -39,10 +43,10 @@ public class MapManager{
         int screenX = player.getScreenX();
         int screenY = player.getScreenY();
 
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
+        g2.drawImage(background[0], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), 768, 768, null);
+        g2.drawImage(background[1], getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY), 768, 768, null);
+        g2.drawImage(background[2], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
+        g2.drawImage(background[3], getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
     }
 
     private void drawTile(Graphics2D g2, int i, int j) {
@@ -54,7 +58,8 @@ public class MapManager{
         if ( map[i][j].equals(TileType.DONUT) ) {
             Donut donut = new Donut(gp, screenX, screenY);
             donut.draw(g2, screenX, screenY, gp.getCollectibleAnimationFrame());
-
+        } else if  (map[i][j].equals(TileType.TREE)) {
+            g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, config.tileSize(), config.tileSize(), null);
         } else if ( !map[i][j].equals(TileType.EMPTY) ) {
             g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, config.tileSize(), config.tileSize(), null);
         }

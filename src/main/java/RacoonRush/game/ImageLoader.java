@@ -13,7 +13,9 @@ public class ImageLoader {
     private final EnumMap<Move, BufferedImage> playerImage1;
     private final EnumMap<TileType, BufferedImage> tileImages;
     private final BufferedImage[] donutImages;
-    private BufferedImage background;
+
+    private final BufferedImage[] background;
+    //private BufferedImage background;
 
     public ImageLoader(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -21,6 +23,7 @@ public class ImageLoader {
         playerImage1 = new EnumMap<>(Move.class);
         tileImages = new EnumMap<>(TileType.class);
         donutImages = new BufferedImage[12];
+        background = new BufferedImage[4];
         loadAllImages();
     }
 
@@ -55,7 +58,12 @@ public class ImageLoader {
         tileImages.put(TileType.EMPTY, loadImage("/tile/floor_v1.png", true));
         tileImages.put(TileType.WALL, loadImage("/tile/wall_v1.png", true));
         tileImages.put(TileType.DONUT, loadImage("/tile/donut_v2.png", true));
-        background = loadImage("/maps/background_img.png", false);
+        tileImages.put(TileType.TREE, loadImage("/tile/tree_v1.png", true));
+
+        for (int i=0; i<4; i++) {
+            background[i] = loadImage("/maps/map_bg_0"+(i+1)+".png", false);
+        }
+
     }
 
     public BufferedImage getPlayerImage(Move move, int index) {
@@ -66,8 +74,8 @@ public class ImageLoader {
         return tileImages.get(type);
     }
 
-    public BufferedImage getBackground() {
-        return background;
+    public BufferedImage getBackground(int index) {
+        return background[index];
     }
 
     public BufferedImage getDonutImage(int index) {
