@@ -1,13 +1,11 @@
 package RacoonRush.map;
 
-import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.ImageLoader;
 
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Random;
 
 public class TileManager {
     private final GamePanel gamePanel;
@@ -35,21 +33,12 @@ public class TileManager {
         tile.put(type, new Tile(imageLoader.getTileImage(type), isSolid));
     }
 
-    public BufferedImage getTileImage(int value) {
-        return getTileImage(getTileType(value));
-    }
-
     public BufferedImage getTileImage(TileType type) {
-        Config config = gamePanel.getConfig();
         return tile.get(type).image;
     }
 
     public TileType getTileType(int value) {
         return tileTypes.get(value);
-    }
-
-    public Tile getTile(TileType type) {
-        return tile.get(type);
     }
 
     public boolean hasCollision(TileType type) {
