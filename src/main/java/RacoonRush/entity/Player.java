@@ -26,8 +26,8 @@ public class Player extends Entity {
 
     public void setDefaultValues() {
         // Starting position of the player
-        worldX = config.tileSize() * (config.maxScreenCol() - 1) / 2;
-        worldY = config.tileSize() * (config.maxScreenRow() - 1) / 2;
+        worldX = config.tileSize() * (config.maxWorldCol() - 1) - 1*config.tileSize();
+        worldY = config.tileSize() * (config.maxWorldRow() - 1) - 1*config.tileSize();
 
         speed = 4;
         dir = Move.DOWN;

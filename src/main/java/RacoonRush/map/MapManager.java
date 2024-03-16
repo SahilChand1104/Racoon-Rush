@@ -60,8 +60,13 @@ public class MapManager{
             donut.draw(g2, screenX, screenY, gp.getCollectibleAnimationFrame());
         } else if  (map[i][j].equals(TileType.TREE)) {
             g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, config.tileSize(), config.tileSize(), null);
-        } else if ( !map[i][j].equals(TileType.EMPTY) ) {
-            g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        } else if ( map[i][j].equals(TileType.WALL) ) {
+            // draw wall segment chosen from 4 different wall images
+            g2.drawImage(gp.getImageLoader().getWallImage((i*j+3)%4), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        } else if (map[i][j].equals(TileType.LEFTOVER)) {
+            g2.drawImage(gp.getImageLoader().getLeftoverImage(), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        } else {
+            // draw empty tile
         }
     }
 

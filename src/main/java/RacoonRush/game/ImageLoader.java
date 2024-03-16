@@ -17,6 +17,8 @@ public class ImageLoader {
     private final BufferedImage[] background;
     //private BufferedImage background;
 
+    private final BufferedImage[] wallImages;
+
     public ImageLoader(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         playerImage0 = new EnumMap<>(Move.class);
@@ -24,6 +26,7 @@ public class ImageLoader {
         tileImages = new EnumMap<>(TileType.class);
         donutImages = new BufferedImage[12];
         background = new BufferedImage[4];
+        wallImages = new BufferedImage[4];
         loadAllImages();
     }
 
@@ -56,12 +59,17 @@ public class ImageLoader {
             donutImages[i] = loadImage("/entity/collectible/donut_" + (i+1) + ".png", true);
         }
         tileImages.put(TileType.EMPTY, loadImage("/tile/floor_v1.png", true));
-        tileImages.put(TileType.WALL, loadImage("/tile/wall_v1.png", true));
-        tileImages.put(TileType.DONUT, loadImage("/tile/donut_v2.png", true));
+        tileImages.put(TileType.WALL, loadImage("/tile/wall_v3_1.png", true));
+        tileImages.put(TileType.DONUT, loadImage("/entity/collectible/donut_1.png", true));
         tileImages.put(TileType.TREE, loadImage("/tile/tree_v1.png", true));
+        tileImages.put(TileType.LEFTOVER, loadImage("/entity/collectible/leftovers_v4.png", true));
 
         for (int i=0; i<4; i++) {
             background[i] = loadImage("/maps/map_bg_0"+(i+1)+".png", false);
+        }
+
+        for (int i=0; i<4; i++) {
+            wallImages[i] = loadImage("/tile/wall_v3_"+(i+1)+".png", true);
         }
 
     }
@@ -80,5 +88,13 @@ public class ImageLoader {
 
     public BufferedImage getDonutImage(int index) {
         return donutImages[index];
+    }
+
+    public BufferedImage getWallImage(int index) {
+        return wallImages[index];
+    }
+
+    public BufferedImage getLeftoverImage() {
+        return loadImage("/entity/collectible/leftovers_v5.png", true);
     }
 }

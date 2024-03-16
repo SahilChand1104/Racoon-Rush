@@ -7,6 +7,7 @@ import RacoonRush.game.ImageLoader;
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Random;
 
 public class TileManager {
     private final GamePanel gamePanel;
@@ -25,6 +26,7 @@ public class TileManager {
         createTile(1, TileType.WALL, true);
         createTile(2, TileType.TREE, true);
         createTile(3, TileType.DONUT, false);
+        createTile(4, TileType.LEFTOVER, false);
     }
 
     private void createTile(int value, TileType type, boolean isSolid) {
@@ -53,4 +55,5 @@ public class TileManager {
     public boolean hasCollision(TileType type) {
         return tile.get(type).collision;
     }
+
 }
