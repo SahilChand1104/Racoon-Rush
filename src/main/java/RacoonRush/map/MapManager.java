@@ -1,10 +1,10 @@
-package RacoonRush.tile;
+package RacoonRush.map;
 
+import RacoonRush.entity.Donut;
 import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -17,20 +17,19 @@ public class MapManager{
     private final MapLoader mapLoader;
     private TileType[][] map;
 
-    private BufferedImage background;
 
-
+    private final BufferedImage[] background;
 
     public MapManager(GamePanel gp) {
         this.gp = gp;
         config = gp.getConfig();
-        tileManager = new TileManager();
+        tileManager = new TileManager(gp);
         mapLoader = new MapLoader(gp, tileManager);
-        try {
-            background = ImageIO.read(getClass().getResourceAsStream("/maps/background_img.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        background = new BufferedImage[4];
+        for (int i = 0; i < 4; i++) {
+            background[i] = gp.getImageLoader().getBackground(i);
         }
+
     }
 
     public int getScreenCoordinate(int index, int world, int screen) {
@@ -44,18 +43,30 @@ public class MapManager{
         int screenX = player.getScreenX();
         int screenY = player.getScreenY();
 
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX)+768, getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY)+768, 768, 768, null);
-        g2.drawImage(background, getScreenCoordinate(0, worldX, screenX)+768, getScreenCoordinate(0, worldY, screenY)+768, 768, 768, null);
+        g2.drawImage(background[0], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), 768, 768, null);
+        g2.drawImage(background[1], getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY), 768, 768, null);
+        g2.drawImage(background[2], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
+        g2.drawImage(background[3], getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
     }
 
     private void drawTile(Graphics2D g2, int i, int j) {
         Player player = gp.getPlayer();
+
         int screenX = getScreenCoordinate(j, player.getWorldX(), player.getScreenX());
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
-        if ( !map[i][j].equals(TileType.EMPTY) ) {
+
+        if ( map[i][j].equals(TileType.DONUT) ) {
+            Donut donut = new Donut(gp, screenX, screenY);
+            donut.draw(g2, screenX, screenY, gp.getCollectibleAnimationFrame());
+        } else if  (map[i][j].equals(TileType.TREE)) {
             g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        } else if ( map[i][j].equals(TileType.WALL) ) {
+            // draw wall segment chosen from 4 different wall images
+            g2.drawImage(gp.getImageLoader().getWallImage((i*j+3)%4), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        } else if (map[i][j].equals(TileType.LEFTOVER)) {
+            g2.drawImage(gp.getImageLoader().getLeftoverImage(), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        } else {
+            // draw empty tile
         }
     }
 
