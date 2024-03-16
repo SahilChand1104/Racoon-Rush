@@ -62,7 +62,7 @@ public class ImageLoader {
         tileImages.put(TileType.EMPTY, null);
         tileImages.put(TileType.WALL, loadImage("/tile/wall_v3_1.png", true));
         tileImages.put(TileType.DONUT, loadImage("/entity/collectible/donut_1.png", true));
-        tileImages.put(TileType.TREE, loadImage("/tile/tree_v1.png", true));
+        tileImages.put(TileType.TREE, loadImage("/tile/tree_v4.png", true));
         tileImages.put(TileType.LEFTOVER, loadImage("/entity/collectible/leftovers_v4.png", true));
 
         for (int i = 0; i < 4; i++) {
