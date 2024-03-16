@@ -21,12 +21,15 @@ public class Main {
         menu.startMenuThread();
 
 
-        while (menu.isMenuRunning()) {
+        // This loop stops the main function from loading up the game until the menu is done running
+        while (menu.isRunning()) {
             // do nothing
         }
 
         menu.stopMenuThread();
         window.remove(menu);
+
+
 
 
         GamePanel gamePanel = new GamePanel();

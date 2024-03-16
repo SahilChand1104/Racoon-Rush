@@ -31,7 +31,9 @@ public class Menu extends JPanel implements Runnable {
     }
 
     public void stopMenuThread() {
+
         menuThread.interrupt();
+        menuThread = null;
         this.setFocusable(false);
 
     }
@@ -69,7 +71,7 @@ public class Menu extends JPanel implements Runnable {
         g2.dispose();
     }
 
-    public boolean isMenuRunning() {
+    public boolean isRunning() {
         return menuThread != null;
     }
 
