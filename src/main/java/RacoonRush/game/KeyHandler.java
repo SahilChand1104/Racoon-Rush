@@ -20,12 +20,17 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+            System.exit(0);
+        } if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+            pressed.put(Move.ENTER, true);
+        }
 
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("Key Pressed");
+        //System.out.println("Key Pressed");
         int code = e.getKeyCode();
 
         if (code == KeyEvent.VK_W) {
@@ -40,6 +45,10 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_D) {
             pressed.put(Move.RIGHT, true);
         }
+        if (code == KeyEvent.VK_ENTER) {
+            pressed.put(Move.ENTER, true);
+        }
+
     }
 
     @Override
@@ -57,6 +66,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_D) {
             pressed.put(Move.RIGHT, false);
+        }
+        if (code == KeyEvent.VK_ENTER) {
+            pressed.put(Move.ENTER, false);
         }
     }
 }

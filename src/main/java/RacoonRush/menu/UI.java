@@ -50,11 +50,7 @@ public class UI {
     public void update() {
         KeyHandler keyHandler = menu.getKeyHandler();
         for (MenuComponent component : components) {
-            if (component.getType() == ComponentType.PLAY) {
-                if (keyHandler.get(Move.UP)) {
-                    component.setSelected(true);
-                }
-            }
+
             component.update();
         }
     }

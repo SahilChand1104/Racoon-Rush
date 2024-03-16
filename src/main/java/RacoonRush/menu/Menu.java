@@ -23,6 +23,7 @@ public class Menu extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.keyHandler = new KeyHandler();
         this.setFocusable(true);
+        this.addKeyListener(keyHandler);
     }
 
     public void startMenuThread() {
