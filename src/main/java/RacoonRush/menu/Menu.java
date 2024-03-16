@@ -23,7 +23,6 @@ public class Menu extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.keyHandler = new KeyHandler();
         this.setFocusable(true);
-        this.requestFocusInWindow();
     }
 
     public void startMenuThread() {
@@ -49,6 +48,7 @@ public class Menu extends JPanel implements Runnable {
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             if (delta >= 1) {
+                update();
                 repaint();
                 delta--;
             }
@@ -58,6 +58,9 @@ public class Menu extends JPanel implements Runnable {
 
     }
 
+    public void update() {
+        ui.update();
+    }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -68,5 +71,9 @@ public class Menu extends JPanel implements Runnable {
 
     public boolean isMenuRunning() {
         return menuThread != null;
+    }
+
+    public KeyHandler getKeyHandler() {
+        return keyHandler;
     }
 }

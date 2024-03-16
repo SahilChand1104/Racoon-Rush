@@ -15,43 +15,79 @@ public class MenuComponent {
     private final int x;
     private final int y;
 
-    private final BufferedImage image;
+    private final ComponentType type;
 
-    private boolean fill;
-    private boolean stretch;
+    private  BufferedImage image;
+
 
     private boolean selected;
 
-    public MenuComponent(Menu menu, int x, int y, BufferedImage image, boolean fill, boolean stretch, boolean selected) {
+    public MenuComponent(Menu menu, int x, int y, ComponentType type) {
         this.menu = menu;
 
         this.x = x;
         this.y = y;
-        this.image = image;
-        this.fill = fill;
-        this.stretch = stretch;
-        this.selected = selected;
+        this.type = type;
 
-    }
+        selected = false;
 
-    public void draw(Graphics2D g2) {
-        if (fill) {
-            g2.drawImage(image, x, y, Math.max(menu.getHeight(), menu.getWidth()) , Math.max(menu.getHeight(), menu.getWidth()), null);
-        } else if (stretch) {
-            g2.drawImage(image, x, y, menu.getWidth(), image.getHeight(),null);
+        if (type == ComponentType.BG) {
+            image = loadImage("/menu/menu_bg.png");
+        } else if (type == ComponentType.BANNER) {
+            image = loadImage("/menu/menu_title_v2.png");
+        } else if (type == ComponentType.PLAY) {
+            image = loadImage("/menu/menu_label_play_0.png");
+        } else if (type == ComponentType.SETTINGS) {
+            image = loadImage("/menu/menu_label_settings_0.png");
         } else {
-            g2.drawImage(image, x, y, null);
+            image = null;
         }
 
     }
 
-    public void setFill(boolean fill) {
-        this.fill = fill;
+    public void update() {
+        if (type == ComponentType.PLAY) {
+            if (selected) {
+                image = loadImage("/menu/menu_label_play_1.png");
+            } else {
+                image = loadImage("/menu/menu_label_play_0.png");
+            }
+        } else if (type == ComponentType.SETTINGS) {
+            if (selected) {
+                image = loadImage("/menu/menu_label_settings_1.png");
+            } else {
+                image = loadImage("/menu/menu_label_settings_0.png");
+            }
+        }
+    }
+
+    public void draw(Graphics2D g2) {
+        if (type == ComponentType.BG) {
+            g2.drawImage(image, x, y, Math.max(menu.getHeight(), menu.getWidth()) , Math.max(menu.getHeight(), menu.getWidth()), null);
+        } else if (type == ComponentType.BANNER) {
+            g2.drawImage(image, x, y, menu.getWidth(), image.getHeight(),null);
+        } else if (type == ComponentType.PLAY || type == ComponentType.SETTINGS) {
+            g2.drawImage(image, x, y, null);
+        }
+
     }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
 
+    public ComponentType getType() {
+        return type;
+    }
+
+    private BufferedImage loadImage(String path) {
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
 
 }

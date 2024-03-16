@@ -1,11 +1,9 @@
 package RacoonRush.menu;
 
-import RacoonRush.game.ImageLoader;
+import RacoonRush.game.KeyHandler;
+import RacoonRush.game.Move;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class UI {
@@ -38,23 +36,27 @@ public class UI {
     public void loadComponents() {
 
         // Add Menu Background
-        components.add(new MenuComponent(menu, 0, 0, loadImage("/menu/menu_bg.png"), true, false, false));
+        components.add(new MenuComponent(menu, 0, 0, ComponentType.BG));
         // Add Menu Title
-        components.add(new MenuComponent(menu, 0, 50, loadImage("/menu/menu_title_v2.png"), false, true, false));
+        components.add(new MenuComponent(menu, 0, 50, ComponentType.BANNER));
         // Add Play Button
-        components.add(new MenuComponent(menu, 768/2-200, 200, loadImage("/menu/menu_label_play_1.png"), false, false, true));
+        components.add(new MenuComponent(menu, 768/2-200, 200, ComponentType.PLAY));
         // Add Settings Button
-        components.add(new MenuComponent(menu, 768/2-200, 400, loadImage("/menu/menu_label_settings_0.png"), false, false, false));
+        components.add(new MenuComponent(menu, 768/2-200, 400, ComponentType.SETTINGS));
     }
 
-    private BufferedImage loadImage(String path) {
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream(path));
-        } catch (IOException e) {
-            e.printStackTrace();
+
+
+    public void update() {
+        KeyHandler keyHandler = menu.getKeyHandler();
+        for (MenuComponent component : components) {
+            if (component.getType() == ComponentType.PLAY) {
+                if (keyHandler.get(Move.UP)) {
+                    component.setSelected(true);
+                }
+            }
+            component.update();
         }
-        return image;
     }
 
 
