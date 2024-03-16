@@ -40,6 +40,8 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
 
+
+
     @Override
     public void run() {
         double drawInterval = 1_000_000_000.0 / config.FPS();
