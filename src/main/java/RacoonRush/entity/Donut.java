@@ -8,22 +8,22 @@ import RacoonRush.game.Move;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Donut extends Entity{
-    final GamePanel gp;
-    final Config config;
+public class Donut extends Entity {
+    final GamePanel gamePanel;
 
-    public Donut(GamePanel gp, int x, int y) {
-        this.config = gp.getConfig();
-        this.gp = gp;
+    public Donut(GamePanel gamePanel, int x, int y) {
+        this.gamePanel = gamePanel;
         this.worldX = x;
         this.worldY = y;
         this.speed = 0;
         this.dir = Move.DOWN;
-        this.hitbox = new Rectangle(x, y, 32, 32);
+        Config config = gamePanel.getConfig();
+        this.hitbox = new Rectangle(config.tileSize(), config.tileSize());
     }
 
     public void draw(Graphics2D g2, int x, int y, int animationFrame) {
-        ImageLoader imageLoader = gp.getImageLoader();
+        Config config = gamePanel.getConfig();
+        ImageLoader imageLoader = gamePanel.getImageLoader();
         BufferedImage image = imageLoader.getDonutImage(animationFrame);
         g2.drawImage(image, x, y, config.tileSize(), config.tileSize(), null);
     }
