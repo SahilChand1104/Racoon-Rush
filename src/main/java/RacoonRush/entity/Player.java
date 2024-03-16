@@ -6,14 +6,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
-    private final GamePanel gp;
+    private final GamePanel gamePanel;
     private final Config config;
 
     public final int screenX, screenY;
+    private int score;
 
-    public Player(GamePanel gp) {
-        this.gp = gp;
-        this.config = gp.getConfig();
+    public Player(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
+        this.config = gamePanel.getConfig();
 
         // Centered in the middle of the map
         screenX = config.screenWidth() / 2 - config.tileSize() / 2;
@@ -50,32 +51,36 @@ public class Player extends Entity {
     }
 
     public void update() {
-        KeyHandler keyHandler = gp.getKeyHandler();
-        CollisionDetector collisionDetector = gp.getCollisionDetector();
+        KeyHandler keyHandler = gamePanel.getKeyHandler();
+        CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
         if (!keyHandler.get(Move.UP) && !keyHandler.get(Move.DOWN) && !keyHandler.get(Move.LEFT) && !keyHandler.get(Move.RIGHT)) {
             return;
         }
 
-        if (keyHandler.get(Move.UP) && collisionDetector.playerCanMove(this, Move.UP)) {
+        if (keyHandler.get(Move.UP) && collisionDetector.move(this, Move.UP)) {
             dir = Move.UP;
             worldY -= speed;
-        } else if (keyHandler.get(Move.DOWN) && collisionDetector.playerCanMove(this, Move.DOWN)) {
+        } else if (keyHandler.get(Move.DOWN) && collisionDetector.move(this, Move.DOWN)) {
             dir = Move.DOWN;
             worldY += speed;
-        } else if (keyHandler.get(Move.LEFT) && collisionDetector.playerCanMove(this, Move.LEFT)) {
+        } else if (keyHandler.get(Move.LEFT) && collisionDetector.move(this, Move.LEFT)) {
             dir = Move.LEFT;
             worldX -= speed;
-        } else if (keyHandler.get(Move.RIGHT) && collisionDetector.playerCanMove(this, Move.RIGHT)) {
+        } else if (keyHandler.get(Move.RIGHT) && collisionDetector.move(this, Move.RIGHT)) {
             dir = Move.RIGHT;
             worldX += speed;
         }
     }
 
     public void draw(Graphics2D g2, int animationFrame) {
-        ImageLoader imageLoader = gp.getImageLoader();
-        animationFrame = gp.getKeyHandler().get(dir) ? animationFrame : 0;
+        ImageLoader imageLoader = gamePanel.getImageLoader();
+        animationFrame = gamePanel.getKeyHandler().get(dir) ? animationFrame : 0;
         BufferedImage image = imageLoader.getPlayerImage(dir, animationFrame);
         g2.drawImage(image, screenX, screenY, config.tileSize(), config.tileSize(), null);
+    }
+
+    public void updateScore(int score) {
+        this.score += score;
     }
 
     public int getWorldX() {

@@ -1,43 +1,38 @@
 package RacoonRush.map;
 
-import RacoonRush.entity.Donut;
 import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
+import RacoonRush.map.tile.Tile;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class MapManager{
 
-    private final GamePanel gp;
-    private final Config config;
-
-    private final TileManager tileManager;
+    private final GamePanel gamePanel;
     private final MapLoader mapLoader;
-    private TileType[][] map;
+    private Tile[][] map;
 
 
     private final BufferedImage[] background;
 
-    public MapManager(GamePanel gp) {
-        this.gp = gp;
-        config = gp.getConfig();
-        tileManager = new TileManager(gp);
-        mapLoader = new MapLoader(gp, tileManager);
+    public MapManager(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
+        mapLoader = new MapLoader(gamePanel);
         background = new BufferedImage[4];
         for (int i = 0; i < 4; i++) {
-            background[i] = gp.getImageLoader().getBackground(i);
+            background[i] = gamePanel.getImageLoader().getBackground(i);
         }
-
     }
 
     public int getScreenCoordinate(int index, int world, int screen) {
+        Config config = gamePanel.getConfig();
         return index * config.tileSize() - world + screen;
     }
 
     private void drawBackground(Graphics2D g2) {
-        Player player = gp.getPlayer();
+        Player player = gamePanel.getPlayer();
         int worldX = player.getWorldX();
         int worldY = player.getWorldY();
         int screenX = player.getScreenX();
@@ -50,36 +45,28 @@ public class MapManager{
     }
 
     private void drawTile(Graphics2D g2, int i, int j) {
-        Player player = gp.getPlayer();
+        Config config = gamePanel.getConfig();
+        Player player = gamePanel.getPlayer();
 
         int screenX = getScreenCoordinate(j, player.getWorldX(), player.getScreenX());
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
 
-        if ( map[i][j].equals(TileType.DONUT) ) {
-            Donut donut = new Donut(gp, screenX, screenY);
-            donut.draw(g2, screenX, screenY, gp.getCollectibleAnimationFrame());
-        } else if  (map[i][j].equals(TileType.TREE)) {
-            g2.drawImage(tileManager.getTileImage(map[i][j]), screenX, screenY, config.tileSize(), config.tileSize(), null);
-        } else if ( map[i][j].equals(TileType.WALL) ) {
-            // draw wall segment chosen from 4 different wall images
-            g2.drawImage(gp.getImageLoader().getWallImage((i*j+3)%4), screenX, screenY, config.tileSize(), config.tileSize(), null);
-        } else if (map[i][j].equals(TileType.LEFTOVER)) {
-            g2.drawImage(gp.getImageLoader().getLeftoverImage(), screenX, screenY, config.tileSize(), config.tileSize(), null);
-        } else {
-            // draw empty tile
-        }
+        g2.drawImage(map[i][j].getImage(i, j, gamePanel.getCollectibleAnimationFrame()), screenX, screenY, config.tileSize(), config.tileSize(), null);
     }
 
     private int getStart(int world, int screen) {
+        Config config = gamePanel.getConfig();
         return Math.max((world - screen - config.screenWidth()) / config.tileSize(), 0);
     }
 
     private int getEnd(int world, int screen, int max) {
+        Config config = gamePanel.getConfig();
         return Math.min((world + screen + config.screenWidth()) / config.tileSize(), max);
     }
 
     public void draw(Graphics2D g2) {
-        Player player = gp.getPlayer();
+        Config config = gamePanel.getConfig();
+        Player player = gamePanel.getPlayer();
         int startX = getStart(player.getWorldX(), player.getScreenX());
         int startY = getStart(player.getWorldY(), player.getScreenY());
         int endX = getEnd(player.getWorldX(), player.getScreenX(), config.maxWorldCol());
@@ -89,7 +76,9 @@ public class MapManager{
         
         for (int i = startY; i < endY; i++) {
             for (int j = startX; j < endX; j++) {
-                drawTile(g2, i, j);
+                if (map[i][j] != null) {
+                    drawTile(g2, i, j);
+                }
             }
         }
     }
@@ -98,7 +87,10 @@ public class MapManager{
         map = mapLoader.loadMap(filePath);
     }
 
-    public boolean hasCollision(int row, int column) {
-        return tileManager.hasCollision(map[row][column]);
+    public boolean onCollide(int row, int column) {
+        if (map[row][column] == null) {
+            return true;
+        }
+        return map[row][column].onCollide(gamePanel.getPlayer());
     }
 }
