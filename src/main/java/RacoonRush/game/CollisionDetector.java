@@ -9,9 +9,9 @@ public class CollisionDetector {
         this.gp = gp;
     }
 
-    // Check if the player can move in the given direction
-    // TODO: Create a function for entity collision detection
-    public boolean playerCanMove(Player player, Move direction) {
+    // Interact with the blocks in the given direction
+    // Returns true if the player can move
+    public boolean move(Player player, Move direction) {
         MapManager mapManager = gp.getMapManager();
         int offsetX = switch (direction) {
             case LEFT -> -player.speed;
@@ -29,10 +29,10 @@ public class CollisionDetector {
         int bottomRow = player.bottomRow(offsetY);
 
         return switch (direction) {
-            case UP -> !mapManager.hasCollision(topRow, leftColumn) && !mapManager.hasCollision(topRow, rightColumn);
-            case DOWN -> !mapManager.hasCollision(bottomRow, leftColumn) && !mapManager.hasCollision(bottomRow, rightColumn);
-            case LEFT -> !mapManager.hasCollision(topRow, leftColumn) && !mapManager.hasCollision(bottomRow, leftColumn);
-            case RIGHT -> !mapManager.hasCollision(topRow, rightColumn) && !mapManager.hasCollision(bottomRow, rightColumn);
+            case UP -> mapManager.onCollide(topRow, leftColumn) && mapManager.onCollide(topRow, rightColumn);
+            case DOWN -> mapManager.onCollide(bottomRow, leftColumn) && mapManager.onCollide(bottomRow, rightColumn);
+            case LEFT -> mapManager.onCollide(topRow, leftColumn) && mapManager.onCollide(bottomRow, leftColumn);
+            case RIGHT -> mapManager.onCollide(topRow, rightColumn) && mapManager.onCollide(bottomRow, rightColumn);
         };
     }
 }
