@@ -14,8 +14,8 @@ public class TileFactory {
             case EMPTY -> null;
             case WALL -> new Wall(imageLoader.getWallImages());
             case TREE -> new Wall(imageLoader.getTreeImages());
-            case DONUT -> new Item(imageLoader.getDonutImages(), 10);
-            case LEFTOVER -> new Item(imageLoader.getLeftoverImages(), -20);
+            case DONUT -> new Item(imageLoader.getDonutImages(), 10, gamePanel);
+            case LEFTOVER -> new Item(imageLoader.getLeftoverImages(), -20, gamePanel);
         };
     }
 }
