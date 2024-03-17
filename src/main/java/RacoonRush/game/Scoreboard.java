@@ -12,6 +12,7 @@ public class Scoreboard extends JPanel {
     private JLabel scoreLabel;
     private JLabel timerLabel;
     private JLabel messageLabel;
+    private boolean isDisabled;
 
     public Scoreboard() {
 
@@ -50,24 +51,36 @@ public class Scoreboard extends JPanel {
     }
 
     public void updateScore(int score) {
-        scoreLabel.setText("Score: " + score);
+        if (!isDisabled) {
+            scoreLabel.setText("Score: " + score);
+        }
     }
 
     public void updateTimer(String timeInSeconds) {
-        timerLabel.setText("Time: " + timeInSeconds);
+        if (!isDisabled) {
+            timerLabel.setText("Time: " + timeInSeconds);
+        }
     }
 
     public void showMessage(String message) {
-        messageLabel.setText(message);
-        // Create a javax.swing.Timer to clear the message after 3 seconds
-        Timer timer = new Timer(2000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                messageLabel.setText(" "); // Clear the message
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
+        if (!isDisabled) {
+            messageLabel.setText(message);
+            // Create a javax.swing.Timer to clear the message after 3 seconds
+            Timer timer = new Timer(2000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    messageLabel.setText(" "); // Clear the message
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+    }
+
+    public void reset() {
+        scoreLabel.setText("Score: 0");
+        timerLabel.setText("Time: 00:00");
+        messageLabel.setText(" ");
     }
 
     @Override
@@ -85,5 +98,9 @@ public class Scoreboard extends JPanel {
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
         g2d.dispose();
+    }
+
+    public boolean setDisabled(boolean bool) {
+        return isDisabled = bool;
     }
 }

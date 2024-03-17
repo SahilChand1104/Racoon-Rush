@@ -9,6 +9,7 @@ public class GameTime {
     private Timer timer;
     private long startTime;
     private long pausedTime;
+    private long totalTime;
     private boolean isPaused;
     Scoreboard scoreboard;
     public GameTime(Scoreboard scoreboard) {
@@ -18,6 +19,7 @@ public class GameTime {
             public void actionPerformed(ActionEvent e) {
                 if (!isPaused) {
                     updateTimeLabel(scoreboard);
+                    totalTime = System.currentTimeMillis() - startTime;
                 }
             }
         });
@@ -36,7 +38,7 @@ public class GameTime {
         }
     }
 
-    public void resume() {
+    public void resumeTimer() {
         if (isPaused) {
             isPaused = false;
             startTime += System.currentTimeMillis() - pausedTime;
@@ -44,18 +46,12 @@ public class GameTime {
         }
     }
 
-    public void stop() {
-        timer.stop();
-        long totalTime = System.currentTimeMillis() - startTime;
-        displayTotalTime(totalTime);
-    }
-
-    public void reset(Scoreboard sb) {
+    public void stopTimer() {
         timer.stop();
         startTime = 0;
         pausedTime = 0;
+        totalTime = 0;
         isPaused = false;
-        sb.updateTimer(formatTime(0));
     }
 
     private void updateTimeLabel(Scoreboard sb) {
@@ -68,7 +64,6 @@ public class GameTime {
     private void displayTotalTime(long totalTime) {
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
         String formattedTotalTime = sdf.format(new Date(totalTime));
-        JOptionPane.showMessageDialog(null, "Total time: " + formattedTotalTime);
     }
 
     private String formatTime(long time) {
@@ -76,5 +71,9 @@ public class GameTime {
         long minutes = seconds / 60;
         seconds = seconds % 60;
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public long getTime() {
+        return (totalTime / 1000);
     }
 }

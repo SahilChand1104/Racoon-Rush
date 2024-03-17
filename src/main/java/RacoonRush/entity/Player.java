@@ -128,4 +128,6 @@ public class Player extends Entity {
     public void addDonutsLeft() {
         donutsLeft++;
     }
+    public int getScore() { return score; }
+    public int resetScore() { return score = 0; }
 }

@@ -141,6 +141,22 @@ public class GamePanel extends JPanel implements Runnable {
         sound.play();
     }
 
+    public void disableScoreboard() {
+        scoreboard.setVisible(false);
+        time.stopTimer();
+        scoreboard.reset();
+        scoreboard.setDisabled(true);
+        player.resetScore();
+    }
+
+    public void enableScoreboard() {
+        scoreboard.setVisible(true);
+        time.startTimer();
+        scoreboard.reset();
+        scoreboard.setDisabled(false);
+        player.resetScore();
+    }
+
     public Config getConfig() {
         return config;
     }
