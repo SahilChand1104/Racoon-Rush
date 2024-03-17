@@ -90,7 +90,13 @@ public class Player extends Entity {
 
     public void updateScore(int score) {
         this.score += score;
-        this.scoreboard.updateScore(score);
+        this.scoreboard.updateScore(this.score);
+        if (score == 10) {
+            this.scoreboard.showMessage("+10 points!");
+        }
+        else if (score == -20) {
+            this.scoreboard.showMessage("-20 points...");
+        }
     }
 
     public int getWorldX() {

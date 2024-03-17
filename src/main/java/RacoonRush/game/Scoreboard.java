@@ -51,13 +51,6 @@ public class Scoreboard extends JPanel {
 
     public void updateScore(int score) {
         scoreLabel.setText("Score: " + score);
-        if (score == 10) {
-            showMessage("+10 points!");
-        }
-        else if (score == -20) {
-            showMessage("-20 points...");
-        }
-
     }
 
     public void updateTimer(String timeInSeconds) {
