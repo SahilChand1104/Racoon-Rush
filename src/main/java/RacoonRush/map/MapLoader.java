@@ -34,12 +34,14 @@ public class MapLoader {
                 String[] tokens = br.readLine().split(" ");
                 for (int j = 0; j < config.maxWorldCol(); j++) {
                     map[i][j] = tileFactory.createTile(tileTypes.get(Integer.parseInt(tokens[j])));
+                    if (tileTypes.get(Integer.parseInt(tokens[j])) == TileType.DONUT) {
+                        gamePanel.getPlayer().addDonutsLeft();
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return map;
     }
 }

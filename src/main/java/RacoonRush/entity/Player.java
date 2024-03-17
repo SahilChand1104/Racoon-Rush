@@ -15,6 +15,7 @@ public class Player extends Entity {
 
     public final int screenX, screenY;
     private int score;
+    private int donutsLeft;
 
     public Player(GamePanel gamePanel, Scoreboard scoreboard) {
         this.gamePanel = gamePanel;
@@ -27,6 +28,9 @@ public class Player extends Entity {
 
         hitbox = new Rectangle(config.tileSize() / 6, config.tileSize() / 3, config.tileSize() * 2 / 3, config.tileSize() * 2 / 3);
 
+        donutsLeft = 0;
+        System.out.println(donutsLeft);
+
         setDefaultValues();
     }
 
@@ -37,6 +41,8 @@ public class Player extends Entity {
 
         speed = 4;
         dir = Move.DOWN;
+
+        score = 0;
     }
 
     public int leftColumn(int offsetX) {
@@ -92,7 +98,16 @@ public class Player extends Entity {
         this.score += score;
         this.scoreboard.updateScore(this.score);
         if (score == 10) {
-            this.scoreboard.showMessage("+10 points!");
+            this.donutsLeft--;
+            if (donutsLeft == 0) {
+                this.scoreboard.showMessage("+10 points! Hurry to the exit!");
+            }
+            else if (donutsLeft == 1) {
+                this.scoreboard.showMessage("+10 points! 1 more donuts left.");
+            }
+            else {
+                this.scoreboard.showMessage("+10 points! " + donutsLeft + " more donuts left.");
+            }
         }
         else if (score == -20) {
             this.scoreboard.showMessage("-20 points...");
@@ -111,5 +126,7 @@ public class Player extends Entity {
     public int getScreenY() {
         return screenY;
     }
-    public int getScore() { return score; }
+    public void addDonutsLeft() {
+        donutsLeft++;
+    }
 }
