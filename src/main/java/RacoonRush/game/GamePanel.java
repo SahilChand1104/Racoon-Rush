@@ -25,6 +25,8 @@ public class GamePanel extends JPanel implements Runnable {
     private int collectibleAnimationFrame;
     private GameTime time;
 
+    private boolean gameRunning = false;
+
     public GamePanel() {
         imageLoader = new ImageLoader(this);
         keyHandler = new KeyHandler();
@@ -45,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.addKeyListener(uiKeyHandler);
         this.setFocusable(true);
+        disableScoreboard();
     }
 
     public void loadMap(String filePath) {
@@ -215,11 +218,23 @@ public class GamePanel extends JPanel implements Runnable {
         return gameState;
     }
 
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
+
     public void openMenu() {
+        hideScoreboard();
         gameState = GameState.MENU;
     }
 
+    public void closeMenu() {
+        showScoreboard();
+        gameState = GameState.PLAY;
+    }
+
     public void startGame() {
+        gameRunning = true;
+        enableScoreboard();
         gameState = GameState.PLAY;
     }
 
@@ -230,5 +245,7 @@ public class GamePanel extends JPanel implements Runnable {
     public UI getMenuUI() {
         return ui;
     }
+
+
 
 }
