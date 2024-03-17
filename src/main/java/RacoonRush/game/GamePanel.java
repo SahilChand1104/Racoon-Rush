@@ -159,13 +159,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void hideScoreboard() {
         scoreboard.setVisible(false);
-        time.stopTimer();
         scoreboard.setDisabled(true);
     }
 
     public void showScoreboard() {
         scoreboard.setVisible(true);
-        time.startTimer();
         scoreboard.setDisabled(false);
     }
 
