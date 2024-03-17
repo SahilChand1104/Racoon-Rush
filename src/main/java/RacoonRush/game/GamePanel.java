@@ -32,9 +32,6 @@ public class GamePanel extends JPanel implements Runnable {
         player = new Player(this);
         playMusic(0);
         uiKeyHandler = new UIKeyHandler();
-        mapManager = new MapManager(this);
-        collisionDetector = new CollisionDetector(this);
-        player = new Player(this);
         ui = new UI(this);
         gameState = GameState.MENU;
 
