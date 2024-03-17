@@ -29,7 +29,6 @@ public class Player extends Entity {
         hitbox = new Rectangle(config.tileSize() / 6, config.tileSize() / 3, config.tileSize() * 2 / 3, config.tileSize() * 2 / 3);
 
         donutsLeft = 0;
-        System.out.println(donutsLeft);
 
         setDefaultValues();
     }
