@@ -13,6 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final ImageLoader imageLoader;
     private final MapManager mapManager;
     private final KeyHandler keyHandler;
+    private final Sound sound;
     private final UIKeyHandler uiKeyHandler;
     private final CollisionDetector collisionDetector;
     private final Player player;
@@ -25,6 +26,11 @@ public class GamePanel extends JPanel implements Runnable {
     public GamePanel() {
         imageLoader = new ImageLoader(this);
         keyHandler = new KeyHandler();
+        sound  = new Sound();
+        mapManager = new MapManager(this);
+        collisionDetector = new CollisionDetector(this);
+        player = new Player(this);
+        playMusic(0);
         uiKeyHandler = new UIKeyHandler();
         mapManager = new MapManager(this);
         collisionDetector = new CollisionDetector(this);
@@ -118,6 +124,19 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
         }
         g2.dispose();
+    }
+
+    public void playMusic(int i ){
+        sound.setFile(i);
+        sound.play();
+        sound.loop();
+    }
+    public void stopMusic(){
+        sound.stop();
+    }
+    public void PlaySoundEffect(int i){
+        sound.setFile(i);
+        sound.play();
     }
 
     public Config getConfig() {
