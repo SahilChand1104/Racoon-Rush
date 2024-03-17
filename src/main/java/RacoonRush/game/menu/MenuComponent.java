@@ -1,6 +1,6 @@
-package RacoonRush.menu;
+package RacoonRush.game.menu;
 
-import RacoonRush.game.Config;
+import RacoonRush.game.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class MenuComponent {
 
-    private final Menu menu;
+    private final GamePanel gamePanel;
 
     private final int x;
     private final int y;
@@ -22,8 +22,8 @@ public class MenuComponent {
 
     private boolean selected;
 
-    public MenuComponent(Menu menu, int x, int y, ComponentType type) {
-        this.menu = menu;
+    public MenuComponent(GamePanel gamePanel, int x, int y, ComponentType type) {
+        this.gamePanel = gamePanel;
 
         this.x = x;
         this.y = y;
@@ -63,9 +63,9 @@ public class MenuComponent {
 
     public void draw(Graphics2D g2) {
         if (type == ComponentType.BG) {
-            g2.drawImage(image, x, y, Math.max(menu.getHeight(), menu.getWidth()) , Math.max(menu.getHeight(), menu.getWidth()), null);
+            g2.drawImage(image, x, y, Math.max(gamePanel.getHeight(), gamePanel.getWidth()) , Math.max(gamePanel.getHeight(), gamePanel.getWidth()), null);
         } else if (type == ComponentType.BANNER) {
-            g2.drawImage(image, x, y, menu.getWidth(), image.getHeight(),null);
+            g2.drawImage(image, x, y, gamePanel.getWidth(), image.getHeight(),null);
         } else if (type == ComponentType.PLAY || type == ComponentType.SETTINGS) {
             g2.drawImage(image, x, y, null);
         }

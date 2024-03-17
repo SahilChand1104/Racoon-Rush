@@ -1,7 +1,7 @@
-package RacoonRush.menu;
+package RacoonRush.game.menu;
 
+import RacoonRush.game.GamePanel;
 import RacoonRush.game.KeyHandler;
-import RacoonRush.game.Move;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,13 +9,13 @@ import java.util.ArrayList;
 public class UI {
     private final Font arial_40;
 
-    private final Menu menu;
+    private final GamePanel gamePanel;
 
     private final ArrayList<MenuComponent> components;
 
 
-    public UI(Menu menu) {
-        this.menu = menu;
+    public UI(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
         components = new ArrayList<>();
         loadComponents();
@@ -36,21 +36,21 @@ public class UI {
     public void loadComponents() {
 
         // Add Menu Background
-        components.add(new MenuComponent(menu, 0, 0, ComponentType.BG));
+        components.add(new MenuComponent(gamePanel, 0, 0, ComponentType.BG));
         // Add Menu Title
-        components.add(new MenuComponent(menu, 0, 50, ComponentType.BANNER));
+        components.add(new MenuComponent(gamePanel, 0, 50, ComponentType.BANNER));
         // Add Play Button
-        components.add(new MenuComponent(menu, 768/2-200, 200, ComponentType.PLAY));
+        components.add(new MenuComponent(gamePanel, 768/2-200, 200, ComponentType.PLAY));
         // Add Settings Button
-        components.add(new MenuComponent(menu, 768/2-200, 400, ComponentType.SETTINGS));
+        components.add(new MenuComponent(gamePanel, 768/2-200, 400, ComponentType.SETTINGS));
     }
 
 
 
     public void update() { // depending on the keyhandler, get the correct component an modify it
-        KeyHandler keyHandler = menu.getKeyHandler();
-        if (keyHandler.keyTyped();)
-        component.update();
+        KeyHandler keyHandler = gamePanel.getKeyHandler();
+        //if (keyHandler.keyTyped();)
+        //component.update();
     }
 
 
