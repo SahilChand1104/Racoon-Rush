@@ -17,12 +17,12 @@ public class Main {
         GamePanel gamePanel = new GamePanel();
         Scoreboard scoreboard = gamePanel.getScoreboard();
 
-        JPanel contentPane = new JPanel(new BorderLayout());
+        JPanel fullGamePanel = new JPanel(new BorderLayout());
 
-        contentPane.add(scoreboard, BorderLayout.SOUTH);
-        contentPane.add(gamePanel, BorderLayout.CENTER);
+        fullGamePanel.add(scoreboard, BorderLayout.SOUTH);
+        fullGamePanel.add(gamePanel, BorderLayout.CENTER);
 
-        window.setContentPane(contentPane);
+        window.add(fullGamePanel);
 
         window.pack();
 
@@ -31,8 +31,5 @@ public class Main {
 
         gamePanel.loadMap("/maps/world_map.txt");
         gamePanel.startGameThread();
-
-        GameTime time = new GameTime(scoreboard);
-        time.startTimer();
     }
 }

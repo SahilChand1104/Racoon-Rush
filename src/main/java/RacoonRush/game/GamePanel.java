@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable {
     private Thread gameThread;
     private int playerAnimationFrame;
     private int collectibleAnimationFrame;
+    private GameTime time;
 
     public GamePanel() {
         imageLoader = new ImageLoader(this);
@@ -36,6 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
         uiKeyHandler = new UIKeyHandler();
         ui = new UI(this);
         gameState = GameState.MENU;
+        time = new GameTime(scoreboard);
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
@@ -52,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
+        time.startTimer();
     }
 
 

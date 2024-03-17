@@ -4,7 +4,6 @@ import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.map.tile.Tile;
-import RacoonRush.map.tile.TileType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
