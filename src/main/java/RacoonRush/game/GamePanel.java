@@ -19,6 +19,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final Player player;
     private final UI ui;
     private GameState gameState;
+    private final Scoreboard scoreboard;
     private Thread gameThread;
     private int playerAnimationFrame;
     private int collectibleAnimationFrame;
@@ -29,7 +30,8 @@ public class GamePanel extends JPanel implements Runnable {
         sound  = new Sound();
         mapManager = new MapManager(this);
         collisionDetector = new CollisionDetector(this);
-        player = new Player(this);
+        scoreboard = new Scoreboard();
+        player = new Player(this, scoreboard);
         playMusic(0);
         uiKeyHandler = new UIKeyHandler();
         ui = new UI(this);
@@ -170,6 +172,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     public int getCollectibleAnimationFrame() {
         return collectibleAnimationFrame;
+    }
+
+    public Scoreboard getScoreboard() {
+        return scoreboard;
     }
 
     public void setGameState(GameState gameState) {

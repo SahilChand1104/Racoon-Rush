@@ -10,13 +10,15 @@ import java.security.Key;
 
 public class Player extends Entity {
     private final GamePanel gamePanel;
+    private final Scoreboard scoreboard;
     private final Config config;
 
     public final int screenX, screenY;
     private int score;
 
-    public Player(GamePanel gamePanel) {
+    public Player(GamePanel gamePanel, Scoreboard scoreboard) {
         this.gamePanel = gamePanel;
+        this.scoreboard = scoreboard;
         this.config = gamePanel.getConfig();
 
         // Centered in the middle of the map
@@ -88,6 +90,7 @@ public class Player extends Entity {
 
     public void updateScore(int score) {
         this.score += score;
+        this.scoreboard.updateScore(score);
     }
 
     public int getWorldX() {
@@ -102,4 +105,5 @@ public class Player extends Entity {
     public int getScreenY() {
         return screenY;
     }
+    public int getScore() { return score; }
 }

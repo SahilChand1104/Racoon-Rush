@@ -4,6 +4,7 @@ import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.map.tile.Tile;
+import RacoonRush.map.tile.TileType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -73,7 +74,7 @@ public class MapManager{
         int endY = getEnd(player.getWorldY(), player.getScreenY(), config.maxWorldRow());
 
         drawBackground(g2);
-        
+
         for (int i = startY; i < endY; i++) {
             for (int j = startX; j < endX; j++) {
                 if (map[i][j] != null) {
