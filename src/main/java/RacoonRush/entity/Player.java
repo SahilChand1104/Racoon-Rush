@@ -1,9 +1,12 @@
 package RacoonRush.entity;
 
 import RacoonRush.game.*;
+import RacoonRush.game.menu.UIKeyHandler;
+import RacoonRush.game.menu.UI_Pressed;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.security.Key;
 
 public class Player extends Entity {
     private final GamePanel gamePanel;
@@ -52,7 +55,11 @@ public class Player extends Entity {
 
     public void update() {
         KeyHandler keyHandler = gamePanel.getKeyHandler();
+        UIKeyHandler uiKeyHandler = gamePanel.getUIKeyHandler();
         CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
+        if (uiKeyHandler.get(UI_Pressed.PAUSE)) {
+            gamePanel.openMenu();
+        }
         if (!keyHandler.get(Move.UP) && !keyHandler.get(Move.DOWN) && !keyHandler.get(Move.LEFT) && !keyHandler.get(Move.RIGHT)) {
             return;
         }
