@@ -89,6 +89,10 @@ public class GamePanel extends JPanel implements Runnable {
             case PLAY:
                 player.update();
                 break;
+            case QUIT:
+                gameThread = null;
+                System.exit(0);
+                break;
             default:
                 break;
         }
@@ -152,8 +156,20 @@ public class GamePanel extends JPanel implements Runnable {
         return gameState;
     }
 
+    public void openMenu() {
+        gameState = GameState.MENU;
+    }
+
     public void startGame() {
         gameState = GameState.PLAY;
+    }
+
+    public void stopGame() {
+        gameState = GameState.QUIT;
+    }
+
+    public UI getMenuUI() {
+        return ui;
     }
 
 }

@@ -1,6 +1,7 @@
 package RacoonRush.game.menu;
 
 import RacoonRush.game.GamePanel;
+import RacoonRush.game.GameState;
 import RacoonRush.game.ImageLoader;
 
 import javax.imageio.ImageIO;
@@ -78,5 +79,14 @@ public class MenuComponent {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public void doAction() {
+        if (type == ComponentType.PLAY) {
+            gamePanel.startGame();
+        } else if (type == ComponentType.SETTINGS) {
+            gamePanel.getMenuUI().setMenuState(MenuState.SETTINGS);
+            //gamePanel.setGameState(GameState.SETTINGS);
+        }
     }
 }

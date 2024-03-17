@@ -60,6 +60,9 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_ESCAPE) {
             pressedUI.put(UI_Pressed.ESCAPE, true);
         }
+        if (code == KeyEvent.VK_P) {
+            pressedUI.put(UI_Pressed.PAUSE, true);
+        }
 
     }
 
@@ -88,6 +91,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_ESCAPE) {
             pressedUI.put(UI_Pressed.ESCAPE, false);
+        }
+        if (code == KeyEvent.VK_P) {
+            pressedUI.put(UI_Pressed.PAUSE, false);
         }
     }
 }

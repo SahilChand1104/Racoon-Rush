@@ -13,13 +13,20 @@ public class UI {
     private final GamePanel gamePanel;
 
     private final EnumMap<ComponentType, MenuComponent> components;
+    private final ArrayList<MenuComponent> selectableComponents;
+    private int selectedComponentIndex;
+
+    private MenuState menuState;
 
 
     public UI(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
         components = new EnumMap<>(ComponentType.class);
+        selectableComponents = new ArrayList<>();
         loadComponents();
+        selectedComponentIndex = 0;
+        menuState = MenuState.MAIN;
     }
 
     public void drawString(Graphics2D g2, String text, Font font, int x, int y) {
@@ -33,40 +40,47 @@ public class UI {
     }
 
     public void loadComponents() {
+        MenuComponent playButton = new MenuComponent(gamePanel, 768 / 2 - 200, 200, ComponentType.PLAY, gamePanel.getImageLoader().getMenuImage(ComponentType.PLAY));
+        MenuComponent settingsButton = new MenuComponent(gamePanel, 768 / 2 - 200, 400, ComponentType.SETTINGS, gamePanel.getImageLoader().getMenuImage(ComponentType.SETTINGS));
+
 
         components.put(ComponentType.BG, new MenuComponent(gamePanel, 0, 0, ComponentType.BG, gamePanel.getImageLoader().getMenuImage(ComponentType.BG)));
         components.put(ComponentType.BANNER, new MenuComponent(gamePanel, 0, 50, ComponentType.BANNER, gamePanel.getImageLoader().getMenuImage(ComponentType.BANNER)));
-        components.put(ComponentType.PLAY, new MenuComponent(gamePanel, 768 / 2 - 200, 200, ComponentType.PLAY, gamePanel.getImageLoader().getMenuImage(ComponentType.PLAY)));
-        components.put(ComponentType.SETTINGS, new MenuComponent(gamePanel, 768 / 2 - 200, 400, ComponentType.SETTINGS, gamePanel.getImageLoader().getMenuImage(ComponentType.SETTINGS)));
+        components.put(ComponentType.PLAY, playButton);
+        selectableComponents.add(playButton);
+        components.put(ComponentType.SETTINGS, settingsButton);
+        selectableComponents.add(settingsButton);
+
     }
 
 
 
-    public void update() { // depending on the keyhandler, get the correct component an modify it
+    public void update() { // depending on the keyhandler, get the correct component and modify it
         KeyHandler keyHandler = gamePanel.getKeyHandler();
 
-        if (keyHandler.getUI_Pressed(UI_Pressed.UP)) {
-            components.get(ComponentType.PLAY).setSelected(true);
-            components.get(ComponentType.SETTINGS).setSelected(false);
-        } else if (keyHandler.getUI_Pressed(UI_Pressed.DOWN)) {
-            components.get(ComponentType.SETTINGS).setSelected(true);
-            components.get(ComponentType.PLAY).setSelected(false);
-            System.out.println("DOWN");
-        } else if (keyHandler.getUI_Pressed(UI_Pressed.LEFT)) {
-            System.out.println("LEFT");
-        } else if (keyHandler.getUI_Pressed(UI_Pressed.RIGHT)) {
-            System.out.println("RIGHT");
-        } else if (keyHandler.getUI_Pressed(UI_Pressed.ENTER)) {
-            if (components.get(ComponentType.PLAY).isSelected()) {
-                gamePanel.startGame();
-            }
-        } else if (keyHandler.getUI_Pressed(UI_Pressed.ESCAPE)) {
-            System.out.println("ESCAPE");
+        for (MenuComponent component : selectableComponents) {
+            component.setSelected(false);
         }
+
+        if (keyHandler.getUI_Pressed(UI_Pressed.UP)) {
+            if (selectedComponentIndex > 0) {
+                selectedComponentIndex--;
+            }
+        } else if (keyHandler.getUI_Pressed(UI_Pressed.DOWN)) {
+            if (selectedComponentIndex < selectableComponents.size() - 1) {
+                selectedComponentIndex++;
+            }
+        } else if (keyHandler.getUI_Pressed(UI_Pressed.ENTER)) {
+            selectableComponents.get(selectedComponentIndex).doAction();
+        } else if (keyHandler.getUI_Pressed(UI_Pressed.ESCAPE)) {
+            gamePanel.stopGame();
+        }
+
+        selectableComponents.get(selectedComponentIndex).setSelected(true);
         //component.update();
     }
 
-
-
-
+    public void setMenuState(MenuState menuState) {
+        this.menuState = menuState;
+    }
 }
