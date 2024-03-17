@@ -8,8 +8,8 @@ import java.util.EnumMap;
 
 public class ImageLoader {
     private final GamePanel gamePanel;
-    private final EnumMap<Move, BufferedImage> playerImage0;
-    private final EnumMap<Move, BufferedImage> playerImage1;
+    private final ArrayList<EnumMap<Move, BufferedImage>> playerImages;
+    private final ArrayList<EnumMap<Move, BufferedImage>> enemyRacoonImages;
     private final ArrayList<BufferedImage> backgroundImages;
     private final ArrayList<BufferedImage> wallImages;
     private final ArrayList<BufferedImage> treeImages;
@@ -18,8 +18,8 @@ public class ImageLoader {
 
     public ImageLoader(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        playerImage0 = new EnumMap<>(Move.class);
-        playerImage1 = new EnumMap<>(Move.class);
+        playerImages = new ArrayList<>();
+        enemyRacoonImages = new ArrayList<>();
         backgroundImages = new ArrayList<>();
         wallImages = new ArrayList<>();
         treeImages = new ArrayList<>();
@@ -50,10 +50,21 @@ public class ImageLoader {
     }
 
     private void loadAllImages() {
+        EnumMap<Move, BufferedImage> playerImages0 = new EnumMap<>(Move.class);
+        EnumMap<Move, BufferedImage> playerImages1 = new EnumMap<>(Move.class);
+        EnumMap<Move, BufferedImage> enemyRacoonImages0 = new EnumMap<>(Move.class);
+        EnumMap<Move, BufferedImage> enemyRacoonImages1 = new EnumMap<>(Move.class);
         for (Move move : Move.values()) {
-            playerImage0.put(move, loadImage("/entity/player/player_" + move.name().toLowerCase() + "_0.png", true));
-            playerImage1.put(move, loadImage("/entity/player/player_" + move.name().toLowerCase() + "_1.png", true));
+            playerImages0.put(move, loadImage("/entity/player/player_" + move.name().toLowerCase() + "_0.png", true));
+            playerImages1.put(move, loadImage("/entity/player/player_" + move.name().toLowerCase() + "_1.png", true));
+            enemyRacoonImages0.put(move, loadImage("/entity/enemy/RacoonEnemy/enemy_racoon_" + move.name().toLowerCase() + "_0.png", true));
+            enemyRacoonImages1.put(move, loadImage("/entity/enemy/RacoonEnemy/enemy_racoon_" + move.name().toLowerCase() + "_1.png", true));
         }
+
+        playerImages.add(playerImages0);
+        playerImages.add(playerImages1);
+        enemyRacoonImages.add(enemyRacoonImages0);
+        enemyRacoonImages.add(enemyRacoonImages1);
 
         for (int i = 0; i < 4; i++) {
             backgroundImages.add(loadImage("/maps/map_bg_0" + (i + 1) + ".png", false));
@@ -72,8 +83,12 @@ public class ImageLoader {
         leftoverImages.add(loadImage("/entity/collectible/leftovers_v4.png", true));
     }
 
-    public BufferedImage getPlayerImage(Move move, int index) {
-        return index == 0 ? playerImage0.get(move) : playerImage1.get(move);
+    public ArrayList<EnumMap<Move, BufferedImage>> getPlayerImages() {
+        return playerImages;
+    }
+
+    public ArrayList<EnumMap<Move, BufferedImage>> getEnemyRacoonImages() {
+        return enemyRacoonImages;
     }
 
     public BufferedImage getBackground(int index) {

@@ -1,6 +1,7 @@
 package RacoonRush.game;
 
 import RacoonRush.entity.Player;
+import RacoonRush.entity.enemy.EnemyManager;
 import RacoonRush.map.MapManager;
 
 import javax.swing.*;
@@ -9,19 +10,21 @@ import java.awt.*;
 public class GamePanel extends JPanel implements Runnable {
     private final Config config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
     private final ImageLoader imageLoader;
-    private final MapManager mapManager;
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
+    private final MapManager mapManager;
+    private final EnemyManager enemyManager;
     private final Player player;
     private Thread gameThread;
     private int playerAnimationFrame;
-    private int collectibleAnimationFrame;
+    private int itemAnimationFrame;
 
     public GamePanel() {
         imageLoader = new ImageLoader(this);
         keyHandler = new KeyHandler();
-        mapManager = new MapManager(this);
         collisionDetector = new CollisionDetector(this);
+        mapManager = new MapManager(this);
+        enemyManager = new EnemyManager(this);
         player = new Player(this);
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
@@ -49,7 +52,7 @@ public class GamePanel extends JPanel implements Runnable {
         int animationCounter = 0;
         int animationInterval = config.FPS() / config.animationFPS();
         playerAnimationFrame = 0;
-        collectibleAnimationFrame = 0;
+        itemAnimationFrame = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
@@ -59,12 +62,8 @@ public class GamePanel extends JPanel implements Runnable {
                 animationCounter++;
                 if (animationCounter % animationInterval == 0) {
                     playerAnimationFrame = (playerAnimationFrame == 0) ? 1 : 0;
+                    itemAnimationFrame = (itemAnimationFrame < 11) ? itemAnimationFrame + 1 : 0;
                     animationCounter = 0;
-                    if (collectibleAnimationFrame < 11) {
-                        collectibleAnimationFrame++;
-                    } else {
-                        collectibleAnimationFrame = 0;
-                    }
                 }
                 update();
                 repaint();
@@ -75,6 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
+        enemyManager.update();
         player.update();
     }
 
@@ -83,7 +83,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
         mapManager.draw(g2);
-        player.draw(g2, playerAnimationFrame);
+        enemyManager.draw(g2);
+        player.draw(g2);
         g2.dispose();
     }
 
@@ -99,12 +100,17 @@ public class GamePanel extends JPanel implements Runnable {
         return keyHandler;
     }
 
+    public CollisionDetector getCollisionDetector() {
+        return collisionDetector;
+    }
+
+
     public MapManager getMapManager() {
         return mapManager;
     }
 
-    public CollisionDetector getCollisionDetector() {
-        return collisionDetector;
+    public EnemyManager getEnemyManager() {
+        return enemyManager;
     }
 
     public Player getPlayer() {
@@ -115,8 +121,8 @@ public class GamePanel extends JPanel implements Runnable {
         return playerAnimationFrame;
     }
 
-    public int getCollectibleAnimationFrame() {
-        return collectibleAnimationFrame;
+    public int getItemAnimationFrame() {
+        return itemAnimationFrame;
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public abstract class Tile {
     protected ArrayList<BufferedImage> images;
 
-    public Tile (ArrayList<BufferedImage> images) {
+    public Tile(ArrayList<BufferedImage> images) {
         this.images = images;
     }
 

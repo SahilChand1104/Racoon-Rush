@@ -5,8 +5,7 @@ import RacoonRush.game.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Player extends Entity {
-    private final GamePanel gamePanel;
+public class Player extends Entity implements Manager {
     private final Config config;
 
     public final int screenX, screenY;
@@ -14,13 +13,14 @@ public class Player extends Entity {
 
     public Player(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        this.config = gamePanel.getConfig();
+        config = gamePanel.getConfig();
+
+        hitbox = new Rectangle(config.tileSize() / 6, config.tileSize() / 3, config.tileSize() * 2 / 3, config.tileSize() * 2 / 3);
+        images = gamePanel.getImageLoader().getPlayerImages();
 
         // Centered in the middle of the map
         screenX = config.screenWidth() / 2 - config.tileSize() / 2;
         screenY = config.screenHeight() / 2 - config.tileSize() / 2;
-
-        hitbox = new Rectangle(config.tileSize() / 6, config.tileSize() / 3, config.tileSize() * 2 / 3, config.tileSize() * 2 / 3);
 
         setDefaultValues();
     }
@@ -72,23 +72,16 @@ public class Player extends Entity {
         }
     }
 
-    public void draw(Graphics2D g2, int animationFrame) {
-        ImageLoader imageLoader = gamePanel.getImageLoader();
-        animationFrame = gamePanel.getKeyHandler().get(dir) ? animationFrame : 0;
-        BufferedImage image = imageLoader.getPlayerImage(dir, animationFrame);
-        g2.drawImage(image, screenX, screenY, config.tileSize(), config.tileSize(), null);
+    public void draw(Graphics2D g2) {
+        int animationFrame = gamePanel.getKeyHandler().get(dir) ? gamePanel.getPlayerAnimationFrame() : 0;
+        g2.drawImage(images.get(animationFrame).get(dir), screenX, screenY, config.tileSize(), config.tileSize(), null);
     }
 
     public void updateScore(int score) {
         this.score += score;
     }
 
-    public int getWorldX() {
-        return worldX;
-    }
-    public int getWorldY() {
-        return worldY;
-    }
+
     public int getScreenX() {
         return screenX;
     }

@@ -3,12 +3,14 @@ package RacoonRush.map;
 import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
+import RacoonRush.game.Manager;
 import RacoonRush.map.tile.Tile;
+import RacoonRush.map.tile.Wall;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class MapManager{
+public class MapManager implements Manager {
 
     private final GamePanel gamePanel;
     private final MapLoader mapLoader;
@@ -51,18 +53,20 @@ public class MapManager{
         int screenX = getScreenCoordinate(j, player.getWorldX(), player.getScreenX());
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
 
-        g2.drawImage(map[i][j].getImage(i, j, gamePanel.getCollectibleAnimationFrame()), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        g2.drawImage(map[i][j].getImage(i, j, gamePanel.getItemAnimationFrame()), screenX, screenY, config.tileSize(), config.tileSize(), null);
     }
 
     private int getStart(int world, int screen) {
         Config config = gamePanel.getConfig();
-        return Math.max((world - screen - config.screenWidth()) / config.tileSize(), 0);
+        return Math.max((world - screen) / config.tileSize(), 0);
     }
 
     private int getEnd(int world, int screen, int max) {
         Config config = gamePanel.getConfig();
-        return Math.min((world + screen + config.screenWidth()) / config.tileSize(), max);
+        return Math.min((world + screen) / config.tileSize() + 2, max);
     }
+
+    public void update() {}
 
     public void draw(Graphics2D g2) {
         Config config = gamePanel.getConfig();
@@ -92,5 +96,13 @@ public class MapManager{
             return true;
         }
         return map[row][column].onCollide(gamePanel.getPlayer());
+    }
+
+    public boolean isWall(int row, int column) {
+        Config config = gamePanel.getConfig();
+        if (row < 0 || row >= config.maxWorldRow() || column < 0 || column >= config.maxWorldCol()) {
+            return true;
+        }
+        return map[row][column] instanceof Wall;
     }
 }
