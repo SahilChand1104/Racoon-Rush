@@ -47,12 +47,10 @@ public class UI {
 
 
 
-    public void update() {
+    public void update() { // depending on the keyhandler, get the correct component an modify it
         KeyHandler keyHandler = menu.getKeyHandler();
-        for (MenuComponent component : components) {
-
-            component.update();
-        }
+        if (keyHandler.keyTyped();)
+        component.update();
     }
 
 
