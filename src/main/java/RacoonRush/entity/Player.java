@@ -1,10 +1,12 @@
 package RacoonRush.entity;
 
 import RacoonRush.game.*;
+import RacoonRush.game.menu.UIKeyHandler;
 import RacoonRush.game.menu.UI_Pressed;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.security.Key;
 
 public class Player extends Entity {
     private final GamePanel gamePanel;
@@ -53,24 +55,25 @@ public class Player extends Entity {
 
     public void update() {
         KeyHandler keyHandler = gamePanel.getKeyHandler();
+        UIKeyHandler uiKeyHandler = gamePanel.getUIKeyHandler();
         CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
-        if (keyHandler.getUI_Pressed(UI_Pressed.PAUSE)) {
+        if (uiKeyHandler.get(UI_Pressed.PAUSE)) {
             gamePanel.openMenu();
         }
-        if (!keyHandler.getMove(Move.UP) && !keyHandler.getMove(Move.DOWN) && !keyHandler.getMove(Move.LEFT) && !keyHandler.getMove(Move.RIGHT)) {
+        if (!keyHandler.get(Move.UP) && !keyHandler.get(Move.DOWN) && !keyHandler.get(Move.LEFT) && !keyHandler.get(Move.RIGHT)) {
             return;
         }
 
-        if (keyHandler.getMove(Move.UP) && collisionDetector.move(this, Move.UP)) {
+        if (keyHandler.get(Move.UP) && collisionDetector.move(this, Move.UP)) {
             dir = Move.UP;
             worldY -= speed;
-        } else if (keyHandler.getMove(Move.DOWN) && collisionDetector.move(this, Move.DOWN)) {
+        } else if (keyHandler.get(Move.DOWN) && collisionDetector.move(this, Move.DOWN)) {
             dir = Move.DOWN;
             worldY += speed;
-        } else if (keyHandler.getMove(Move.LEFT) && collisionDetector.move(this, Move.LEFT)) {
+        } else if (keyHandler.get(Move.LEFT) && collisionDetector.move(this, Move.LEFT)) {
             dir = Move.LEFT;
             worldX -= speed;
-        } else if (keyHandler.getMove(Move.RIGHT) && collisionDetector.move(this, Move.RIGHT)) {
+        } else if (keyHandler.get(Move.RIGHT) && collisionDetector.move(this, Move.RIGHT)) {
             dir = Move.RIGHT;
             worldX += speed;
         }
@@ -78,7 +81,7 @@ public class Player extends Entity {
 
     public void draw(Graphics2D g2, int animationFrame) {
         ImageLoader imageLoader = gamePanel.getImageLoader();
-        animationFrame = gamePanel.getKeyHandler().getMove(dir) ? animationFrame : 0;
+        animationFrame = gamePanel.getKeyHandler().get(dir) ? animationFrame : 0;
         BufferedImage image = imageLoader.getPlayerImage(dir, animationFrame);
         g2.drawImage(image, screenX, screenY, config.tileSize(), config.tileSize(), null);
     }

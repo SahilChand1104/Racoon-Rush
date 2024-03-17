@@ -56,23 +56,23 @@ public class UI {
 
 
     public void update() { // depending on the keyhandler, get the correct component and modify it
-        KeyHandler keyHandler = gamePanel.getKeyHandler();
+        UIKeyHandler uiKeyHandler = gamePanel.getUIKeyHandler();
 
         for (MenuComponent component : selectableComponents) {
             component.setSelected(false);
         }
 
-        if (keyHandler.getUI_Pressed(UI_Pressed.UP)) {
+        if (uiKeyHandler.get(UI_Pressed.UP)) {
             if (selectedComponentIndex > 0) {
                 selectedComponentIndex--;
             }
-        } else if (keyHandler.getUI_Pressed(UI_Pressed.DOWN)) {
+        } else if (uiKeyHandler.get(UI_Pressed.DOWN)) {
             if (selectedComponentIndex < selectableComponents.size() - 1) {
                 selectedComponentIndex++;
             }
-        } else if (keyHandler.getUI_Pressed(UI_Pressed.ENTER)) {
+        } else if (uiKeyHandler.get(UI_Pressed.ENTER)) {
             selectableComponents.get(selectedComponentIndex).doAction();
-        } else if (keyHandler.getUI_Pressed(UI_Pressed.ESCAPE)) {
+        } else if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
             gamePanel.stopGame();
         }
 

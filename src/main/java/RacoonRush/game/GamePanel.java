@@ -2,6 +2,7 @@ package RacoonRush.game;
 
 import RacoonRush.entity.Player;
 import RacoonRush.game.menu.UI;
+import RacoonRush.game.menu.UIKeyHandler;
 import RacoonRush.map.MapManager;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final ImageLoader imageLoader;
     private final MapManager mapManager;
     private final KeyHandler keyHandler;
+    private final UIKeyHandler uiKeyHandler;
     private final CollisionDetector collisionDetector;
     private final Player player;
     private final UI ui;
@@ -23,6 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
     public GamePanel() {
         imageLoader = new ImageLoader(this);
         keyHandler = new KeyHandler();
+        uiKeyHandler = new UIKeyHandler();
         mapManager = new MapManager(this);
         collisionDetector = new CollisionDetector(this);
         player = new Player(this);
@@ -33,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
+        this.addKeyListener(uiKeyHandler);
         this.setFocusable(true);
     }
 
@@ -126,6 +130,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     public KeyHandler getKeyHandler() {
         return keyHandler;
+    }
+
+    public UIKeyHandler getUIKeyHandler() {
+        return uiKeyHandler;
     }
 
     public MapManager getMapManager() {
