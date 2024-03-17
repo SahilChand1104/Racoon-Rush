@@ -12,6 +12,9 @@ public class ImageLoader {
     private final EnumMap<Move, BufferedImage> playerImage1;
     private final ArrayList<BufferedImage> backgroundImages;
     private final ArrayList<BufferedImage> wallImages;
+
+    private final EnumMap<ComponentType, BufferedImage> menuImages;
+    private final EnumMap<ComponentType, BufferedImage> menuSelectedImages;
     private final ArrayList<BufferedImage> treeImages;
     private final ArrayList<BufferedImage> donutImages;
     private final ArrayList<BufferedImage> leftoverImages;
@@ -26,6 +29,8 @@ public class ImageLoader {
         donutImages = new ArrayList<>();
         leftoverImages = new ArrayList<>();
 
+        menuImages = new EnumMap<>(ComponentType.class);
+        menuSelectedImages = new EnumMap<>(ComponentType.class);
         loadAllImages();
     }
 
@@ -70,6 +75,13 @@ public class ImageLoader {
         }
 
         leftoverImages.add(loadImage("/entity/collectible/leftovers_v4.png", true));
+
+        menuImages.put(ComponentType.BG, loadImage("/menu/menu_bg.png", false));
+        menuImages.put(ComponentType.BANNER, loadImage("/menu/menu_title_v2.png", false));
+        menuImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_0.png", false));
+        menuImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_settings_0.png", false));
+        menuSelectedImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_1.png", false));
+        menuSelectedImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_settings_1.png", false));
     }
 
     public BufferedImage getPlayerImage(Move move, int index) {
@@ -94,5 +106,13 @@ public class ImageLoader {
 
     public ArrayList<BufferedImage> getLeftoverImages() {
         return leftoverImages;
+    }
+
+    public BufferedImage getMenuImage(ComponentType type) {
+        return menuImages.get(type);
+    }
+
+    public BufferedImage getMenuSelectedImage(ComponentType type) {
+        return menuSelectedImages.get(type);
     }
 }

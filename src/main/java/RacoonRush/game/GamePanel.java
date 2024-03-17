@@ -1,6 +1,7 @@
 package RacoonRush.game;
 
 import RacoonRush.entity.Player;
+import RacoonRush.game.menu.UI;
 import RacoonRush.map.MapManager;
 
 import javax.swing.*;
@@ -13,6 +14,8 @@ public class GamePanel extends JPanel implements Runnable {
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
     private final Player player;
+    private final UI ui;
+    private GameState gameState;
     private Thread gameThread;
     private int playerAnimationFrame;
     private int collectibleAnimationFrame;
@@ -23,6 +26,8 @@ public class GamePanel extends JPanel implements Runnable {
         mapManager = new MapManager(this);
         collisionDetector = new CollisionDetector(this);
         player = new Player(this);
+        ui = new UI(this);
+        gameState = GameState.MENU;
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
@@ -77,15 +82,33 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
+        switch (gameState) {
+            case MENU:
+                ui.update();
+                break;
+            case PLAY:
+                player.update();
+                break;
+            default:
+                break;
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        mapManager.draw(g2);
-        player.draw(g2, playerAnimationFrame);
+        switch (gameState) {
+            case MENU:
+                ui.draw(g2);
+                break;
+            case PLAY:
+                mapManager.draw(g2);
+                player.draw(g2, playerAnimationFrame);
+                break;
+            default:
+                break;
+        }
         g2.dispose();
     }
 
@@ -119,6 +142,18 @@ public class GamePanel extends JPanel implements Runnable {
 
     public int getCollectibleAnimationFrame() {
         return collectibleAnimationFrame;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void startGame() {
+        gameState = GameState.PLAY;
     }
 
 }

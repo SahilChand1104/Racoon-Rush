@@ -9,8 +9,7 @@ public class Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(true);
         window.setTitle("Racoon Rush");
-        window.setLocationRelativeTo(null);
-        window.setVisible(true);
+
 
 
 
@@ -18,6 +17,9 @@ public class Main {
         window.add(gamePanel);
 
         window.pack();
+
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
 
         gamePanel.loadMap("/maps/world_map.txt");
         gamePanel.startGameThread();

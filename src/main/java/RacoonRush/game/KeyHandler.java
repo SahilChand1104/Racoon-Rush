@@ -15,11 +15,18 @@ public class KeyHandler implements KeyListener {
         for (Move move : Move.values()) {
             pressed.put(move, false);
         }
+        for (UI_Pressed ui_pressed : UI_Pressed.values()) {
+            pressedUI.put(ui_pressed, false);
+        }
     }
 
-    public boolean get(Move move) {
+    public boolean getMove(Move move) {
         //System.out.println(pressed.get(move));
         return pressed.get(move);
+    }
+
+    public boolean getUI_Pressed(UI_Pressed ui_pressed) {
+        return pressedUI.get(ui_pressed);
     }
 
     @Override
@@ -29,11 +36,9 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //System.out.println("Key Pressed");
         int code = e.getKeyCode();
 
         if (code == KeyEvent.VK_W) {
-            System.out.println("W Pressed");
             pressed.put(Move.UP, true);
             pressedUI.put(UI_Pressed.UP, true);
         }
