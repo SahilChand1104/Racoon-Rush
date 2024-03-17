@@ -1,5 +1,7 @@
 package RacoonRush.game;
 
+import RacoonRush.game.menu.ComponentType;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
