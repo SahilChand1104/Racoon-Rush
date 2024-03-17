@@ -1,5 +1,6 @@
 package RacoonRush.game;
 
+
 import javax.swing.JFrame;
 
 public class Main {
@@ -8,6 +9,9 @@ public class Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(true);
         window.setTitle("Racoon Rush");
+
+
+
 
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
