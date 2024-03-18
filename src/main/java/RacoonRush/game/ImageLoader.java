@@ -20,6 +20,7 @@ public class ImageLoader {
     private final ArrayList<BufferedImage> treeImages;
     private final ArrayList<BufferedImage> donutImages;
     private final ArrayList<BufferedImage> leftoverImages;
+    private final ArrayList<BufferedImage> pizzaImages;
 
     public ImageLoader(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -30,6 +31,7 @@ public class ImageLoader {
         treeImages = new ArrayList<>();
         donutImages = new ArrayList<>();
         leftoverImages = new ArrayList<>();
+        pizzaImages = new ArrayList<>();
 
         menuImages = new EnumMap<>(ComponentType.class);
         menuSelectedImages = new EnumMap<>(ComponentType.class);
@@ -78,6 +80,8 @@ public class ImageLoader {
 
         leftoverImages.add(loadImage("/entity/collectible/leftovers_v4.png", true));
 
+        pizzaImages.add(loadImage("/entity/collectible/golden_pizza_v1.png", true));
+
         menuImages.put(ComponentType.BG, loadImage("/menu/menu_bg.png", false));
         menuImages.put(ComponentType.BANNER, loadImage("/menu/menu_title_v2.png", false));
         menuImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_0.png", false));
@@ -108,6 +112,10 @@ public class ImageLoader {
 
     public ArrayList<BufferedImage> getLeftoverImages() {
         return leftoverImages;
+    }
+
+    public ArrayList<BufferedImage> getPizzaImages() {
+        return pizzaImages;
     }
 
     public BufferedImage getMenuImage(ComponentType type) {

@@ -12,6 +12,7 @@ public class Item extends Tile {
     private final GamePanel gamePanel;
     private boolean collected;
 
+
     public Item( ArrayList<BufferedImage> images, int score, GamePanel gamePanel) {
         super(images);
         this.gamePanel = gamePanel;
@@ -31,6 +32,9 @@ public class Item extends Tile {
             else if(score == -20){
                 gamePanel.PlaySoundEffect(2);
             }
+            else if(score == 50){
+                gamePanel.PlaySoundEffect(1);
+            }
         }
         return true;
     }
@@ -40,4 +44,5 @@ public class Item extends Tile {
     public BufferedImage getImage(int x, int y, int animationFrame) {
         return collected ? null : images.get(animationFrame % images.size());
     }
+
 }
