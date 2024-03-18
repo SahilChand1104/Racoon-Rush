@@ -19,21 +19,21 @@ public class GameTime {
             public void actionPerformed(ActionEvent e) {
                 if (!isPaused) {
                     updateTimeLabel(scoreboard);
-                    totalTime = System.currentTimeMillis() - startTime;
+                    totalTime = System.nanoTime() - startTime;
                 }
             }
         });
     }
 
     public void startTimer() {
-        startTime = System.currentTimeMillis();
+        startTime = System.nanoTime();
         timer.start();
     }
 
     public void pauseTimer() {
         if (!isPaused) {
             isPaused = true;
-            pausedTime = System.currentTimeMillis();
+            pausedTime = System.nanoTime();
             timer.stop();
         }
     }
@@ -41,7 +41,7 @@ public class GameTime {
     public void resumeTimer() {
         if (isPaused) {
             isPaused = false;
-            startTime += System.currentTimeMillis() - pausedTime;
+            startTime += System.nanoTime() - pausedTime;
             timer.start();
         }
     }
@@ -55,9 +55,9 @@ public class GameTime {
     }
 
     private void updateTimeLabel(Scoreboard sb) {
-        long elapsedTime = System.currentTimeMillis() - startTime;
+        long elapsedTime = System.nanoTime() - startTime;
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-        String formattedTime = sdf.format(new Date(elapsedTime));
+        String formattedTime = sdf.format(new Date(elapsedTime/1_000_000));
         sb.updateTimer(formattedTime);
     }
 
@@ -67,13 +67,13 @@ public class GameTime {
     }
 
     private String formatTime(long time) {
-        long seconds = time / 1000;
+        long seconds = time / 1_000_000;
         long minutes = seconds / 60;
         seconds = seconds % 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
 
     public long getTime() {
-        return (totalTime / 1000);
+        return (totalTime / 1_000_000);
     }
 }
