@@ -48,15 +48,21 @@ public class MenuComponent {
             g2.drawImage(image, x, y, Math.max(gamePanel.getHeight(), gamePanel.getWidth()) , Math.max(gamePanel.getHeight(), gamePanel.getWidth()), null);
         } else if (type == ComponentType.BANNER) {
             g2.drawImage(image, x, y, gamePanel.getWidth(), image.getHeight(),null);
-        } else if (type == ComponentType.PLAY || type == ComponentType.SETTINGS) {
+        } else if (type == ComponentType.PLAY) {
             if (selected) {
                 g2.drawImage(imageLoader.getMenuSelectedImage(type), x, y, null);
             } else {
                 g2.drawImage(imageLoader.getMenuImage(type), x, y, null);
             }
-
+        } else if (type == ComponentType.SETTINGS) {
+            int offset = image.getWidth()/2;
+            int xpos = gamePanel.getWidth()/2 - offset+15;
+            if (selected) {
+                g2.drawImage(imageLoader.getMenuSelectedImage(type), xpos, y, null);
+            } else {
+                g2.drawImage(imageLoader.getMenuImage(type), xpos, y, null);
+            }
         }
-
     }
 
     public void setSelected(boolean selected) {

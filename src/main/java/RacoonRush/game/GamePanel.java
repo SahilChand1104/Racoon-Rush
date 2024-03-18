@@ -186,6 +186,12 @@ public class GamePanel extends JPanel implements Runnable {
                 int x = (getWidth() - loseWidth) / 2;
                 int y = getHeight() / 2;
                 g2.drawString(gameOverMessage, x, y);
+
+                String gameOverMessage2 = "Press ESC to quit";
+                loseWidth = fontMetricsLose.stringWidth(gameOverMessage2);
+                int x1 = (getWidth() - loseWidth) / 2;
+                int y1 = getHeight() / 2 + 200;
+                g2.drawString(gameOverMessage2, x1, y1);
                 break;
             case WIN:
                 g2.setColor(Color.GREEN);
@@ -210,6 +216,12 @@ public class GamePanel extends JPanel implements Runnable {
                     int messageY = winY + fontMetricsWin.getHeight() * i;
                     g2.drawString(winMessages[i], messageX, messageY);
                 }
+
+                gameOverMessage2 = "Press ESC to quit";
+                loseWidth = fontMetricsWin.stringWidth(gameOverMessage2);
+                x1 = (getWidth() - loseWidth) / 2;
+                y1 = getHeight() / 2 + 200;
+                g2.drawString(gameOverMessage2, x1, y1);
                 break;
             default:
                 break;

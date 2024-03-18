@@ -85,9 +85,9 @@ public class ImageLoader {
         menuImages.put(ComponentType.BG, loadImage("/menu/menu_bg.png", false));
         menuImages.put(ComponentType.BANNER, loadImage("/menu/menu_title_v2.png", false));
         menuImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_0.png", false));
-        menuImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_settings_0.png", false));
+        menuImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_0.png", false));
         menuSelectedImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_1.png", false));
-        menuSelectedImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_settings_1.png", false));
+        menuSelectedImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_1.png", false));
     }
 
     public BufferedImage getPlayerImage(Move move, int index) {
