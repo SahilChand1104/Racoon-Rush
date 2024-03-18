@@ -6,6 +6,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.EnumMap;
 
+/**
+ * KeyHandler class
+ * This is responsible for
+ */
 public class KeyHandler implements KeyListener {
     // Stores which keys are pressed
     private final EnumMap<Move, Boolean> pressed = new EnumMap<>(Move.class);
