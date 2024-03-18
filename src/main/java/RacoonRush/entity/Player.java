@@ -10,13 +10,16 @@ import java.security.Key;
 
 public class Player extends Entity {
     private final GamePanel gamePanel;
+    private final Scoreboard scoreboard;
     private final Config config;
 
     public final int screenX, screenY;
     private int score;
+    private int donutsLeft;
 
-    public Player(GamePanel gamePanel) {
+    public Player(GamePanel gamePanel, Scoreboard scoreboard) {
         this.gamePanel = gamePanel;
+        this.scoreboard = scoreboard;
         this.config = gamePanel.getConfig();
 
         // Centered in the middle of the map
@@ -24,6 +27,8 @@ public class Player extends Entity {
         screenY = config.screenHeight() / 2 - config.tileSize() / 2;
 
         hitbox = new Rectangle(config.tileSize() / 6, config.tileSize() / 3, config.tileSize() * 2 / 3, config.tileSize() * 2 / 3);
+
+        donutsLeft = 0;
 
         setDefaultValues();
     }
@@ -35,6 +40,8 @@ public class Player extends Entity {
 
         speed = 4;
         dir = Move.DOWN;
+
+        score = 0;
     }
 
     public int leftColumn(int offsetX) {
@@ -88,6 +95,22 @@ public class Player extends Entity {
 
     public void updateScore(int score) {
         this.score += score;
+        this.scoreboard.updateScore(this.score);
+        if (score == 10) {
+            this.donutsLeft--;
+            if (donutsLeft == 0) {
+                this.scoreboard.showMessage("+10 points! Hurry to the exit!");
+            }
+            else if (donutsLeft == 1) {
+                this.scoreboard.showMessage("+10 points! 1 more donuts left.");
+            }
+            else {
+                this.scoreboard.showMessage("+10 points! " + donutsLeft + " more donuts left.");
+            }
+        }
+        else if (score == -20) {
+            this.scoreboard.showMessage("-20 points...");
+        }
     }
 
     public int getWorldX() {
@@ -102,4 +125,9 @@ public class Player extends Entity {
     public int getScreenY() {
         return screenY;
     }
+    public void addDonutsLeft() {
+        donutsLeft++;
+    }
+    public int getScore() { return score; }
+    public int resetScore() { return score = 0; }
 }

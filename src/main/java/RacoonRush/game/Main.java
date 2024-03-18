@@ -1,7 +1,8 @@
 package RacoonRush.game;
 
 
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,7 +15,14 @@ public class Main {
 
 
         GamePanel gamePanel = new GamePanel();
-        window.add(gamePanel);
+        Scoreboard scoreboard = gamePanel.getScoreboard();
+
+        JPanel fullGamePanel = new JPanel(new BorderLayout());
+
+        fullGamePanel.add(scoreboard, BorderLayout.SOUTH);
+        fullGamePanel.add(gamePanel, BorderLayout.CENTER);
+
+        window.add(fullGamePanel);
 
         window.pack();
 

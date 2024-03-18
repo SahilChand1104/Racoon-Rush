@@ -77,16 +77,15 @@ public class MenuComponent {
         return image;
     }
 
-    public boolean isSelected() {
-        return selected;
-    }
-
     public void doAction() {
         if (type == ComponentType.PLAY) {
-            gamePanel.startGame();
+            if (!gamePanel.isGameRunning()) {
+                gamePanel.startGame();
+            } else {
+                gamePanel.closeMenu();
+            }
         } else if (type == ComponentType.SETTINGS) {
             gamePanel.getMenuUI().setMenuState(MenuState.SETTINGS);
-            //gamePanel.setGameState(GameState.SETTINGS);
         }
     }
 }

@@ -19,9 +19,13 @@ public class GamePanel extends JPanel implements Runnable {
     private final Player player;
     private final UI ui;
     private GameState gameState;
+    private final Scoreboard scoreboard;
     private Thread gameThread;
     private int playerAnimationFrame;
     private int collectibleAnimationFrame;
+    private GameTime time;
+
+    private boolean gameRunning = false;
 
     public GamePanel() {
         imageLoader = new ImageLoader(this);
@@ -29,11 +33,13 @@ public class GamePanel extends JPanel implements Runnable {
         sound  = new Sound();
         mapManager = new MapManager(this);
         collisionDetector = new CollisionDetector(this);
-        player = new Player(this);
+        scoreboard = new Scoreboard();
+        player = new Player(this, scoreboard);
         playMusic(0);
         uiKeyHandler = new UIKeyHandler();
         ui = new UI(this);
         gameState = GameState.MENU;
+        time = new GameTime(scoreboard);
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
@@ -41,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.addKeyListener(uiKeyHandler);
         this.setFocusable(true);
+        disableScoreboard();
     }
 
     public void loadMap(String filePath) {
@@ -50,6 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
+        time.startTimer();
     }
 
 
@@ -136,6 +144,34 @@ public class GamePanel extends JPanel implements Runnable {
         sound.play();
     }
 
+    public void disableScoreboard() {
+        scoreboard.setVisible(false);
+        time.stopTimer();
+        scoreboard.reset();
+        scoreboard.setDisabled(true);
+        player.resetScore();
+    }
+
+    public void enableScoreboard() {
+        scoreboard.setVisible(true);
+        time.startTimer();
+        scoreboard.reset();
+        scoreboard.setDisabled(false);
+        player.resetScore();
+    }
+
+    public void hideScoreboard() {
+        time.pauseTimer();
+        scoreboard.setVisible(false);
+        scoreboard.setDisabled(true);
+    }
+
+    public void showScoreboard() {
+        time.resumeTimer();
+        scoreboard.setVisible(true);
+        scoreboard.setDisabled(false);
+    }
+
     public Config getConfig() {
         return config;
     }
@@ -172,6 +208,10 @@ public class GamePanel extends JPanel implements Runnable {
         return collectibleAnimationFrame;
     }
 
+    public Scoreboard getScoreboard() {
+        return scoreboard;
+    }
+
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
@@ -180,11 +220,23 @@ public class GamePanel extends JPanel implements Runnable {
         return gameState;
     }
 
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
+
     public void openMenu() {
+        hideScoreboard();
         gameState = GameState.MENU;
     }
 
+    public void closeMenu() {
+        showScoreboard();
+        gameState = GameState.PLAY;
+    }
+
     public void startGame() {
+        gameRunning = true;
+        enableScoreboard();
         gameState = GameState.PLAY;
     }
 
@@ -195,5 +247,7 @@ public class GamePanel extends JPanel implements Runnable {
     public UI getMenuUI() {
         return ui;
     }
+
+
 
 }
