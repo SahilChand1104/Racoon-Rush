@@ -6,25 +6,38 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.EnumMap;
 
+/**
+ * Class for handling the key inputs for the UI
+ * Similar to the KeyHandler class, but only for the UI and play/pause functionality
+ * Contains extra keybindings for the UI
+ */
 public class UIKeyHandler implements KeyListener {
 
+    // Enum for the different keys that can be pressed
     private final EnumMap<UI_Pressed, Boolean> pressedUI = new EnumMap<>(UI_Pressed.class);
 
+    /**
+     * Constructor for the UIKeyHandler
+     */
     public UIKeyHandler () {
         for (UI_Pressed ui_pressed : UI_Pressed.values()) {
             pressedUI.put(ui_pressed, false);
         }
     }
 
+    /**
+     * Returns the state of the key
+     * @param key the key
+     * @return the boolean state of the key
+     */
     public boolean get(UI_Pressed key) {
         return pressedUI.get(key);
     }
 
-    @Override
-    public void keyTyped(KeyEvent keyEvent) {
-
-    }
-
+    /**
+     * Adds the action to the pressedUI map
+     * @param e the key
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
@@ -53,6 +66,10 @@ public class UIKeyHandler implements KeyListener {
 
     }
 
+    /**
+     * Removes the action from the pressedUI map
+     * @param e the key
+     */
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
@@ -78,6 +95,11 @@ public class UIKeyHandler implements KeyListener {
         if (code == KeyEvent.VK_P) {
             pressedUI.put(UI_Pressed.PAUSE, false);
         }
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent keyEvent) {
 
     }
 }

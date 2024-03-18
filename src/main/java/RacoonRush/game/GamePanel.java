@@ -13,6 +13,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * This class represents the manager for all aspects of the game.
+ * It extends JPanel and implements Runnable.
+ * The fields include gameOverMessage, winMessage, config, imageLoader, mapManager, keyHandler, sound, uiKeyHandler, collisionDetector, player, ui, gameState, scoreboard, gameThread, playerAnimationFrame, collectibleAnimationFrame, time, pizzas, numPizzas, pizzaSpawn, and labelFont.
+ * The methods include loadMap, startGameThread, run, update, paintComponent, playMusic, stopMusic, PlaySoundEffect, disableScoreboard, enableScoreboard, hideScoreboard, showScoreboard, getConfig, getImageLoader, getKeyHandler, getUIKeyHandler, getMapManager, getCollisionDetector, getPlayer, getPlayerAnimationFrame, getCollectibleAnimationFrame, getScoreboard, setGameState, getGameState, isGameRunning, openMenu, closeMenu, startGame, stopGame, winGame, loseGame, getMenuUI, and addPizzas.
+ */
 public class GamePanel extends JPanel implements Runnable {
     private String gameOverMessage = "";
     private String winMessage = "";
@@ -38,6 +44,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     private boolean gameRunning = false;
 
+    /**
+     * Constructor for the GamePanel class
+     */
     public GamePanel() {
         imageLoader = new ImageLoader(this);
         keyHandler = new KeyHandler();
@@ -64,10 +73,17 @@ public class GamePanel extends JPanel implements Runnable {
         disableScoreboard();
     }
 
+    /**
+     * Method to load the map from a file
+     * @param filePath the file path of the map
+     */
     public void loadMap(String filePath) {
         mapManager.loadMap(filePath);
     }
 
+    /**
+     * Method to start the game thread
+     */
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -75,7 +91,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
 
-
+    /**
+     * Implementation of the run method from the Runnable interface
+     */
     @Override
     public void run() {
         double drawInterval = 1_000_000_000.0 / config.FPS();
@@ -109,6 +127,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Method to update the game based on the current game state
+     */
     public void update() {
         switch (gameState) {
             case MENU:
@@ -160,6 +181,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Method to render the game based on the current game state
+     * @param g the graphics object
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -229,19 +254,36 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
+    /**
+     * Method to play music
+     * @param i the index of the music file
+     */
     public void playMusic(int i ){
         sound.setFile(i);
         sound.play();
         sound.loop();
     }
+
+    /**
+     * Method to stop music
+     */
     public void stopMusic(){
         sound.stop();
     }
+
+    /**
+     * Method to play sound effect
+     * @param i the index of the sound effect file
+     */
     public void PlaySoundEffect(int i){
         sound.setFile(i);
         sound.play();
     }
 
+    /**
+     * Method to disable the scoreboard
+     * This method also stops the timer and resets the player's score
+     */
     public void disableScoreboard() {
         scoreboard.setVisible(false);
         time.stopTimer();
@@ -250,6 +292,10 @@ public class GamePanel extends JPanel implements Runnable {
         player.resetScore();
     }
 
+    /**
+     * Method to enable/reset the scoreboard
+     * This method also resets the timer amd the player's score
+     */
     public void enableScoreboard() {
         scoreboard.setVisible(true);
         time.startTimer();
@@ -258,105 +304,191 @@ public class GamePanel extends JPanel implements Runnable {
         player.resetScore();
     }
 
+    /**
+     * Method to hide the scoreboard
+     */
     public void hideScoreboard() {
         time.pauseTimer();
         scoreboard.setVisible(false);
         scoreboard.setDisabled(true);
     }
 
+    /**
+     * Method to show the scoreboard
+     */
     public void showScoreboard() {
         time.resumeTimer();
         scoreboard.setVisible(true);
         scoreboard.setDisabled(false);
     }
 
+    /**
+     * Method to get the game panel's constant values like tilesize, screen width, screen height, etc.
+     * @return the config object
+     */
     public Config getConfig() {
         return config;
     }
 
+    /**
+     * Method to get the gamepanel's image loader
+     * @return the image loader object
+     */
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
 
+    /**
+     * Method to get the gamepanel's key handler
+     * @return the key handler object
+     */
     public KeyHandler getKeyHandler() {
         return keyHandler;
     }
 
+    /**
+     * Method to get the gamepanel's UI key handler
+     * This is used for handling key events in the menu
+     * @return the sound object
+     */
     public UIKeyHandler getUIKeyHandler() {
         return uiKeyHandler;
     }
 
+    /**
+     * Method to get the gamepanel's map manager
+     * @return the map manager object
+     */
     public MapManager getMapManager() {
         return mapManager;
     }
 
+    /**
+     * Method to get the gamepanel's collision detector
+     * @return the collision object
+     */
     public CollisionDetector getCollisionDetector() {
         return collisionDetector;
     }
 
+    /**
+     * Method to get the gamepanel's player object
+     * @return the player object
+     */
     public Player getPlayer() {
         return player;
     }
 
+
+    /**
+     * Returns the current frame index for the player animation.
+     * @return The current frame index for the player animation.
+     */
     public int getPlayerAnimationFrame() {
         return playerAnimationFrame;
     }
 
+    /**
+     * Returns the current frame index for the collectible animation.
+     * @return The current frame index for the collectible animation.
+     */
     public int getCollectibleAnimationFrame() {
         return collectibleAnimationFrame;
     }
 
+    /**
+     * Returns the scoreboard object.
+     * @return The scoreboard object.
+     */
     public Scoreboard getScoreboard() {
         return scoreboard;
     }
 
+    /**
+     * Sets the game state to the provided state.
+     * @param gameState The new game state.
+     */
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
 
+    /**
+     * Returns the current game state.
+     * @return The current game state.
+     */
     public GameState getGameState() {
         return gameState;
     }
 
+    /**
+     * Checks whether the game is currently running.
+     * @return True if the game is running, false otherwise.
+     */
     public boolean isGameRunning() {
         return gameRunning;
     }
 
+    /**
+     * Sets the game state to MENU and hides the scoreboard.
+     */
     public void openMenu() {
         hideScoreboard();
         gameState = GameState.MENU;
     }
 
+    /**
+     * Sets the game state to PLAY and shows the scoreboard.
+     */
     public void closeMenu() {
         showScoreboard();
         gameState = GameState.PLAY;
     }
 
+    /**
+     * Starts the game by setting the game state to PLAY and enabling the scoreboard.
+     */
     public void startGame() {
         gameRunning = true;
         enableScoreboard();
         gameState = GameState.PLAY;
     }
 
+    /**
+     * Stops the game by setting the game state to QUIT and hides the scoreboard.
+     */
     public void stopGame() {
         hideScoreboard();
         gameState = GameState.QUIT;
     }
 
+    /**
+     * Indicates that the game has been won by setting the game state to WIN and hiding the scoreboard.
+     */
     public void winGame() {
         hideScoreboard();
         gameState = GameState.WIN;
     }
 
+    /**
+     * Indicates that the game has been lost by setting the game state to GAMEOVER and hiding the scoreboard.
+     */
     public void loseGame() {
         hideScoreboard();
         gameState = GameState.GAMEOVER;
     }
 
+    /**
+     * Returns the UI object associated with the game menu.
+     * @return The UI object associated with the game menu.
+     */
     public UI getMenuUI() {
         return ui;
     }
 
+    /**
+     * Adds a pizza item to the game.
+     * @param p The pizza item to be added.
+     */
     public void addPizzas(Item p) {
         pizzas.add(p);
         numPizzas++;
