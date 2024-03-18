@@ -2,6 +2,7 @@ package RacoonRush.map;
 
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
+import RacoonRush.map.tile.Item;
 import RacoonRush.map.tile.Tile;
 import RacoonRush.map.tile.TileFactory;
 import RacoonRush.map.tile.TileType;
@@ -36,6 +37,9 @@ public class MapLoader {
                     map[i][j] = tileFactory.createTile(tileTypes.get(Integer.parseInt(tokens[j])));
                     if (tileTypes.get(Integer.parseInt(tokens[j])) == TileType.DONUT) {
                         gamePanel.getPlayer().addDonutsLeft();
+                    }
+                    else if (tileTypes.get(Integer.parseInt(tokens[j])) == TileType.PIZZA) {
+                        gamePanel.addPizzas((Item)map[i][j]);
                     }
                 }
             }

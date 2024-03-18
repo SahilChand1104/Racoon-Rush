@@ -3,12 +3,19 @@ package RacoonRush.game;
 import RacoonRush.entity.Player;
 import RacoonRush.game.menu.UI;
 import RacoonRush.game.menu.UIKeyHandler;
+import RacoonRush.game.menu.UI_Pressed;
 import RacoonRush.map.MapManager;
+import RacoonRush.map.tile.Item;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class GamePanel extends JPanel implements Runnable {
+    private String gameOverMessage = "";
+    private String winMessage = "";
     private final Config config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
     private final ImageLoader imageLoader;
     private final MapManager mapManager;
@@ -24,6 +31,10 @@ public class GamePanel extends JPanel implements Runnable {
     private int playerAnimationFrame;
     private int collectibleAnimationFrame;
     private GameTime time;
+    private ArrayList<Item> pizzas;
+    private int numPizzas;
+    private int pizzaSpawn;
+    private Font labelFont;
 
     private boolean gameRunning = false;
 
@@ -40,6 +51,9 @@ public class GamePanel extends JPanel implements Runnable {
         ui = new UI(this);
         gameState = GameState.MENU;
         time = new GameTime(scoreboard);
+        pizzas = new ArrayList<>();
+        numPizzas = 0;
+        pizzaSpawn = 0;
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
@@ -92,7 +106,6 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint();
                 delta--;
             }
-
         }
     }
 
@@ -103,10 +116,44 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
             case PLAY:
                 player.update();
+                Random rand = new Random();
+                int ranPizza = rand.nextInt(numPizzas);
+                for (int i = 0; i < numPizzas; i++) {
+                    if (i == ranPizza && pizzaSpawn == config.FPS() * 3) {
+                        pizzas.get(i).setCollected(false);
+                    }
+                    else if (pizzaSpawn == config.FPS() * 3 || pizzaSpawn == rand.nextInt(config.FPS() * 3) + config.FPS()/2) {
+                        pizzas.get(i).setCollected(true);
+                    }
+                }
+                if (pizzaSpawn == config.FPS() * 3) {
+                    pizzaSpawn = -1;
+                }
+                else {
+                    pizzaSpawn++;
+                }
                 break;
             case QUIT:
                 gameThread = null;
                 System.exit(0);
+                break;
+            case GAMEOVER:
+                if (time.getTime()/1000 != 0) {
+                    gameOverMessage = "You lose! Better luck next time!";
+                    time.stopTimer();
+                }
+                if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
+                    System.exit(0);
+                }
+                break;
+            case WIN:
+                if (time.getTime()/1000 != 0) {
+                    winMessage = "You won!\nScore: " + player.getScore() + "\nTime: " + time.formatTime(time.getTime());
+                    time.stopTimer();
+                }
+                if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
+                    System.exit(0);
+                }
                 break;
             default:
                 break;
@@ -124,6 +171,45 @@ public class GamePanel extends JPanel implements Runnable {
             case PLAY:
                 mapManager.draw(g2);
                 player.draw(g2, playerAnimationFrame);
+                break;
+            case GAMEOVER:
+                g2.setColor(Color.RED);
+                try {
+                    labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/font/VCR_OSD_MONO_1.001.ttf").openStream());
+                    g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
+                } catch (IOException | FontFormatException e) {
+                    // Handle font loading exception
+                    e.printStackTrace();
+                }
+                FontMetrics fontMetricsLose = g2.getFontMetrics();
+                int loseWidth = fontMetricsLose.stringWidth(gameOverMessage);
+                int x = (getWidth() - loseWidth) / 2;
+                int y = getHeight() / 2;
+                g2.drawString(gameOverMessage, x, y);
+                break;
+            case WIN:
+                g2.setColor(Color.GREEN);
+                try {
+                    labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/font/VCR_OSD_MONO_1.001.ttf").openStream());
+                    g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
+                } catch (IOException | FontFormatException e) {
+                    // Handle font loading exception
+                    e.printStackTrace();
+                }
+                FontMetrics fontMetricsWin = g2.getFontMetrics();
+
+                String[] winMessages = winMessage.split("\n");
+                int winWidth = fontMetricsWin.stringWidth(winMessages[0]); // Width of "You win!" message
+                int winX = (getWidth() - winWidth) / 2;
+                int winY = getHeight() / 2;
+                g2.drawString(winMessages[0], winX, winY);
+
+                for (int i = 1; i < winMessages.length; i++) {
+                    int messageWidth = fontMetricsWin.stringWidth(winMessages[i]);
+                    int messageX = (getWidth() - messageWidth) / 2;
+                    int messageY = winY + fontMetricsWin.getHeight() * i;
+                    g2.drawString(winMessages[i], messageX, messageY);
+                }
                 break;
             default:
                 break;
@@ -241,13 +327,26 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void stopGame() {
+        hideScoreboard();
         gameState = GameState.QUIT;
+    }
+
+    public void winGame() {
+        hideScoreboard();
+        gameState = GameState.WIN;
+    }
+
+    public void loseGame() {
+        hideScoreboard();
+        gameState = GameState.GAMEOVER;
     }
 
     public UI getMenuUI() {
         return ui;
     }
 
-
-
+    public void addPizzas(Item p) {
+        pizzas.add(p);
+        numPizzas++;
+    }
 }

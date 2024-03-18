@@ -63,11 +63,11 @@ public class GameTime {
 
     private void displayTotalTime(long totalTime) {
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-        String formattedTotalTime = sdf.format(new Date(totalTime));
+        String formattedTotalTime = sdf.format(new Date(totalTime / 1000));
     }
 
-    private String formatTime(long time) {
-        long seconds = time / 1_000_000;
+    public String formatTime(long time) {
+        long seconds = time / 1_000;
         long minutes = seconds / 60;
         seconds = seconds % 60;
         return String.format("%02d:%02d", minutes, seconds);

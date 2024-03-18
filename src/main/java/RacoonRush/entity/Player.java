@@ -84,6 +84,9 @@ public class Player extends Entity {
             dir = Move.RIGHT;
             worldX += speed;
         }
+        if (score < 0) {
+            gamePanel.loseGame();
+        }
     }
 
     public void draw(Graphics2D g2, int animationFrame) {
@@ -111,7 +114,7 @@ public class Player extends Entity {
         else if (score == -20) {
             this.scoreboard.showMessage("-20 points...");
         } else if (score == 50) {
-            this.scoreboard.showMessage("+50 points! You found Uncle Fatih's lost pizza!");
+            this.scoreboard.showMessage("+50 points! You found Uncle Faith's lost pizza!");
         }
     }
 
@@ -127,9 +130,8 @@ public class Player extends Entity {
     public int getScreenY() {
         return screenY;
     }
-    public void addDonutsLeft() {
-        donutsLeft++;
-    }
+    public void addDonutsLeft() { donutsLeft++; }
+    public int getDonutsLeft() { return donutsLeft; }
     public int getScore() { return score; }
     public int resetScore() { return score = 0; }
 }

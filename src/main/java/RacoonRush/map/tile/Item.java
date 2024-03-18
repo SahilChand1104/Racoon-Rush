@@ -18,6 +18,9 @@ public class Item extends Tile {
         this.gamePanel = gamePanel;
         this.score = score;
         collected = false;
+        if (score == 50) {
+            collected = true;
+        }
     }
 
     @Override
@@ -26,7 +29,7 @@ public class Item extends Tile {
             collected = true;
             player.updateScore(score);
 
-            if(score  == 10){
+            if(score == 10){
                 gamePanel.PlaySoundEffect(1);
             }
             else if(score == -20){
@@ -35,6 +38,9 @@ public class Item extends Tile {
             else if(score == 50){
                 gamePanel.PlaySoundEffect(1);
             }
+            else if(score == 0 && gamePanel.getPlayer().getDonutsLeft() == 0){
+                gamePanel.winGame();
+            }
         }
         return true;
     }
@@ -42,7 +48,13 @@ public class Item extends Tile {
 
     @Override
     public BufferedImage getImage(int x, int y, int animationFrame) {
+        if (images == null) {
+            return null;
+        }
         return collected ? null : images.get(animationFrame % images.size());
     }
 
+    public void setCollected(boolean status) {
+        collected = status;
+    }
 }
