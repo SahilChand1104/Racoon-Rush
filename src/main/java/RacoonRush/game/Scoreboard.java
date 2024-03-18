@@ -90,7 +90,7 @@ public class Scoreboard extends JPanel {
 
         // Create a gradient paint for the background
         GradientPaint gradient = new GradientPaint(
-                0, 0, Color.PINK,
+                0, 0, Color.MAGENTA,
                 getWidth(), getHeight(), Color.ORANGE);
 
         // Set the paint and fill the background with the gradient
