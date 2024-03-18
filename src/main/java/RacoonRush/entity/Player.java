@@ -161,7 +161,7 @@ public class Player extends Entity {
         else if (score == -20) {
             this.scoreboard.showMessage("-20 points...");
         } else if (score == 50) {
-            this.scoreboard.showMessage("+50 points! You found Uncle Faith's lost pizza!");
+            this.scoreboard.showMessage("+50 points! You found Uncle Fatih's lost pizza!");
         }
     }
 

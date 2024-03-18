@@ -169,7 +169,7 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
             case WIN:
                 if (time.getTime()/1000 != 0) {
-                    winMessage = "You won!\nScore: " + player.getScore() + "\nTime: " + time.formatTime(time.getTime());
+                    winMessage = "You win!\nScore: " + player.getScore() + "\nTime: " + time.formatTime(time.getTime());
                     time.stopTimer();
                 }
                 if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
