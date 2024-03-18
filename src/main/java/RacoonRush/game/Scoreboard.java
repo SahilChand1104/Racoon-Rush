@@ -8,12 +8,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+/**
+ * Scoreboard class for the game
+ */
 public class Scoreboard extends JPanel {
     private JLabel scoreLabel;
     private JLabel timerLabel;
     private JLabel messageLabel;
     private boolean isDisabled;
 
+    /**
+     * Constructor for the Scoreboard
+     */
     public Scoreboard() {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -50,18 +56,30 @@ public class Scoreboard extends JPanel {
         add(messageLabel);
     }
 
+    /**
+     * Update the score on the scoreboard
+     * @param score The new score
+     */
     public void updateScore(int score) {
         if (!isDisabled) {
             scoreLabel.setText("Score: " + score);
         }
     }
 
+    /**
+     * Update the timer on the scoreboard
+     * @param timeInSeconds The new time in seconds
+     */
     public void updateTimer(String timeInSeconds) {
         if (!isDisabled) {
             timerLabel.setText("Time: " + timeInSeconds);
         }
     }
 
+    /**
+     * Show a message on the scoreboard
+     * @param message The string message to show
+     */
     public void showMessage(String message) {
         if (!isDisabled) {
             messageLabel.setText(message);
@@ -77,12 +95,19 @@ public class Scoreboard extends JPanel {
         }
     }
 
+    /**
+     * Reset the scoreboard
+     */
     public void reset() {
         scoreLabel.setText("Score: 0");
         timerLabel.setText("Time: 00:00");
         messageLabel.setText(" ");
     }
 
+    /**
+     * Paint the background of the scoreboard with a gradient
+     * @param g The Graphics object to paint with
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -100,6 +125,11 @@ public class Scoreboard extends JPanel {
         g2d.dispose();
     }
 
+    /**
+     * Set the disabled state of the scoreboard
+     * @param bool The new disabled state
+     * @return The new disabled state
+     */
     public boolean setDisabled(boolean bool) {
         return isDisabled = bool;
     }
