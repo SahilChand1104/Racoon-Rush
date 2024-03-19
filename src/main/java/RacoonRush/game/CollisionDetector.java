@@ -3,14 +3,27 @@ package RacoonRush.game;
 import RacoonRush.entity.Player;
 import RacoonRush.map.MapManager;
 
+/**
+ * This class represents the collision detector for the game.
+ * It is used to detect collisions between the player and the map.
+ */
 public class CollisionDetector {
     private final GamePanel gp;
+
+    /**
+     * This constructor initializes the collision detector with the current game panel.
+     * @param gp The game panel.
+     */
     public CollisionDetector(GamePanel gp) {
         this.gp = gp;
     }
 
-    // Interact with the blocks in the given direction
-    // Returns true if the player can move
+    /**
+     * @param player The player object.
+     * @param direction The direction to move.
+     * Interact with the blocks in the given direction
+     * @return true if the player can move.
+     */
     public boolean move(Player player, Move direction) {
         MapManager mapManager = gp.getMapManager();
         int offsetX = switch (direction) {

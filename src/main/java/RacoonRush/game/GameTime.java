@@ -12,6 +12,11 @@ public class GameTime {
     private long totalTime;
     private boolean isPaused;
     Scoreboard scoreboard;
+
+    /**
+     * Constructor for GameTime
+     * @param scoreboard the scoreboard where the time is displayed
+     */
     public GameTime(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
         timer = new Timer(1000, new ActionListener() {
@@ -25,11 +30,17 @@ public class GameTime {
         });
     }
 
+    /**
+     * Starts the timer
+     */
     public void startTimer() {
         startTime = System.nanoTime();
         timer.start();
     }
 
+    /**
+     * Pauses the timer
+     */
     public void pauseTimer() {
         if (!isPaused) {
             isPaused = true;
@@ -38,6 +49,9 @@ public class GameTime {
         }
     }
 
+    /**
+     * Resumes the timer
+     */
     public void resumeTimer() {
         if (isPaused) {
             isPaused = false;
@@ -46,6 +60,9 @@ public class GameTime {
         }
     }
 
+    /**
+     * Stops the timer
+     */
     public void stopTimer() {
         timer.stop();
         startTime = 0;
@@ -54,6 +71,10 @@ public class GameTime {
         isPaused = false;
     }
 
+    /**
+     * Updates the time on the scoreboard
+     * @param sb the scoreboard
+     */
     private void updateTimeLabel(Scoreboard sb) {
         long elapsedTime = System.nanoTime() - startTime;
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
@@ -61,18 +82,30 @@ public class GameTime {
         sb.updateTimer(formattedTime);
     }
 
+    /**
+     * Displays the total time with formatting
+     */
     private void displayTotalTime(long totalTime) {
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-        String formattedTotalTime = sdf.format(new Date(totalTime));
+        String formattedTotalTime = sdf.format(new Date(totalTime / 1000));
     }
 
-    private String formatTime(long time) {
-        long seconds = time / 1_000_000;
+    /**
+     * Formats the time
+     * @param time the time to format
+     * @return the formatted time as a string
+     */
+    public String formatTime(long time) {
+        long seconds = time / 1_000;
         long minutes = seconds / 60;
         seconds = seconds % 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
 
+    /**
+     * Gets the time
+     * @return the time as a long
+     */
     public long getTime() {
         return (totalTime / 1_000_000);
     }

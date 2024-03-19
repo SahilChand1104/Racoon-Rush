@@ -8,6 +8,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.security.Key;
 
+/**
+ * Class for the player entity
+ * This class should only have one instance
+ */
 public class Player extends Entity {
     private final GamePanel gamePanel;
     private final Scoreboard scoreboard;
@@ -17,6 +21,11 @@ public class Player extends Entity {
     private int score;
     private int donutsLeft;
 
+    /**
+     * Constructor for the player
+     * @param gamePanel the gamePanel
+     * @param scoreboard the scoreboard
+     */
     public Player(GamePanel gamePanel, Scoreboard scoreboard) {
         this.gamePanel = gamePanel;
         this.scoreboard = scoreboard;
@@ -33,6 +42,9 @@ public class Player extends Entity {
         setDefaultValues();
     }
 
+    /**
+     * Sets the default values for the player
+     */
     public void setDefaultValues() {
         // Starting position of the player
         worldX = config.tileSize() * (config.maxWorldCol() - 2);
@@ -44,24 +56,49 @@ public class Player extends Entity {
         score = 0;
     }
 
+    /**
+     * Returns the left edge of the player
+     * @param offsetX the x offset
+     * @return the left column
+     */
     public int leftColumn(int offsetX) {
         return (worldX + hitbox.x + offsetX) / config.tileSize();
     }
 
+    /**
+     * Returns the right edge of the player
+     * @param offsetX the x offset
+     * @return the right column
+     */
     public int rightColumn(int offsetX) {
         return (worldX + hitbox.x + hitbox.width + offsetX) / config.tileSize();
     }
 
+    /**
+     * Returns the top edge of the player
+     * @param offsetY the y offset
+     * @return the top row
+     */
     public int topRow(int offsetY) {
         return (worldY + hitbox.y + offsetY) / config.tileSize();
     }
 
+    /**
+     * Returns the bottom edge of the player
+     * @param offsetY the y offset
+     * @return the bottom row
+     */
     public int bottomRow(int offsetY) {
         return (worldY + hitbox.y + hitbox.height + offsetY) / config.tileSize();
     }
 
+    /**
+     * Updates the player's actions
+     */
     public void update() {
+        // Use the game keyhandler for player movement
         KeyHandler keyHandler = gamePanel.getKeyHandler();
+        // Use the UI keyhandler for pausing/playing the game
         UIKeyHandler uiKeyHandler = gamePanel.getUIKeyHandler();
         CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
         if (uiKeyHandler.get(UI_Pressed.PAUSE)) {
@@ -71,6 +108,7 @@ public class Player extends Entity {
             return;
         }
 
+        // Movement causes world coordinates to change, imitating a camera
         if (keyHandler.get(Move.UP) && collisionDetector.move(this, Move.UP)) {
             dir = Move.UP;
             worldY -= speed;
@@ -84,8 +122,16 @@ public class Player extends Entity {
             dir = Move.RIGHT;
             worldX += speed;
         }
+        if (score < 0) {
+            gamePanel.loseGame();
+        }
     }
 
+    /**
+     * Draws the player
+     * @param g2 the graphics2D object
+     * @param animationFrame the animation frame for the player
+     */
     public void draw(Graphics2D g2, int animationFrame) {
         ImageLoader imageLoader = gamePanel.getImageLoader();
         animationFrame = gamePanel.getKeyHandler().get(dir) ? animationFrame : 0;
@@ -93,6 +139,10 @@ public class Player extends Entity {
         g2.drawImage(image, screenX, screenY, config.tileSize(), config.tileSize(), null);
     }
 
+    /**
+     * Updates the score
+     * @param score the score
+     */
     public void updateScore(int score) {
         this.score += score;
         this.scoreboard.updateScore(this.score);
@@ -110,24 +160,56 @@ public class Player extends Entity {
         }
         else if (score == -20) {
             this.scoreboard.showMessage("-20 points...");
+        } else if (score == 50) {
+            this.scoreboard.showMessage("+50 points! You found Uncle Fatih's lost pizza!");
         }
     }
 
+    /**
+     * Returns the world x position
+     * @return the world x integer position
+     */
     public int getWorldX() {
         return worldX;
     }
+    /**
+     * Returns the world y position
+     * @return the world y integer position
+     */
     public int getWorldY() {
         return worldY;
     }
+    /**
+     * Returns the screen x position
+     * @return the screen x integer position
+     */
     public int getScreenX() {
         return screenX;
     }
+    /**
+     * Returns the screen y position
+     * @return the screen y integer position
+     */
     public int getScreenY() {
         return screenY;
     }
-    public void addDonutsLeft() {
-        donutsLeft++;
-    }
+
+    /**
+     * Add a donut to the donutsLeft count
+     */
+    public void addDonutsLeft() { donutsLeft++; }
+    /**
+     * Remove a donut from the donutsLeft count
+     */
+    public int getDonutsLeft() { return donutsLeft; }
+    /**
+     * Returns the score
+     * @return the score
+     */
     public int getScore() { return score; }
+    /**
+     * Resets the score
+     * @return the score set to 0
+     */
     public int resetScore() { return score = 0; }
 }
