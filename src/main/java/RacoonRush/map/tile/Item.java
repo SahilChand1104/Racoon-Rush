@@ -22,14 +22,11 @@ public class Item extends Tile {
      * @param score score value of the item
      * @param gamePanel GamePanel object
      */
-    public Item( ArrayList<BufferedImage> images, int score, GamePanel gamePanel) {
+    public Item(ArrayList<BufferedImage> images, int score, GamePanel gamePanel) {
         super(images);
         this.gamePanel = gamePanel;
         this.score = score;
-        collected = false;
-        if (score == 50) {
-            collected = true;
-        }
+        collected = score == 50;
     }
 
     /**
@@ -42,16 +39,13 @@ public class Item extends Tile {
             collected = true;
             player.updateScore(score);
 
-            if(score == 10){
+            if (score == 10) {
                 gamePanel.PlaySoundEffect(1);
-            }
-            else if(score == -20){
+            } else if (score == -20) {
                 gamePanel.PlaySoundEffect(2);
-            }
-            else if(score == 50){
+            } else if (score == 50) {
                 gamePanel.PlaySoundEffect(1);
-            }
-            else if(score == 0 && gamePanel.getPlayer().getDonutsLeft() == 0){
+            } else if (score == 0 && gamePanel.getPlayer().getDonutsLeft() == 0) {
                 gamePanel.winGame();
             }
         }

@@ -36,8 +36,8 @@ public class GamePanel extends JPanel implements Runnable {
     private Thread gameThread;
     private int playerAnimationFrame;
     private int collectibleAnimationFrame;
-    private GameTime time;
-    private ArrayList<Item> pizzas;
+    private final GameTime time;
+    private final ArrayList<Item> pizzas;
     private int numPizzas;
     private int pizzaSpawn;
     private Font labelFont;
@@ -54,7 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
         mapManager = new MapManager(this);
         collisionDetector = new CollisionDetector(this);
         scoreboard = new Scoreboard();
-        player = new Player(this, scoreboard);
+        player = new Player(this);
         playMusic(0);
         uiKeyHandler = new UIKeyHandler();
         ui = new UI(this);
@@ -63,6 +63,11 @@ public class GamePanel extends JPanel implements Runnable {
         pizzas = new ArrayList<>();
         numPizzas = 0;
         pizzaSpawn = 0;
+        try {
+            labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
@@ -142,15 +147,13 @@ public class GamePanel extends JPanel implements Runnable {
                 for (int i = 0; i < numPizzas; i++) {
                     if (i == ranPizza && pizzaSpawn == config.FPS() * 3) {
                         pizzas.get(i).setCollected(false);
-                    }
-                    else if (pizzaSpawn == config.FPS() * 3 || pizzaSpawn == rand.nextInt(config.FPS() * 3) + config.FPS()/2) {
+                    } else if (pizzaSpawn == config.FPS() * 3 || pizzaSpawn == rand.nextInt(config.FPS() * 3) + config.FPS() / 2) {
                         pizzas.get(i).setCollected(true);
                     }
                 }
                 if (pizzaSpawn == config.FPS() * 3) {
                     pizzaSpawn = -1;
-                }
-                else {
+                } else {
                     pizzaSpawn++;
                 }
                 break;
@@ -159,7 +162,7 @@ public class GamePanel extends JPanel implements Runnable {
                 System.exit(0);
                 break;
             case GAMEOVER:
-                if (time.getTime()/1000 != 0) {
+                if (time.getTime() / 1000 != 0) {
                     gameOverMessage = "You lose! Better luck next time!";
                     time.stopTimer();
                 }
@@ -168,7 +171,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
                 break;
             case WIN:
-                if (time.getTime()/1000 != 0) {
+                if (time.getTime() / 1000 != 0) {
                     winMessage = "You win!\nScore: " + player.getScore() + "\nTime: " + time.formatTime(time.getTime());
                     time.stopTimer();
                 }
@@ -199,13 +202,7 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
             case GAMEOVER:
                 g2.setColor(Color.RED);
-                try {
-                    labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/font/VCR_OSD_MONO_1.001.ttf").openStream());
-                    g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-                } catch (IOException | FontFormatException e) {
-                    // Handle font loading exception
-                    e.printStackTrace();
-                }
+                g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
                 FontMetrics fontMetricsLose = g2.getFontMetrics();
                 int loseWidth = fontMetricsLose.stringWidth(gameOverMessage);
                 int x = (getWidth() - loseWidth) / 2;
@@ -220,13 +217,7 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
             case WIN:
                 g2.setColor(Color.GREEN);
-                try {
-                    labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/font/VCR_OSD_MONO_1.001.ttf").openStream());
-                    g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-                } catch (IOException | FontFormatException e) {
-                    // Handle font loading exception
-                    e.printStackTrace();
-                }
+                g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
                 FontMetrics fontMetricsWin = g2.getFontMetrics();
 
                 String[] winMessages = winMessage.split("\n");

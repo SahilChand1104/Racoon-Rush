@@ -6,7 +6,6 @@ import RacoonRush.game.menu.UI_Pressed;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.security.Key;
 
 /**
  * Class for the player entity
@@ -14,8 +13,6 @@ import java.security.Key;
  */
 public class Player extends Entity {
     private final GamePanel gamePanel;
-    private final Scoreboard scoreboard;
-    private final Config config;
 
     public final int screenX, screenY;
     private int score;
@@ -24,14 +21,12 @@ public class Player extends Entity {
     /**
      * Constructor for the player
      * @param gamePanel the gamePanel
-     * @param scoreboard the scoreboard
      */
-    public Player(GamePanel gamePanel, Scoreboard scoreboard) {
+    public Player(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        this.scoreboard = scoreboard;
-        this.config = gamePanel.getConfig();
 
         // Centered in the middle of the map
+        Config config = gamePanel.getConfig();
         screenX = config.screenWidth() / 2 - config.tileSize() / 2;
         screenY = config.screenHeight() / 2 - config.tileSize() / 2;
 
@@ -47,6 +42,7 @@ public class Player extends Entity {
      */
     public void setDefaultValues() {
         // Starting position of the player
+        Config config = gamePanel.getConfig();
         worldX = config.tileSize() * (config.maxWorldCol() - 2);
         worldY = config.tileSize() * (config.maxWorldRow() - 2);
 
@@ -62,7 +58,7 @@ public class Player extends Entity {
      * @return the left column
      */
     public int leftColumn(int offsetX) {
-        return (worldX + hitbox.x + offsetX) / config.tileSize();
+        return (worldX + hitbox.x + offsetX) / gamePanel.getConfig().tileSize();
     }
 
     /**
@@ -71,7 +67,7 @@ public class Player extends Entity {
      * @return the right column
      */
     public int rightColumn(int offsetX) {
-        return (worldX + hitbox.x + hitbox.width + offsetX) / config.tileSize();
+        return (worldX + hitbox.x + hitbox.width + offsetX) / gamePanel.getConfig().tileSize();
     }
 
     /**
@@ -80,7 +76,7 @@ public class Player extends Entity {
      * @return the top row
      */
     public int topRow(int offsetY) {
-        return (worldY + hitbox.y + offsetY) / config.tileSize();
+        return (worldY + hitbox.y + offsetY) / gamePanel.getConfig().tileSize();
     }
 
     /**
@@ -89,7 +85,7 @@ public class Player extends Entity {
      * @return the bottom row
      */
     public int bottomRow(int offsetY) {
-        return (worldY + hitbox.y + hitbox.height + offsetY) / config.tileSize();
+        return (worldY + hitbox.y + hitbox.height + offsetY) / gamePanel.getConfig().tileSize();
     }
 
     /**
@@ -136,7 +132,7 @@ public class Player extends Entity {
         ImageLoader imageLoader = gamePanel.getImageLoader();
         animationFrame = gamePanel.getKeyHandler().get(dir) ? animationFrame : 0;
         BufferedImage image = imageLoader.getPlayerImage(dir, animationFrame);
-        g2.drawImage(image, screenX, screenY, config.tileSize(), config.tileSize(), null);
+        g2.drawImage(image, screenX, screenY, gamePanel.getConfig().tileSize(), gamePanel.getConfig().tileSize(), null);
     }
 
     /**
@@ -144,24 +140,22 @@ public class Player extends Entity {
      * @param score the score
      */
     public void updateScore(int score) {
+        Scoreboard scoreboard = gamePanel.getScoreboard();
         this.score += score;
-        this.scoreboard.updateScore(this.score);
+        scoreboard.updateScore(score);
         if (score == 10) {
-            this.donutsLeft--;
+            donutsLeft--;
             if (donutsLeft == 0) {
-                this.scoreboard.showMessage("+10 points! Hurry to the exit!");
+                scoreboard.showMessage("+10 points! Hurry to the exit!");
+            } else if (donutsLeft == 1) {
+                scoreboard.showMessage("+10 points! 1 more donuts left.");
+            } else {
+                scoreboard.showMessage("+10 points! " + donutsLeft + " more donuts left.");
             }
-            else if (donutsLeft == 1) {
-                this.scoreboard.showMessage("+10 points! 1 more donuts left.");
-            }
-            else {
-                this.scoreboard.showMessage("+10 points! " + donutsLeft + " more donuts left.");
-            }
-        }
-        else if (score == -20) {
-            this.scoreboard.showMessage("-20 points...");
+        } else if (score == -20) {
+            scoreboard.showMessage("-20 points...");
         } else if (score == 50) {
-            this.scoreboard.showMessage("+50 points! You found Uncle Fatih's lost pizza!");
+            scoreboard.showMessage("+50 points! You found Uncle Fatih's lost pizza!");
         }
     }
 
@@ -209,7 +203,6 @@ public class Player extends Entity {
     public int getScore() { return score; }
     /**
      * Resets the score
-     * @return the score set to 0
      */
-    public int resetScore() { return score = 0; }
+    public void resetScore() { score = 0; }
 }
