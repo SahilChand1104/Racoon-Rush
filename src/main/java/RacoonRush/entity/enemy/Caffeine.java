@@ -3,28 +3,23 @@ package RacoonRush.entity.enemy;
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.Move;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
 public class Caffeine extends Enemy {
-    public Caffeine(GamePanel gamePanel, int worldX, int worldY, int speed, int damage, int cooldown, Rectangle hitbox, ArrayList<EnumMap<Move, BufferedImage>> images) {
-        super(gamePanel, worldX, worldY, speed, damage, cooldown, hitbox, images);
+    public Caffeine(GamePanel gamePanel, int worldX, int worldY, int speed, Move direction, ArrayList<EnumMap<Move, BufferedImage>> images,
+                  int damage, int abilityDuration, int abilityCooldownDuration) {
+        super(gamePanel, worldX, worldY, speed, direction, images, damage, abilityDuration, abilityCooldownDuration);
     }
 
     @Override
-    public void ability() {
-
-    }
-
-    @Override
-    public void update() {
+    public void activateAbility() {
 
     }
 
     @Override
-    public void draw(Graphics2D g2) {
+    public void deactivateAbility() {
 
     }
 }

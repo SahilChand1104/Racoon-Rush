@@ -1,5 +1,6 @@
 package RacoonRush.map.tile;
 
+import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
 
 import java.awt.image.BufferedImage;
@@ -16,10 +17,13 @@ public class Item extends Tile {
     }
 
     @Override
-    public boolean onCollide(Player player) {
-        collected = true;
-        player.updateScore(score);
-        return true;
+    public boolean onCollide(Entity entity) {
+        if (entity instanceof Player player && !collected) {
+            collected = true;
+            player.updateScore(score);
+            return true;
+        }
+        return false;
     }
 
     @Override

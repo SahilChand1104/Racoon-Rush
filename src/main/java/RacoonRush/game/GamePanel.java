@@ -1,7 +1,7 @@
 package RacoonRush.game;
 
+import RacoonRush.entity.EntityManager;
 import RacoonRush.entity.Player;
-import RacoonRush.entity.enemy.EnemyManager;
 import RacoonRush.map.MapManager;
 
 import javax.swing.*;
@@ -13,8 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final KeyHandler keyHandler;
     private final CollisionDetector collisionDetector;
     private final MapManager mapManager;
-    private final EnemyManager enemyManager;
-    private final Player player;
+    private final EntityManager entityManager;
     private Thread gameThread;
     private int playerAnimationFrame;
     private int itemAnimationFrame;
@@ -24,9 +23,7 @@ public class GamePanel extends JPanel implements Runnable {
         keyHandler = new KeyHandler();
         collisionDetector = new CollisionDetector(this);
         mapManager = new MapManager(this);
-        enemyManager = new EnemyManager(this);
-        player = new Player(this);
-
+        entityManager = new EntityManager(this);
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -74,8 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        enemyManager.update();
-        player.update();
+        entityManager.update();
     }
 
     public void paintComponent(Graphics g) {
@@ -83,8 +79,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
         mapManager.draw(g2);
-        enemyManager.draw(g2);
-        player.draw(g2);
+        entityManager.draw(g2);
         g2.dispose();
     }
 
@@ -109,12 +104,12 @@ public class GamePanel extends JPanel implements Runnable {
         return mapManager;
     }
 
-    public EnemyManager getEnemyManager() {
-        return enemyManager;
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     public Player getPlayer() {
-        return player;
+        return entityManager.getPlayer();
     }
 
     public int getPlayerAnimationFrame() {

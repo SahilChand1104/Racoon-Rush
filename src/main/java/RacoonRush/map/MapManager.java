@@ -5,7 +5,6 @@ import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.Manager;
 import RacoonRush.map.tile.Tile;
-import RacoonRush.map.tile.Wall;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -34,16 +33,18 @@ public class MapManager implements Manager {
     }
 
     private void drawBackground(Graphics2D g2) {
+        Config config = gamePanel.getConfig();
         Player player = gamePanel.getPlayer();
         int worldX = player.getWorldX();
         int worldY = player.getWorldY();
         int screenX = player.getScreenX();
         int screenY = player.getScreenY();
+        int size = config.screenWidth();
 
-        g2.drawImage(background[0], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background[1], getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background[2], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
-        g2.drawImage(background[3], getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
+        g2.drawImage(background[0], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), size, size, null);
+        g2.drawImage(background[1], getScreenCoordinate(0, worldX, screenX) + size, getScreenCoordinate(0, worldY, screenY), size, size, null);
+        g2.drawImage(background[2], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY) + size, size, size, null);
+        g2.drawImage(background[3], getScreenCoordinate(0, worldX, screenX) + size, getScreenCoordinate(0, worldY, screenY) + size, size, size, null);
     }
 
     private void drawTile(Graphics2D g2, int i, int j) {
@@ -96,13 +97,5 @@ public class MapManager implements Manager {
             return true;
         }
         return map[row][column].onCollide(gamePanel.getPlayer());
-    }
-
-    public boolean isWall(int row, int column) {
-        Config config = gamePanel.getConfig();
-        if (row < 0 || row >= config.maxWorldRow() || column < 0 || column >= config.maxWorldCol()) {
-            return true;
-        }
-        return map[row][column] instanceof Wall;
     }
 }

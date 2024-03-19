@@ -1,6 +1,8 @@
 package RacoonRush.entity.enemy;
 
 import RacoonRush.entity.Entity;
+import RacoonRush.entity.Player;
+import RacoonRush.game.CollisionDetector;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.Move;
@@ -11,35 +13,70 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 public abstract class Enemy extends Entity {
-    private final Config config;
-    protected int damage, cooldown;
-    public Enemy(GamePanel gamePanel, int worldX, int worldY, int speed, int damage, int cooldown, Rectangle hitbox, ArrayList<EnumMap<Move, BufferedImage>> images) {
-        this.gamePanel = gamePanel;
-        config = gamePanel.getConfig();
-        this.worldX = worldX;
-        this.worldY = worldY;
-        this.speed = speed;
+    protected int damage, abilityDuration, abilityCooldownDuration, abilityCooldownCounter;
+    protected boolean abilityActive;
+
+    public Enemy(GamePanel gamePanel, int worldX, int worldY, int speed, Move direction, ArrayList<EnumMap<Move, BufferedImage>> images,
+                 int damage, int abilityDuration, int abilityCooldownDuration) {
+        super(gamePanel, worldX, worldY, speed, direction, images);
         this.damage = damage;
-        this.cooldown = cooldown;
-        this.hitbox = hitbox;
-        this.images = images;
-    }
-    public abstract void ability();
-
-    public int leftColumn(int offsetX) {
-        return (worldX + hitbox.x + offsetX) / config.tileSize();
+        this.abilityDuration = abilityDuration;
+        this.abilityCooldownDuration = abilityCooldownDuration;
+        abilityCooldownCounter = abilityCooldownDuration;
+        abilityActive = false;
     }
 
-    public int rightColumn(int offsetX) {
-        return (worldX + hitbox.x + hitbox.width + offsetX) / config.tileSize();
+    public abstract void activateAbility();
+    public abstract void deactivateAbility();
+
+    @Override
+    public void update() {
+        CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
+        if (collisionDetector.move(this, direction)) {
+            switch (direction) {
+                case UP:
+                    worldY -= speed;
+                    break;
+                case DOWN:
+                    worldY += speed;
+                    break;
+                case LEFT:
+                    worldX -= speed;
+                    break;
+                case RIGHT:
+                    worldX += speed;
+                    break;
+            }
+        } else {
+            direction = collisionDetector.nextDirection(this);
+            System.out.println("New direction: " + direction);
+        }
+        if (abilityActive) {
+            abilityDuration--;
+            if (abilityDuration == 0) {
+                deactivateAbility();
+                abilityActive = false;
+                abilityCooldownCounter = abilityCooldownDuration;
+            }
+        } else {
+            abilityCooldownCounter--;
+            if (abilityCooldownCounter == 0) {
+                activateAbility();
+                abilityActive = true;
+            }
+        }
     }
 
-    public int topRow(int offsetY) {
-        return (worldY + hitbox.y + offsetY) / config.tileSize();
+    @Override
+    public void draw(Graphics2D g2) {
+        Config config = gamePanel.getConfig();
+        Player player = gamePanel.getPlayer();
+        g2.drawImage(getImage(gamePanel.getPlayerAnimationFrame(), direction),
+                worldX - player.getWorldX() + player.getScreenX(),
+                worldY - player.getWorldY() + player.getScreenY(),
+                config.tileSize(),
+                config.tileSize(),
+                null
+        );
     }
-
-    public int bottomRow(int offsetY) {
-        return (worldY + hitbox.y + hitbox.height + offsetY) / config.tileSize();
-    }
-
 }

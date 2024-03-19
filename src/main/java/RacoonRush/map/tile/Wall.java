@@ -1,6 +1,6 @@
 package RacoonRush.map.tile;
 
-import RacoonRush.entity.Player;
+import RacoonRush.entity.Entity;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public class Wall extends Tile {
     }
 
     @Override
-    public boolean onCollide(Player player) {
+    public boolean onCollide(Entity entity) {
         return false;
     }
 
