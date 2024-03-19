@@ -1,45 +1,49 @@
 package RacoonRush.game;
 
-import RacoonRush.entity.Player;
+import RacoonRush.entity.Entity;
+import RacoonRush.entity.enemy.Enemy;
 import RacoonRush.map.MapManager;
+
+import java.util.ArrayList;
 
 /**
  * This class represents the collision detector for the game.
  * It is used to detect collisions between the player and the map.
  */
 public class CollisionDetector {
-    private final GamePanel gp;
+    private final GamePanel gamePanel;
 
     /**
      * This constructor initializes the collision detector with the current game panel.
-     * @param gp The game panel.
+     * @param gamePanel The game panel.
      */
-    public CollisionDetector(GamePanel gp) {
-        this.gp = gp;
+    public CollisionDetector(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
     }
 
     /**
-     * @param player The player object.
+     * @param entity The entity object.
      * @param direction The direction to move.
      * Interact with the blocks in the given direction
-     * @return true if the player can move.
+     * @return true if the entity can move in the given direction.
      */
-    public boolean move(Player player, Move direction) {
-        MapManager mapManager = gp.getMapManager();
+    public boolean move(Entity entity, Move direction) {
+        MapManager mapManager = gamePanel.getMapManager();
+        int speed = entity.getSpeed();
         int offsetX = switch (direction) {
-            case LEFT -> -player.speed;
-            case RIGHT -> player.speed;
+            case LEFT -> -speed;
+            case RIGHT -> speed;
             default -> 0;
         };
         int offsetY = switch (direction) {
-            case UP -> -player.speed;
-            case DOWN -> player.speed;
+            case UP -> -speed;
+            case DOWN -> speed;
             default -> 0;
         };
-        int leftColumn = player.leftColumn(offsetX);
-        int rightColumn = player.rightColumn(offsetX);
-        int topRow = player.topRow(offsetY);
-        int bottomRow = player.bottomRow(offsetY);
+        int leftColumn = entity.leftColumn(offsetX);
+        int rightColumn = entity.rightColumn(offsetX);
+        int topRow = entity.topRow(offsetY);
+        int bottomRow = entity.bottomRow(offsetY);
 
         return switch (direction) {
             case UP -> mapManager.onCollide(topRow, leftColumn) && mapManager.onCollide(topRow, rightColumn);
@@ -47,5 +51,16 @@ public class CollisionDetector {
             case LEFT -> mapManager.onCollide(topRow, leftColumn) && mapManager.onCollide(bottomRow, leftColumn);
             case RIGHT -> mapManager.onCollide(topRow, rightColumn) && mapManager.onCollide(bottomRow, rightColumn);
         };
+    }
+
+    public Move nextDirection(Enemy enemy) {
+        ArrayList<Move> moves = new ArrayList<>();
+        for (Move move : Move.values()) {
+            if (move(enemy, move)) {
+                moves.add(move);
+            }
+        }
+
+        return moves.get((int) (Math.random() * moves.size()));
     }
 }

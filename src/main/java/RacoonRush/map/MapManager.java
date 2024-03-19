@@ -3,6 +3,7 @@ package RacoonRush.map;
 import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
+import RacoonRush.game.Manager;
 import RacoonRush.map.tile.Tile;
 
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImage;
  * MapManager class is used to manage the map of the game.
  * It is used to load the map, draw the map, and check for collisions.
  */
-public class MapManager{
+public class MapManager implements Manager {
 
     private final GamePanel gamePanel;
     private final MapLoader mapLoader;
@@ -53,17 +54,18 @@ public class MapManager{
      * @param g2 Graphics2D object
      */
     private void drawBackground(Graphics2D g2) {
+        Config config = gamePanel.getConfig();
         Player player = gamePanel.getPlayer();
         int worldX = player.getWorldX();
         int worldY = player.getWorldY();
         int screenX = player.getScreenX();
         int screenY = player.getScreenY();
+        int size = config.screenWidth();
 
-        // draw each background tile in a 2x2 grid
-        g2.drawImage(background[0], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background[1], getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY), 768, 768, null);
-        g2.drawImage(background[2], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
-        g2.drawImage(background[3], getScreenCoordinate(0, worldX, screenX) + 768, getScreenCoordinate(0, worldY, screenY) + 768, 768, 768, null);
+        g2.drawImage(background[0], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), size, size, null);
+        g2.drawImage(background[1], getScreenCoordinate(0, worldX, screenX) + size, getScreenCoordinate(0, worldY, screenY), size, size, null);
+        g2.drawImage(background[2], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY) + size, size, size, null);
+        g2.drawImage(background[3], getScreenCoordinate(0, worldX, screenX) + size, getScreenCoordinate(0, worldY, screenY) + size, size, size, null);
     }
 
     /**
@@ -79,7 +81,7 @@ public class MapManager{
         int screenX = getScreenCoordinate(j, player.getWorldX(), player.getScreenX());
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
 
-        g2.drawImage(map[i][j].getImage(i, j, gamePanel.getCollectibleAnimationFrame()), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        g2.drawImage(map[i][j].getImage(i, j, gamePanel.getItemAnimationFrame()), screenX, screenY, config.tileSize(), config.tileSize(), null);
     }
 
     /**
@@ -91,7 +93,7 @@ public class MapManager{
      */
     private int getStart(int world, int screen) {
         Config config = gamePanel.getConfig();
-        return Math.max((world - screen - config.screenWidth()) / config.tileSize(), 0);
+        return Math.max((world - screen) / config.tileSize(), 0);
     }
 
     /**
@@ -104,8 +106,10 @@ public class MapManager{
      */
     private int getEnd(int world, int screen, int max) {
         Config config = gamePanel.getConfig();
-        return Math.min((world + screen + config.screenWidth()) / config.tileSize(), max);
+        return Math.min((world + screen) / config.tileSize() + 2, max);
     }
+
+    public void update() {}
 
     /**
      * Method to draw the map on the screen

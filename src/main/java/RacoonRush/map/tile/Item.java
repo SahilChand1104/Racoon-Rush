@@ -1,5 +1,6 @@
 package RacoonRush.map.tile;
 
+import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
 import RacoonRush.game.GamePanel;
 
@@ -26,7 +27,7 @@ public class Item extends Tile {
         super(images);
         this.gamePanel = gamePanel;
         this.score = score;
-        collected = score == 50;
+        collected = false;
     }
 
     /**
@@ -34,8 +35,8 @@ public class Item extends Tile {
      * @return true
      */
     @Override
-    public boolean onCollide(Player player) {
-        if (!collected) {
+    public boolean onCollide(Entity entity) {
+        if (entity instanceof Player player && !collected) {
             collected = true;
             player.updateScore(score);
 
@@ -48,8 +49,10 @@ public class Item extends Tile {
             } else if (score == 0 && gamePanel.getPlayer().getDonutsLeft() == 0) {
                 gamePanel.winGame();
             }
+
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -61,9 +64,6 @@ public class Item extends Tile {
      */
     @Override
     public BufferedImage getImage(int x, int y, int animationFrame) {
-        if (images == null) {
-            return null;
-        }
         return collected ? null : images.get(animationFrame % images.size());
     }
 

@@ -1,5 +1,7 @@
 package RacoonRush.game;
 
+import RacoonRush.entity.EntityManager;
+import RacoonRush.entity.EntityManager;
 import RacoonRush.entity.Player;
 import RacoonRush.game.menu.UI;
 import RacoonRush.game.menu.UIKeyHandler;
@@ -25,17 +27,18 @@ public class GamePanel extends JPanel implements Runnable {
     private final Config config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
     private final ImageLoader imageLoader;
     private final MapManager mapManager;
+    private final EntityManager entityManager;
+    private final Player player;
     private final KeyHandler keyHandler;
     private final Sound sound;
     private final UIKeyHandler uiKeyHandler;
     private final CollisionDetector collisionDetector;
-    private final Player player;
     private final UI ui;
     private GameState gameState;
     private final Scoreboard scoreboard;
     private Thread gameThread;
     private int playerAnimationFrame;
-    private int collectibleAnimationFrame;
+    private int itemAnimationFrame;
     private final GameTime time;
     private final ArrayList<Item> pizzas;
     private int numPizzas;
@@ -50,11 +53,12 @@ public class GamePanel extends JPanel implements Runnable {
     public GamePanel() {
         imageLoader = new ImageLoader(this);
         keyHandler = new KeyHandler();
-        sound  = new Sound();
         mapManager = new MapManager(this);
+        entityManager = new EntityManager(this);
+        player = entityManager.getPlayer();
         collisionDetector = new CollisionDetector(this);
+        sound  = new Sound();
         scoreboard = new Scoreboard();
-        player = new Player(this);
         playMusic(0);
         uiKeyHandler = new UIKeyHandler();
         ui = new UI(this);
@@ -108,7 +112,7 @@ public class GamePanel extends JPanel implements Runnable {
         int animationCounter = 0;
         int animationInterval = config.FPS() / config.animationFPS();
         playerAnimationFrame = 0;
-        collectibleAnimationFrame = 0;
+        itemAnimationFrame = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
@@ -118,12 +122,8 @@ public class GamePanel extends JPanel implements Runnable {
                 animationCounter++;
                 if (animationCounter % animationInterval == 0) {
                     playerAnimationFrame = (playerAnimationFrame == 0) ? 1 : 0;
+                    itemAnimationFrame = (itemAnimationFrame < 11) ? itemAnimationFrame + 1 : 0;
                     animationCounter = 0;
-                    if (collectibleAnimationFrame < 11) {
-                        collectibleAnimationFrame++;
-                    } else {
-                        collectibleAnimationFrame = 0;
-                    }
                 }
                 update();
                 repaint();
@@ -141,7 +141,7 @@ public class GamePanel extends JPanel implements Runnable {
                 ui.update();
                 break;
             case PLAY:
-                player.update();
+                entityManager.update();
                 Random rand = new Random();
                 int ranPizza = rand.nextInt(numPizzas);
                 for (int i = 0; i < numPizzas; i++) {
@@ -198,7 +198,7 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
             case PLAY:
                 mapManager.draw(g2);
-                player.draw(g2, playerAnimationFrame);
+                entityManager.draw(g2);
                 break;
             case GAMEOVER:
                 g2.setColor(Color.RED);
@@ -355,6 +355,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
+     * Method to get the gamepanel's map manager
+     * @return the map manager object
+     */
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    /**
      * Method to get the gamepanel's collision detector
      * @return the collision object
      */
@@ -367,8 +375,9 @@ public class GamePanel extends JPanel implements Runnable {
      * @return the player object
      */
     public Player getPlayer() {
-        return player;
+        return entityManager.getPlayer();
     }
+
 
 
     /**
@@ -380,11 +389,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Returns the current frame index for the collectible animation.
-     * @return The current frame index for the collectible animation.
+     * Returns the current frame index for the item animation.
+     * @return The current frame index for the item animation.
      */
-    public int getCollectibleAnimationFrame() {
-        return collectibleAnimationFrame;
+    public int getItemAnimationFrame() {
+        return itemAnimationFrame;
     }
 
     /**
