@@ -6,14 +6,27 @@ import RacoonRush.map.MapManager;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents the collision detector for the game.
+ * It is used to detect collisions between the player and the map.
+ */
 public class CollisionDetector {
     private final GamePanel gamePanel;
+
+    /**
+     * This constructor initializes the collision detector with the current game panel.
+     * @param gamePanel The game panel.
+     */
     public CollisionDetector(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
 
-    // Interact with the blocks in the given direction
-    // Returns true if the entity can move
+    /**
+     * @param entity The entity object.
+     * @param direction The direction to move.
+     * Interact with the blocks in the given direction
+     * @return true if the entity can move in the given direction.
+     */
     public boolean move(Entity entity, Move direction) {
         MapManager mapManager = gamePanel.getMapManager();
         int speed = entity.getSpeed();
