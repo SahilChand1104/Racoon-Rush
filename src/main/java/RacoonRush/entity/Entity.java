@@ -12,11 +12,9 @@ import java.util.EnumMap;
 public abstract class Entity {
     protected GamePanel gamePanel;
     protected int worldX, worldY, speed;
-
     protected Move direction;
-    protected Rectangle hitbox;
-
     protected ArrayList<EnumMap<Move, BufferedImage>> images;
+    protected Rectangle hitbox;
 
     public Entity(GamePanel gamePanel, int worldX, int worldY, int speed, Move direction, ArrayList<EnumMap<Move, BufferedImage>> images) {
         this.gamePanel = gamePanel;
@@ -49,6 +47,10 @@ public abstract class Entity {
 
     public BufferedImage getImage(int index, Move move) {
         return images.get(index).get(move);
+    }
+
+    public Rectangle getWorldHitbox() {
+        return new Rectangle(worldX + hitbox.x, worldY + hitbox.y, hitbox.width, hitbox.height);
     }
 
     public int leftColumn(int offsetX) {

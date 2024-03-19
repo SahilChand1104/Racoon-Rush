@@ -1,5 +1,6 @@
 package RacoonRush.entity;
 
+import RacoonRush.entity.enemy.Enemy;
 import RacoonRush.game.*;
 
 import java.awt.*;
@@ -8,8 +9,8 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 public class Player extends Entity implements Manager {
-    public final int screenX, screenY;
-    private int score;
+    public final int screenX, screenY, invincibilityDuration;
+    private int score, invincibilityFrames;
 
     public Player(GamePanel gamePanel, int worldX, int worldY, int speed, Move direction, ArrayList<EnumMap<Move, BufferedImage>> images) {
         super(gamePanel, worldX, worldY, speed, direction, images);
@@ -18,6 +19,8 @@ public class Player extends Entity implements Manager {
         Config config = gamePanel.getConfig();
         screenX = config.screenWidth() / 2 - config.tileSize() / 2;
         screenY = config.screenHeight() / 2 - config.tileSize() / 2;
+        score = 0;
+        invincibilityDuration = 120;
     }
 
     @Override
@@ -41,6 +44,7 @@ public class Player extends Entity implements Manager {
             direction = Move.RIGHT;
             worldX += speed;
         }
+        invincibilityFrames = isInvincible() ? invincibilityFrames - 1 : invincibilityFrames;
     }
 
     @Override
@@ -54,6 +58,15 @@ public class Player extends Entity implements Manager {
                 gamePanel.getConfig().tileSize(),
                 null
         );
+    }
+
+    public boolean isInvincible() {
+        return invincibilityFrames > 0;
+    }
+
+    public void onCollide(Enemy enemy) {
+        updateScore(-enemy.getDamage());
+        invincibilityFrames = invincibilityDuration;
     }
 
     public void updateScore(int score) {

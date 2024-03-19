@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 public abstract class Enemy extends Entity {
-    protected int damage, abilityDuration, abilityCooldownDuration, abilityCooldownCounter;
+    protected int damage, abilityDuration, abilityCooldownDuration, abilityCooldownFrames;
     protected boolean abilityActive;
 
     public Enemy(GamePanel gamePanel, int worldX, int worldY, int speed, Move direction, ArrayList<EnumMap<Move, BufferedImage>> images,
@@ -22,7 +22,7 @@ public abstract class Enemy extends Entity {
         this.damage = damage;
         this.abilityDuration = abilityDuration;
         this.abilityCooldownDuration = abilityCooldownDuration;
-        abilityCooldownCounter = abilityCooldownDuration;
+        abilityCooldownFrames = abilityCooldownDuration;
         abilityActive = false;
     }
 
@@ -49,18 +49,17 @@ public abstract class Enemy extends Entity {
             }
         } else {
             direction = collisionDetector.nextDirection(this);
-            System.out.println("New direction: " + direction);
         }
         if (abilityActive) {
             abilityDuration--;
             if (abilityDuration == 0) {
                 deactivateAbility();
                 abilityActive = false;
-                abilityCooldownCounter = abilityCooldownDuration;
+                abilityCooldownFrames = abilityCooldownDuration;
             }
         } else {
-            abilityCooldownCounter--;
-            if (abilityCooldownCounter == 0) {
+            abilityCooldownFrames--;
+            if (abilityCooldownFrames == 0) {
                 activateAbility();
                 abilityActive = true;
             }
@@ -78,5 +77,9 @@ public abstract class Enemy extends Entity {
                 config.tileSize(),
                 null
         );
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }

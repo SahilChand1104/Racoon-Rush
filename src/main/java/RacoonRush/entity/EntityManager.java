@@ -1,6 +1,7 @@
 package RacoonRush.entity;
 
 import RacoonRush.entity.enemy.Caffeine;
+import RacoonRush.entity.enemy.Enemy;
 import RacoonRush.entity.enemy.EnemyType;
 import RacoonRush.entity.enemy.Racoon;
 import RacoonRush.game.Config;
@@ -15,7 +16,7 @@ import java.util.Comparator;
 public class EntityManager {
     private final GamePanel gamePanel;
     private final Player player;
-    private final ArrayList<Entity> enemyList;
+    private final ArrayList<Enemy> enemyList;
 
     public EntityManager (GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -54,8 +55,12 @@ public class EntityManager {
 
     public void update() {
         player.update();
-        for (Entity enemy : enemyList) {
+        for (Enemy enemy : enemyList) {
             enemy.update();
+            if (!player.isInvincible() && player.getWorldHitbox().intersects(enemy.getWorldHitbox())) {
+                player.onCollide(enemy);
+                System.out.println("Player collided with enemy");
+            }
         }
     }
 

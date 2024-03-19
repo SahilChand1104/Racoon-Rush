@@ -15,11 +15,11 @@ public class Caffeine extends Enemy {
 
     @Override
     public void activateAbility() {
-
+        speed *= 2;
     }
 
     @Override
     public void deactivateAbility() {
-
+        speed /= 2;
     }
 }

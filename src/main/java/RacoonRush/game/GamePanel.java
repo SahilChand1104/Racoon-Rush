@@ -99,7 +99,6 @@ public class GamePanel extends JPanel implements Runnable {
         return collisionDetector;
     }
 
-
     public MapManager getMapManager() {
         return mapManager;
     }
@@ -119,5 +118,4 @@ public class GamePanel extends JPanel implements Runnable {
     public int getItemAnimationFrame() {
         return itemAnimationFrame;
     }
-
 }
