@@ -148,7 +148,7 @@ public class MapManager{
      * @return true if the player can move to the tile, false otherwise
      */
     public boolean onCollide(int row, int column) {
-        if (row < 0 || column < 0) {
+        if (row < 0 || column < 0 || row >= map.length || column >= map[row].length) {
             return false;
         }
         if (map[row][column] == null) {
