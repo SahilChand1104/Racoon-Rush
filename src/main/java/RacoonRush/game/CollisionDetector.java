@@ -46,10 +46,10 @@ public class CollisionDetector {
         int bottomRow = entity.bottomRow(offsetY);
 
         return switch (direction) {
-            case UP -> mapManager.onCollide(topRow, leftColumn) && mapManager.onCollide(topRow, rightColumn);
-            case DOWN -> mapManager.onCollide(bottomRow, leftColumn) && mapManager.onCollide(bottomRow, rightColumn);
-            case LEFT -> mapManager.onCollide(topRow, leftColumn) && mapManager.onCollide(bottomRow, leftColumn);
-            case RIGHT -> mapManager.onCollide(topRow, rightColumn) && mapManager.onCollide(bottomRow, rightColumn);
+            case UP -> mapManager.onCollide(topRow, leftColumn, entity) && mapManager.onCollide(topRow, rightColumn, entity);
+            case DOWN -> mapManager.onCollide(bottomRow, leftColumn, entity) && mapManager.onCollide(bottomRow, rightColumn, entity);
+            case LEFT -> mapManager.onCollide(topRow, leftColumn, entity) && mapManager.onCollide(bottomRow, leftColumn, entity);
+            case RIGHT -> mapManager.onCollide(topRow, rightColumn, entity) && mapManager.onCollide(bottomRow, rightColumn, entity);
         };
     }
 

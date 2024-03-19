@@ -1,5 +1,6 @@
 package RacoonRush.map;
 
+import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
@@ -151,13 +152,13 @@ public class MapManager implements Manager {
      * @param column column index of the tile
      * @return true if the player can move to the tile, false otherwise
      */
-    public boolean onCollide(int row, int column) {
+    public boolean onCollide(int row, int column, Entity entity) {
         if (row < 0 || column < 0 || row >= map.length || column >= map[row].length) {
             return false;
         }
         if (map[row][column] == null) {
             return true;
         }
-        return map[row][column].onCollide(gamePanel.getPlayer());
+        return map[row][column].onCollide(entity);
     }
 }

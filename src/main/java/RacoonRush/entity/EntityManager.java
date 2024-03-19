@@ -59,7 +59,6 @@ public class EntityManager {
             enemy.update();
             if (!player.isInvincible() && player.getWorldHitbox().intersects(enemy.getWorldHitbox())) {
                 player.onCollide(enemy);
-                System.out.println("Player collided with enemy");
             }
         }
     }

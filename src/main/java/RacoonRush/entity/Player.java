@@ -29,7 +29,6 @@ public class Player extends Entity implements Manager {
         Config config = gamePanel.getConfig();
         screenX = config.screenWidth() / 2 - config.tileSize() / 2;
         screenY = config.screenHeight() / 2 - config.tileSize() / 2;
-        score = 0;
         invincibilityDuration = 120;
         score = 0;
         donutsLeft = 0;
@@ -75,7 +74,6 @@ public class Player extends Entity implements Manager {
     /**
      * Draws the player
      * @param g2 the graphics2D object
-     * @param animationFrame the animation frame for the player
      */
     @Override
     public void draw(Graphics2D g2) {
@@ -95,6 +93,7 @@ public class Player extends Entity implements Manager {
     }
 
     public void onCollide(Enemy enemy) {
+        gamePanel.loseGame(); // For now, lose game as per assignment instructions, but can be removed if desired
         updateScore(-enemy.getDamage());
         invincibilityFrames = invincibilityDuration;
     }
@@ -106,13 +105,13 @@ public class Player extends Entity implements Manager {
     public void updateScore(int score) {
         Scoreboard scoreboard = gamePanel.getScoreboard();
         this.score += score;
-        scoreboard.updateScore(score);
+        scoreboard.updateScore(this.score);
         if (score == 10) {
             donutsLeft--;
             if (donutsLeft == 0) {
                 scoreboard.showMessage("+10 points! Hurry to the exit!");
             } else if (donutsLeft == 1) {
-                scoreboard.showMessage("+10 points! 1 more donuts left.");
+                scoreboard.showMessage("+10 points! 1 more donut left.");
             } else {
                 scoreboard.showMessage("+10 points! " + donutsLeft + " more donuts left.");
             }

@@ -2,6 +2,7 @@ package RacoonRush.map.tile;
 
 import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
+import RacoonRush.entity.enemy.Enemy;
 import RacoonRush.game.GamePanel;
 
 import java.awt.image.BufferedImage;
@@ -50,9 +51,9 @@ public class Item extends Tile {
                 gamePanel.winGame();
             }
 
-            return true;
         }
-        return false;
+
+        return true;
     }
 
     /**
@@ -64,6 +65,7 @@ public class Item extends Tile {
      */
     @Override
     public BufferedImage getImage(int x, int y, int animationFrame) {
+        if (images == null) { return null; }
         return collected ? null : images.get(animationFrame % images.size());
     }
 
