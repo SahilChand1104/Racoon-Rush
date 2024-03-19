@@ -39,6 +39,7 @@ public class EntityManager {
     private void createEnemyList() {
         Config config = gamePanel.getConfig();
         createEnemy(EnemyType.RACOON, config.maxWorldCol() - 10, config.maxWorldRow() - 10);
+        createEnemy(EnemyType.RACOON, 5, 5);
     }
 
     private void createEnemy(EnemyType type, int startX, int startY) {
