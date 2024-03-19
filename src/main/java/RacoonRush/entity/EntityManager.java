@@ -29,7 +29,7 @@ public class EntityManager {
         Config config = gamePanel.getConfig();
         return new Player(
                 gamePanel,
-                config.tileSize() * (config.maxWorldCol() - 26),
+                config.tileSize() * (config.maxWorldCol() - 2),
                 config.tileSize() * (config.maxWorldRow() - 2),
                 4,
                 Move.DOWN,
@@ -38,7 +38,7 @@ public class EntityManager {
 
     private void createEnemyList() {
         Config config = gamePanel.getConfig();
-        createEnemy(EnemyType.RACOON, config.maxWorldCol() - 28, config.maxWorldRow() - 2);
+        createEnemy(EnemyType.RACOON, config.maxWorldCol() - 10, config.maxWorldRow() - 10);
     }
 
     private void createEnemy(EnemyType type, int startX, int startY) {
