@@ -28,6 +28,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final ImageLoader imageLoader;
     private final MapManager mapManager;
     private final EntityManager entityManager;
+    private final Player player;
     private final KeyHandler keyHandler;
     private final Sound sound;
     private final UIKeyHandler uiKeyHandler;
@@ -54,6 +55,7 @@ public class GamePanel extends JPanel implements Runnable {
         keyHandler = new KeyHandler();
         mapManager = new MapManager(this);
         entityManager = new EntityManager(this);
+        player = entityManager.getPlayer();
         collisionDetector = new CollisionDetector(this);
         sound  = new Sound();
         scoreboard = new Scoreboard();
