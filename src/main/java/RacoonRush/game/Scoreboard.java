@@ -1,6 +1,6 @@
 package RacoonRush.game;
 
-import RacoonRush.entity.Player;
+import RacoonRush.map.tile.Item;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,15 +12,16 @@ import java.io.IOException;
  * Scoreboard class for the game
  */
 public class Scoreboard extends JPanel {
-    private JLabel scoreLabel;
-    private JLabel timerLabel;
-    private JLabel messageLabel;
-    private boolean isDisabled;
+    private final GamePanel gamePanel;
+    private final JLabel scoreLabel;
+    private final JLabel timerLabel;
+    private final JLabel messageLabel;
 
     /**
      * Constructor for the Scoreboard
      */
-    public Scoreboard() {
+    public Scoreboard(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.BLACK);
@@ -31,7 +32,7 @@ public class Scoreboard extends JPanel {
 
         // Set font and size for labels
         try {
-            Font labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/font/VCR_OSD_MONO_1.001.ttf").openStream());
+            Font labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
             scoreLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
             timerLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
             messageLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
@@ -54,15 +55,16 @@ public class Scoreboard extends JPanel {
         add(scoreLabel);
         add(timerLabel);
         add(messageLabel);
+
+        setVisible(false);
     }
 
     /**
      * Update the score on the scoreboard
-     * @param score The new score
      */
-    public void updateScore(int score) {
-        if (!isDisabled) {
-            scoreLabel.setText("Score: " + score);
+    public void updateScore() {
+        if (isVisible()) {
+            scoreLabel.setText("Score: " + gamePanel.getScore());
         }
     }
 
@@ -71,7 +73,7 @@ public class Scoreboard extends JPanel {
      * @param timeInSeconds The new time in seconds
      */
     public void updateTimer(String timeInSeconds) {
-        if (!isDisabled) {
+        if (isVisible()) {
             timerLabel.setText("Time: " + timeInSeconds);
         }
     }
@@ -81,7 +83,7 @@ public class Scoreboard extends JPanel {
      * @param message The string message to show
      */
     public void showMessage(String message) {
-        if (!isDisabled) {
+        if (isVisible()) {
             messageLabel.setText(message);
             // Create a javax.swing.Timer to clear the message after 3 seconds
             Timer timer = new Timer(2000, new ActionListener() {
@@ -93,15 +95,6 @@ public class Scoreboard extends JPanel {
             timer.setRepeats(false);
             timer.start();
         }
-    }
-
-    /**
-     * Reset the scoreboard
-     */
-    public void reset() {
-        scoreLabel.setText("Score: 0");
-        timerLabel.setText("Time: 00:00");
-        messageLabel.setText(" ");
     }
 
     /**
@@ -125,12 +118,20 @@ public class Scoreboard extends JPanel {
         g2d.dispose();
     }
 
-    /**
-     * Set the disabled state of the scoreboard
-     * @param bool The new disabled state
-     * @return The new disabled state
-     */
-    public boolean setDisabled(boolean bool) {
-        return isDisabled = bool;
+    public void collectItemMessage(Item item, int donutsLeft) {
+        if (!isVisible()) {
+            return;
+        }
+        showMessage(switch (item.getType()) {
+            case DONUT -> "+10 points! " + switch (donutsLeft) {
+                case 0 -> "Hurry to the exit!";
+                case 1 -> "1 more donut left.";
+                default -> donutsLeft + " more donuts left.";
+            };
+            case LEFTOVER -> "-20 points...";
+            case PIZZA -> "+50 points! You found Uncle Fatih's lost pizza!";
+            default -> "";
+        });
+        updateScore();
     }
 }

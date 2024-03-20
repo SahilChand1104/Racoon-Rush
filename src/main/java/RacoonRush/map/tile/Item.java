@@ -1,10 +1,5 @@
 package RacoonRush.map.tile;
 
-import RacoonRush.entity.Entity;
-import RacoonRush.entity.Player;
-import RacoonRush.entity.enemy.Enemy;
-import RacoonRush.game.GamePanel;
-
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -13,47 +8,18 @@ import java.util.ArrayList;
  * It has a score value and a boolean to check if it has been collected.
  */
 public class Item extends Tile {
-    private final int score;
-
-    private final GamePanel gamePanel;
+    private final TileType type;
     private boolean collected;
 
     /**
      * Constructor for Item class
      * @param images ArrayList of BufferedImages
-     * @param score score value of the item
-     * @param gamePanel GamePanel object
+     * @param type type of the item
      */
-    public Item(ArrayList<BufferedImage> images, int score, GamePanel gamePanel) {
+    public Item(ArrayList<BufferedImage> images, TileType type) {
         super(images);
-        this.gamePanel = gamePanel;
-        this.score = score;
+        this.type = type;
         collected = false;
-    }
-
-    /**
-     * Method to collect the item if a player collides with it
-     * @return true
-     */
-    @Override
-    public boolean onCollide(Entity entity) {
-        if (entity instanceof Player player && !collected) {
-            collected = true;
-            player.updateScore(score);
-
-            if (score == 10) {
-                gamePanel.PlaySoundEffect(1);
-            } else if (score == -20) {
-                gamePanel.PlaySoundEffect(2);
-            } else if (score == 50) {
-                gamePanel.PlaySoundEffect(1);
-            } else if (score == 0 && gamePanel.getPlayer().getDonutsLeft() == 0) {
-                gamePanel.winGame();
-            }
-
-        }
-
-        return true;
     }
 
     /**
@@ -67,6 +33,14 @@ public class Item extends Tile {
     public BufferedImage getImage(int x, int y, int animationFrame) {
         if (images == null) { return null; }
         return collected ? null : images.get(animationFrame % images.size());
+    }
+
+    public TileType getType() {
+        return type;
+    }
+
+    public boolean isCollected() {
+        return collected;
     }
 
     /**

@@ -1,7 +1,5 @@
 package RacoonRush.game.menu;
 
-import RacoonRush.game.Move;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.EnumMap;
@@ -63,7 +61,6 @@ public class UIKeyHandler implements KeyListener {
         if (code == KeyEvent.VK_P) {
             pressedUI.put(UI_Pressed.PAUSE, true);
         }
-
     }
 
     /**

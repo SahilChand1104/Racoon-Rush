@@ -1,27 +1,16 @@
 package RacoonRush.game.menu;
 
 import RacoonRush.game.GamePanel;
-import RacoonRush.game.GameState;
 import RacoonRush.game.ImageLoader;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 
 public class MenuComponent {
-
     private final GamePanel gamePanel;
-
-    private final int x;
-    private final int y;
-
+    private final int x, y;
     private final ComponentType type;
-
-    private  BufferedImage image;
-
-
+    private final BufferedImage image;
     private boolean selected;
 
     /**
@@ -34,20 +23,12 @@ public class MenuComponent {
      */
     public MenuComponent(GamePanel gamePanel, int x, int y, ComponentType type, BufferedImage image) {
         this.gamePanel = gamePanel;
-
         this.x = x;
         this.y = y;
         this.type = type;
-
-        selected = false;
-
         this.image = image;
 
-        if (type == ComponentType.PLAY) {
-            selected = true;
-        }
-
-
+        selected = (type == ComponentType.PLAY);
     }
 
     /**
@@ -81,7 +62,7 @@ public class MenuComponent {
 
     /**
      * Updates the components to be selected or not
-     * @param selected
+     * @param selected the boolean value to set the component to
      */
     public void setSelected(boolean selected) {
         this.selected = selected;

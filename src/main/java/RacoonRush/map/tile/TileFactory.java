@@ -30,10 +30,10 @@ public class TileFactory {
             case EMPTY -> null;
             case WALL -> new Wall(imageLoader.getWallImages());
             case TREE -> new Wall(imageLoader.getTreeImages());
-            case DONUT -> new Item(imageLoader.getDonutImages(), 10, gamePanel);
-            case LEFTOVER -> new Item(imageLoader.getLeftoverImages(), -20, gamePanel);
-            case PIZZA -> new Item(imageLoader.getPizzaImages(), 50, gamePanel);
-            case END -> new Item(null, 0, gamePanel);
+            case DONUT -> new Item(imageLoader.getDonutImages(), type);
+            case LEFTOVER -> new Item(imageLoader.getLeftoverImages(), type);
+            case PIZZA -> new Item(imageLoader.getPizzaImages(), type);
+            case END -> new Item(null, type);
         };
     }
 }

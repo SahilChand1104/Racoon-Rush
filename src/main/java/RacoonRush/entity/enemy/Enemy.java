@@ -69,7 +69,7 @@ public abstract class Enemy extends Entity {
     @Override
     public void draw(Graphics2D g2) {
         Config config = gamePanel.getConfig();
-        Player player = gamePanel.getPlayer();
+        Player player = gamePanel.getEntityManager().getPlayer();
         g2.drawImage(getImage(gamePanel.getPlayerAnimationFrame(), direction),
                 worldX - player.getWorldX() + player.getScreenX(),
                 worldY - player.getWorldY() + player.getScreenY(),

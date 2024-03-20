@@ -8,7 +8,6 @@ import RacoonRush.map.tile.TileFactory;
 import RacoonRush.map.tile.TileType;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,25 +33,25 @@ public class MapLoader {
      * @param filePath path to the text file
      * @return 2D array of Tile objects
      */
-    public Tile[][] loadMap(String filePath) {
+    public Tile[][] loadMap(ItemManager itemManager, String filePath) {
         Config config = gamePanel.getConfig();
         TileFactory tileFactory = new TileFactory(gamePanel);
         Tile[][] map = new Tile[config.maxWorldRow()][config.maxWorldCol()];
         List<TileType> tileTypes = new ArrayList<>(Arrays.asList(TileType.values()));
         try {
-            InputStream is = getClass().getResourceAsStream(filePath);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filePath)));
 
             for (int i = 0; i < config.maxWorldRow(); i++) {
                 String[] tokens = br.readLine().split(" ");
                 for (int j = 0; j < config.maxWorldCol(); j++) {
                     // the parsed value corresponds to the value of the tileType enum
-                    map[i][j] = tileFactory.createTile(tileTypes.get(Integer.parseInt(tokens[j])));
-                    if (tileTypes.get(Integer.parseInt(tokens[j])) == TileType.DONUT) {
-                        gamePanel.getPlayer().addDonutsLeft();
+                    TileType tileType = tileTypes.get(Integer.parseInt(tokens[j]));
+                    map[i][j] = tileFactory.createTile(tileType);
+                    if (tileType == TileType.DONUT) {
+                        itemManager.addDonut();
                     }
-                    else if (tileTypes.get(Integer.parseInt(tokens[j])) == TileType.PIZZA) {
-                        gamePanel.addPizzas((Item)map[i][j]);
+                    if (tileType == TileType.PIZZA) {
+                        itemManager.addPizza((Item) map[i][j]);
                     }
                 }
             }

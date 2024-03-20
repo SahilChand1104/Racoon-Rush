@@ -16,7 +16,7 @@ import java.util.EnumMap;
  */
 public class Player extends Entity implements Manager {
     public final int screenX, screenY, invincibilityDuration;
-    private int score, invincibilityFrames, donutsLeft;
+    private int invincibilityFrames;
 
     /**
      * Constructor for the player
@@ -30,8 +30,6 @@ public class Player extends Entity implements Manager {
         screenX = config.screenWidth() / 2 - config.tileSize() / 2;
         screenY = config.screenHeight() / 2 - config.tileSize() / 2;
         invincibilityDuration = 120;
-        score = 0;
-        donutsLeft = 0;
     }
 
     /**
@@ -65,9 +63,6 @@ public class Player extends Entity implements Manager {
             direction = Move.RIGHT;
             worldX += speed;
         }
-        if (score < 0) {
-            gamePanel.loseGame();
-        }
         invincibilityFrames = isInvincible() ? invincibilityFrames - 1 : invincibilityFrames;
     }
 
@@ -94,32 +89,8 @@ public class Player extends Entity implements Manager {
 
     public void onCollide(Enemy enemy) {
         gamePanel.loseGame(); // For now, lose game as per assignment instructions, but can be removed if desired
-        updateScore(-enemy.getDamage());
+        // updateScore(-enemy.getDamage());
         invincibilityFrames = invincibilityDuration;
-    }
-
-    /**
-     * Updates the score
-     * @param score the score
-     */
-    public void updateScore(int score) {
-        Scoreboard scoreboard = gamePanel.getScoreboard();
-        this.score += score;
-        scoreboard.updateScore(this.score);
-        if (score == 10) {
-            donutsLeft--;
-            if (donutsLeft == 0) {
-                scoreboard.showMessage("+10 points! Hurry to the exit!");
-            } else if (donutsLeft == 1) {
-                scoreboard.showMessage("+10 points! 1 more donut left.");
-            } else {
-                scoreboard.showMessage("+10 points! " + donutsLeft + " more donuts left.");
-            }
-        } else if (score == -20) {
-            scoreboard.showMessage("-20 points...");
-        } else if (score == 50) {
-            scoreboard.showMessage("+50 points! You found Uncle Fatih's lost pizza!");
-        }
     }
 
     /**
@@ -137,22 +108,4 @@ public class Player extends Entity implements Manager {
     public int getScreenY() {
         return screenY;
     }
-
-    /**
-     * Add a donut to the donutsLeft count
-     */
-    public void addDonutsLeft() { donutsLeft++; }
-    /**
-     * Remove a donut from the donutsLeft count
-     */
-    public int getDonutsLeft() { return donutsLeft; }
-    /**
-     * Returns the score
-     * @return the score
-     */
-    public int getScore() { return score; }
-    /**
-     * Resets the score
-     */
-    public void resetScore() { score = 0; }
 }

@@ -1,5 +1,5 @@
 package RacoonRush.game;
 
 public enum GameState {
-    MENU, PLAY, GAMEOVER, WIN, QUIT;
+    MENU, PLAY, PAUSE, GAMEOVER, WIN, QUIT
 }

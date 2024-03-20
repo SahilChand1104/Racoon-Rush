@@ -1,7 +1,6 @@
 package RacoonRush.game.menu;
 
 import RacoonRush.game.GamePanel;
-import RacoonRush.game.KeyHandler;
 
 import java.awt.*;
 import java.io.IOException;
@@ -9,8 +8,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 public class UI {
-    private final Font arial_40;
-
     private final GamePanel gamePanel;
 
     // Enum map for all menu components
@@ -29,7 +26,6 @@ public class UI {
      */
     public UI(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        arial_40 = new Font("Arial", Font.PLAIN, 40);
         components = new EnumMap<>(ComponentType.class);
         selectableComponents = new ArrayList<>();
         // Load the menu components
@@ -74,8 +70,8 @@ public class UI {
         // Draw the background
         components.get(ComponentType.BG).draw(g2);
         try {
-            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/font/VCR_OSD_MONO_1.001.ttf").openStream());
-            labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/font/VCR_OSD_MONO_1.001.ttf").openStream());
+            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
+            labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
         } catch (IOException | FontFormatException e) {
             // Handle font loading exception
             e.printStackTrace();
@@ -89,16 +85,16 @@ public class UI {
         g2.setPaint(gp);
         g2.drawString("Instructions", x_align, y_align);
         g2.setFont(labelFont.deriveFont(Font.PLAIN, 20f));
-        g2.drawString("Collect all the donuts to win", x_align, y_align+50);
-        g2.drawString("Avoid collecting the radioactive waste", x_align, y_align+100);
-        g2.drawString("You will lose if your score drops below 0!", x_align, y_align+125);
-        y_align+= 25;
-        g2.drawString("Use W A S D to move", x_align, y_align+150);
-        g2.drawString("Press P to pause", x_align, y_align+200);
-        g2.drawString("Try to catch Uncle Fatih's lost pizza as ", x_align, y_align+250);
-        g2.drawString("it teleports around the map", x_align, y_align+275);
+        g2.drawString("Collect all the donuts to win", x_align, y_align + 50);
+        g2.drawString("Avoid collecting the radioactive waste", x_align, y_align + 100);
+        g2.drawString("You will lose if your score drops below 0!", x_align, y_align + 125);
+        y_align += 25;
+        g2.drawString("Use W A S D to move", x_align, y_align + 150);
+        g2.drawString("Press P to pause", x_align, y_align + 200);
+        g2.drawString("Try to catch Uncle Fatih's lost pizza as ", x_align, y_align + 250);
+        g2.drawString("it teleports around the map", x_align, y_align + 275);
 
-        g2.drawString("Press ESC to exit...", x_align, y_align+350);
+        g2.drawString("Press ESC to exit...", x_align, y_align + 350);
     }
 
     /**
@@ -108,11 +104,11 @@ public class UI {
         MenuComponent playButton = new MenuComponent(gamePanel, 768 / 2 - 200, 200, ComponentType.PLAY, gamePanel.getImageLoader().getMenuImage(ComponentType.PLAY));
         MenuComponent instructionsButton = new MenuComponent(gamePanel, 768 / 2 - 200, 400, ComponentType.SETTINGS, gamePanel.getImageLoader().getMenuImage(ComponentType.SETTINGS));
 
-
         components.put(ComponentType.BG, new MenuComponent(gamePanel, 0, 0, ComponentType.BG, gamePanel.getImageLoader().getMenuImage(ComponentType.BG)));
         components.put(ComponentType.BANNER, new MenuComponent(gamePanel, 0, 50, ComponentType.BANNER, gamePanel.getImageLoader().getMenuImage(ComponentType.BANNER)));
         components.put(ComponentType.PLAY, playButton);
         components.put(ComponentType.SETTINGS, instructionsButton);
+
         // Add the selectable components to the list
         // Load the selectable components in the order they appear on the screen, from top to bottom
         selectableComponents.add(playButton);

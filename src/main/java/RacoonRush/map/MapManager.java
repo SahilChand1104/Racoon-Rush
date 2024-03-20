@@ -5,6 +5,7 @@ import RacoonRush.entity.Player;
 import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.game.Manager;
+import RacoonRush.map.tile.Item;
 import RacoonRush.map.tile.Tile;
 
 import java.awt.*;
@@ -17,6 +18,7 @@ import java.awt.image.BufferedImage;
 public class MapManager implements Manager {
 
     private final GamePanel gamePanel;
+    private final ItemManager itemManager;
     private final MapLoader mapLoader;
     private Tile[][] map;
 
@@ -29,6 +31,7 @@ public class MapManager implements Manager {
      */
     public MapManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
+        itemManager = new ItemManager(gamePanel);
         mapLoader = new MapLoader(gamePanel);
         // Background is made of 4 background tiles each 768x768 in size that are drawn in a 2x2 grid
         background = new BufferedImage[4];
@@ -56,7 +59,7 @@ public class MapManager implements Manager {
      */
     private void drawBackground(Graphics2D g2) {
         Config config = gamePanel.getConfig();
-        Player player = gamePanel.getPlayer();
+        Player player = gamePanel.getEntityManager().getPlayer();
         int worldX = player.getWorldX();
         int worldY = player.getWorldY();
         int screenX = player.getScreenX();
@@ -77,7 +80,7 @@ public class MapManager implements Manager {
      */
     private void drawTile(Graphics2D g2, int i, int j) {
         Config config = gamePanel.getConfig();
-        Player player = gamePanel.getPlayer();
+        Player player = gamePanel.getEntityManager().getPlayer();
 
         int screenX = getScreenCoordinate(j, player.getWorldX(), player.getScreenX());
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
@@ -110,7 +113,9 @@ public class MapManager implements Manager {
         return Math.min((world + screen) / config.tileSize() + 2, max);
     }
 
-    public void update() {}
+    public void update() {
+        itemManager.update();
+    }
 
     /**
      * Method to draw the map on the screen
@@ -118,7 +123,7 @@ public class MapManager implements Manager {
      */
     public void draw(Graphics2D g2) {
         Config config = gamePanel.getConfig();
-        Player player = gamePanel.getPlayer();
+        Player player = gamePanel.getEntityManager().getPlayer();
         int startX = getStart(player.getWorldX(), player.getScreenX());
         int startY = getStart(player.getWorldY(), player.getScreenY());
         int endX = getEnd(player.getWorldX(), player.getScreenX(), config.maxWorldCol());
@@ -143,7 +148,7 @@ public class MapManager implements Manager {
      * @param filePath path to the text file
      */
     public void loadMap(String filePath) {
-        map = mapLoader.loadMap(filePath);
+        map = mapLoader.loadMap(itemManager, filePath);
     }
 
     /**
@@ -158,6 +163,9 @@ public class MapManager implements Manager {
         }
         if (map[row][column] == null) {
             return true;
+        }
+        if (entity instanceof Player && map[row][column] instanceof Item item && !item.isCollected()) {
+            itemManager.collectItem(item);
         }
         return map[row][column].onCollide(entity);
     }
