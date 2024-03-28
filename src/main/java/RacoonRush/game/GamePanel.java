@@ -1,15 +1,14 @@
 package RacoonRush.game;
 
 import RacoonRush.entity.EntityManager;
+import RacoonRush.game.menu.MenuState;
 import RacoonRush.game.menu.UI;
 import RacoonRush.game.menu.UIKeyHandler;
-import RacoonRush.game.menu.UI_Pressed;
 import RacoonRush.map.MapManager;
 import RacoonRush.map.tile.Item;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 /**
  * This class represents the manager for all aspects of the game.
@@ -18,8 +17,6 @@ import java.io.IOException;
  * The methods include loadMap, startGameThread, run, update, paintComponent, playMusic, stopMusic, PlaySoundEffect, disableScoreboard, enableScoreboard, hideScoreboard, showScoreboard, getConfig, getImageLoader, getKeyHandler, getUIKeyHandler, getMapManager, getCollisionDetector, getPlayer, getPlayerAnimationFrame, getCollectibleAnimationFrame, getScoreboard, setGameState, getGameState, isGameRunning, openMenu, closeMenu, startGame, stopGame, winGame, loseGame, getMenuUI, and addPizzas.
  */
 public class GamePanel extends JPanel implements Runnable {
-    private String gameOverMessage = "";
-    private String winMessage = "";
     private final Config config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
     private final ImageLoader imageLoader;
     private final MapManager mapManager;
@@ -35,7 +32,6 @@ public class GamePanel extends JPanel implements Runnable {
     private int playerAnimationFrame;
     private int itemAnimationFrame;
     private final GameTime gameTime;
-    private Font labelFont;
     private int score;
 
     /**
@@ -54,11 +50,6 @@ public class GamePanel extends JPanel implements Runnable {
         gameState = GameState.MENU;
         gameTime = new GameTime(this);
         score = 0;
-        try {
-            labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
-        } catch (IOException | FontFormatException e) {
-            e.printStackTrace();
-        }
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
@@ -122,39 +113,13 @@ public class GamePanel extends JPanel implements Runnable {
      */
     public void update() {
         switch (gameState) {
-            case MENU, PAUSE:
+            case MENU, PAUSE, GAMEOVER:
                 ui.update();
                 break;
             case PLAY:
                 mapManager.update();
                 entityManager.update();
-                if (score < 0) {
-                    loseGame();
-                }
-                break;
-            case QUIT:
-                gameThread = null;
-                System.exit(0);
-                break;
-            case GAMEOVER:
-                if (gameTime.getTime() / 1000 != 0) {
-                    gameOverMessage = "You lose! Better luck next time!";
-                    gameTime.stopTimer();
-                }
-                if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
-                    System.exit(0);
-                }
-                break;
-            case WIN:
-                if (gameTime.getTime() / 1000 != 0) {
-                    winMessage = "You win!\nScore: " + score + "\nTime: " + gameTime.formatTime(gameTime.getTime());
-                    gameTime.stopTimer();
-                }
-                if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
-                    System.exit(0);
-                }
-                break;
-            default:
+                if (score < 0) { loseGame(); }
                 break;
         }
     }
@@ -168,53 +133,12 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
         switch (gameState) {
-            case MENU, PAUSE:
+            case MENU, PAUSE, GAMEOVER:
                 ui.draw(g2);
                 break;
             case PLAY:
                 mapManager.draw(g2);
                 entityManager.draw(g2);
-                break;
-            case GAMEOVER:
-                g2.setColor(Color.RED);
-                g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-                FontMetrics fontMetricsLose = g2.getFontMetrics();
-                int loseWidth = fontMetricsLose.stringWidth(gameOverMessage);
-                int x = (getWidth() - loseWidth) / 2;
-                int y = getHeight() / 2;
-                g2.drawString(gameOverMessage, x, y);
-
-                String gameOverMessage2 = "Press ESC to quit";
-                loseWidth = fontMetricsLose.stringWidth(gameOverMessage2);
-                int x1 = (getWidth() - loseWidth) / 2;
-                int y1 = getHeight() / 2 + 200;
-                g2.drawString(gameOverMessage2, x1, y1);
-                break;
-            case WIN:
-                g2.setColor(Color.GREEN);
-                g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-                FontMetrics fontMetricsWin = g2.getFontMetrics();
-
-                String[] winMessages = winMessage.split("\n");
-                int winWidth = fontMetricsWin.stringWidth(winMessages[0]); // Width of "You win!" message
-                int winX = (getWidth() - winWidth) / 2;
-                int winY = getHeight() / 2;
-                g2.drawString(winMessages[0], winX, winY);
-
-                for (int i = 1; i < winMessages.length; i++) {
-                    int messageWidth = fontMetricsWin.stringWidth(winMessages[i]);
-                    int messageX = (getWidth() - messageWidth) / 2;
-                    int messageY = winY + fontMetricsWin.getHeight() * i;
-                    g2.drawString(winMessages[i], messageX, messageY);
-                }
-
-                gameOverMessage2 = "Press ESC to quit";
-                loseWidth = fontMetricsWin.stringWidth(gameOverMessage2);
-                x1 = (getWidth() - loseWidth) / 2;
-                y1 = getHeight() / 2 + 200;
-                g2.drawString(gameOverMessage2, x1, y1);
-                break;
-            default:
                 break;
         }
         g2.dispose();
@@ -297,6 +221,10 @@ public class GamePanel extends JPanel implements Runnable {
         return ui;
     }
 
+    public GameTime getGameTime() {
+        return gameTime;
+    }
+
     /**
      * Returns the current frame index for the player animation.
      * @return The current frame index for the player animation.
@@ -350,20 +278,13 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Stops the game by setting the game state to QUIT and hides the scoreboard.
-     */
-    public void stopGame() {
-        gameTime.stopTimer();
-        scoreboard.setVisible(false);
-        gameState = GameState.QUIT;
-    }
-
-    /**
      * Indicates that the game has been won by setting the game state to WIN and hiding the scoreboard.
      */
     public void winGame() {
         scoreboard.setVisible(false);
-        gameState = GameState.WIN;
+        gameTime.stopTimer();
+        ui.setMenuState(MenuState.GAMEOVER, true);
+        gameState = GameState.GAMEOVER;
     }
 
     /**
@@ -371,6 +292,8 @@ public class GamePanel extends JPanel implements Runnable {
      */
     public void loseGame() {
         scoreboard.setVisible(false);
+        gameTime.stopTimer();
+        ui.setMenuState(MenuState.GAMEOVER, false);
         gameState = GameState.GAMEOVER;
     }
 

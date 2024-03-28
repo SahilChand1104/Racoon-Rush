@@ -48,7 +48,7 @@ public class EntityManager {
         enemyList.add(switch (type) {
             case RACOON -> new Racoon(
                     gamePanel, startX * config.tileSize(), startY * config.tileSize(), 2, Move.LEFT, imageLoader.getEnemyRacoonImages(),
-                    1, config.FPS() / 2, config.FPS() * 6
+                    1, config.FPS() * 2, config.FPS() * 10
             );
             case CAFFEINE -> null;
         });

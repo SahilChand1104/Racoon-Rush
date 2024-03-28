@@ -169,4 +169,8 @@ public class MapManager implements Manager {
         }
         return map[row][column].onCollide(entity);
     }
+
+    public int getDonutsLeft() {
+        return itemManager.getDonutsLeft();
+    }
 }

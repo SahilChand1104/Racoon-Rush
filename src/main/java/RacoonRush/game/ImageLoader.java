@@ -113,12 +113,12 @@ public class ImageLoader {
         treeImages.add(loadImage("/tile/tree_v4.png", true));
         // Load donut images for the animation
         for (int i = 0; i < 12; i++) {
-            donutImages.add(loadImage("/entity/collectible/donut_" + (i + 1) + ".png", true));
+            donutImages.add(loadImage("/item/donut_" + (i + 1) + ".png", true));
         }
         // Load leftover image
-        leftoverImages.add(loadImage("/entity/collectible/leftovers_v4.png", true));
+        leftoverImages.add(loadImage("/item/leftovers_v4.png", true));
         // Load pizza image
-        pizzaImages.add(loadImage("/entity/collectible/golden_pizza_v1.png", true));
+        pizzaImages.add(loadImage("/item/golden_pizza_v1.png", true));
 
         // Load menu images and store them in EnumMaps corresponding to their type
         menuImages.put(ComponentType.BG, loadImage("/menu/menu_bg.png", false));
@@ -131,7 +131,7 @@ public class ImageLoader {
 
     /**
      *  This method returns all images of the player.
-     * @return Array containing all images of the player.
+     * @return ArrayList containing all images of the player.
      */
     public ArrayList<EnumMap<Move, BufferedImage>> getPlayerImages() {
         return playerImages;
@@ -139,7 +139,7 @@ public class ImageLoader {
 
     /**
      *  This method returns all images of the racoon enemy.
-     * @return Array containing all images of the racoon enemy.
+     * @return ArrayList containing all images of the racoon enemy.
      */
     public ArrayList<EnumMap<Move, BufferedImage>> getEnemyRacoonImages() {
         return enemyRacoonImages;

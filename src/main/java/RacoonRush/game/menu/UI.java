@@ -1,6 +1,8 @@
 package RacoonRush.game.menu;
 
+import RacoonRush.game.Config;
 import RacoonRush.game.GamePanel;
+import RacoonRush.game.ImageLoader;
 
 import java.awt.*;
 import java.io.IOException;
@@ -16,8 +18,9 @@ public class UI {
     // List of all selectable components
     private final ArrayList<MenuComponent> selectableComponents;
     private int selectedComponentIndex;
-
     private MenuState menuState;
+    private Font font = null;
+    private boolean winStatus;
 
 
     /**
@@ -32,6 +35,48 @@ public class UI {
         loadComponents();
         selectedComponentIndex = 0;
         menuState = MenuState.MAIN;
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates the UI
+     */
+    public void update() {
+
+        // Use the UI key handler, not the game key handler
+        UIKeyHandler uiKeyHandler = gamePanel.getUIKeyHandler();
+
+        // Initialize all to false
+        for (MenuComponent component : selectableComponents) {
+            component.setSelected(false);
+        }
+
+        // Increment the selected component index depending on the key press
+        if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
+            if (menuState == MenuState.SETTINGS) {
+                menuState = MenuState.MAIN;
+                try {
+                    Thread.sleep(500); // This prevents ESC from closing the game
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.exit(0);
+            }
+        } else if (uiKeyHandler.get(UI_Pressed.UP)) {
+            selectedComponentIndex = Math.max(selectedComponentIndex - 1, 0);
+        } else if (uiKeyHandler.get(UI_Pressed.DOWN)) {
+            selectedComponentIndex = Math.min(selectedComponentIndex + 1, selectableComponents.size() - 1);
+        } else if (uiKeyHandler.get(UI_Pressed.ENTER)) {
+            selectableComponents.get(selectedComponentIndex).doAction();
+        }
+
+        // Set the selected component to true
+        selectableComponents.get(selectedComponentIndex).setSelected(true);
     }
 
     /**
@@ -39,16 +84,10 @@ public class UI {
      * @param g2 the graphics2D object
      */
     public void draw(Graphics2D g2) {
-
         switch (menuState) {
-            case MAIN: // Draw the main menu
-                drawMain(g2);
-                break;
-            case SETTINGS: // Draw the settings menu
-                drawSettings(g2);
-                break;
-            default:
-                break;
+            case MAIN -> drawMain(g2);
+            case SETTINGS -> drawSettings(g2);
+            case GAMEOVER -> drawGameover(g2);
         }
     }
 
@@ -65,26 +104,16 @@ public class UI {
      * @param g2 the graphics2D object
      */
     private void drawSettings(Graphics2D g2) {
-        Font titleFont = new Font("Arial", Font.BOLD, 40);
-        Font labelFont = new Font("Arial", Font.PLAIN, 20);
         // Draw the background
         components.get(ComponentType.BG).draw(g2);
-        try {
-            titleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
-            labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
-        } catch (IOException | FontFormatException e) {
-            // Handle font loading exception
-            e.printStackTrace();
-        }
-
         // Draw the instructions
         int x_align = 100;
         int y_align = 100;
-        g2.setFont(titleFont.deriveFont(Font.BOLD, 40f));
+        g2.setFont(font.deriveFont(Font.BOLD, 40f));
         GradientPaint gp = new GradientPaint(0, 0, Color.MAGENTA, 500, 0, Color.ORANGE);
         g2.setPaint(gp);
         g2.drawString("Instructions", x_align, y_align);
-        g2.setFont(labelFont.deriveFont(Font.PLAIN, 20f));
+        g2.setFont(font.deriveFont(Font.PLAIN, 20f));
         g2.drawString("Collect all the donuts to win", x_align, y_align + 50);
         g2.drawString("Avoid collecting the radioactive waste", x_align, y_align + 100);
         g2.drawString("You will lose if your score drops below 0!", x_align, y_align + 125);
@@ -97,15 +126,45 @@ public class UI {
         g2.drawString("Press ESC to exit...", x_align, y_align + 350);
     }
 
+    public void drawGameover(Graphics2D g2) {
+        Config config = gamePanel.getConfig();
+
+        g2.setFont(font.deriveFont(Font.BOLD, 24f));
+        FontMetrics fontMetrics = g2.getFontMetrics();
+
+        g2.setColor(winStatus ? Color.GREEN : Color.RED);
+        String[] messages = winStatus ? new String[] {
+                "You win!",
+                "Score: " + gamePanel.getScore(),
+                "Time: " + gamePanel.getGameTime().getFormattedTime()
+        } : new String[] {
+                "You lose! Better luck next time!",
+                "Donuts remaining: " + gamePanel.getMapManager().getDonutsLeft(),
+        };
+
+        for (int i = 0; i < messages.length; i++) {
+            g2.drawString(
+                    messages[i],
+                    (config.screenWidth() - fontMetrics.stringWidth(messages[i])) / 2,
+                    config.screenHeight() / 2 + fontMetrics.getHeight() * i
+            );
+        }
+
+        String exitMessage = "Press ESC to quit";
+        g2.drawString(exitMessage, (config.screenWidth() - fontMetrics.stringWidth(exitMessage)) / 2, config.screenHeight() - 100);
+    }
+
     /**
      * Loads the menu components
      */
     public void loadComponents() {
-        MenuComponent playButton = new MenuComponent(gamePanel, 768 / 2 - 200, 200, ComponentType.PLAY, gamePanel.getImageLoader().getMenuImage(ComponentType.PLAY));
-        MenuComponent instructionsButton = new MenuComponent(gamePanel, 768 / 2 - 200, 400, ComponentType.SETTINGS, gamePanel.getImageLoader().getMenuImage(ComponentType.SETTINGS));
+        ImageLoader imageLoader = gamePanel.getImageLoader();
 
-        components.put(ComponentType.BG, new MenuComponent(gamePanel, 0, 0, ComponentType.BG, gamePanel.getImageLoader().getMenuImage(ComponentType.BG)));
-        components.put(ComponentType.BANNER, new MenuComponent(gamePanel, 0, 50, ComponentType.BANNER, gamePanel.getImageLoader().getMenuImage(ComponentType.BANNER)));
+        MenuComponent playButton = new MenuComponent(gamePanel, 768 / 2 - 200, 200, ComponentType.PLAY, imageLoader.getMenuImage(ComponentType.PLAY));
+        MenuComponent instructionsButton = new MenuComponent(gamePanel, 768 / 2 - 200, 400, ComponentType.SETTINGS, imageLoader.getMenuImage(ComponentType.SETTINGS));
+
+        components.put(ComponentType.BG, new MenuComponent(gamePanel, 0, 0, ComponentType.BG, imageLoader.getMenuImage(ComponentType.BG)));
+        components.put(ComponentType.BANNER, new MenuComponent(gamePanel, 0, 50, ComponentType.BANNER, imageLoader.getMenuImage(ComponentType.BANNER)));
         components.put(ComponentType.PLAY, playButton);
         components.put(ComponentType.SETTINGS, instructionsButton);
 
@@ -116,55 +175,16 @@ public class UI {
 
     }
 
-
-    /**
-     * Updates the UI
-     */
-    public void update() {
-
-        // Use the UI key handler, not the game key handler
-        UIKeyHandler uiKeyHandler = gamePanel.getUIKeyHandler();
-
-        // Initialize all to false
-        for (MenuComponent component : selectableComponents) {
-            component.setSelected(false);
-        }
-
-
-        if (menuState == MenuState.SETTINGS && uiKeyHandler.get(UI_Pressed.ESCAPE)) {
-            menuState = MenuState.MAIN;
-            try {
-                Thread.sleep(500); // This prevents ESC from closing the game
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        // Increment the selected component index depending on the key press
-        if (uiKeyHandler.get(UI_Pressed.UP)) {
-            if (selectedComponentIndex > 0) {
-                selectedComponentIndex--;
-            }
-        } else if (uiKeyHandler.get(UI_Pressed.DOWN)) {
-            if (selectedComponentIndex < selectableComponents.size() - 1) {
-                selectedComponentIndex++;
-            }
-        } else if (uiKeyHandler.get(UI_Pressed.ENTER)) {
-            selectableComponents.get(selectedComponentIndex).doAction();
-        } else if (uiKeyHandler.get(UI_Pressed.ESCAPE) && menuState == MenuState.MAIN) {
-            gamePanel.stopGame();
-        }
-
-        // Set the selected component to true
-        selectableComponents.get(selectedComponentIndex).setSelected(true);
-    }
-
     /**
      * Sets the menu state
      * @param menuState the menu state
      */
     public void setMenuState(MenuState menuState) {
         this.menuState = menuState;
+    }
+
+    public void setMenuState(MenuState menuState, boolean winStatus) {
+        this.menuState = menuState;
+        this.winStatus = winStatus;
     }
 }

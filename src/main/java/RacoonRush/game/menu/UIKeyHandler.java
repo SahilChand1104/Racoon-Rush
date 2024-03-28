@@ -92,7 +92,6 @@ public class UIKeyHandler implements KeyListener {
         if (code == KeyEvent.VK_P) {
             pressedUI.put(UI_Pressed.PAUSE, false);
         }
-
     }
 
     @Override

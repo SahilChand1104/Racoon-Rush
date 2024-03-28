@@ -1,7 +1,5 @@
 package RacoonRush.game;
 
-import RacoonRush.game.menu.UI_Pressed;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.EnumMap;

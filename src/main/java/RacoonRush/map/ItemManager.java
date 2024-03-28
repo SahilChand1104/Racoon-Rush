@@ -50,4 +50,8 @@ public class ItemManager {
         pizza.setCollected(true);
         pizzaList.add(pizza);
     }
+
+    public int getDonutsLeft() {
+        return donutsLeft;
+    }
 }

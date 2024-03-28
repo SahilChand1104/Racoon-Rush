@@ -62,9 +62,6 @@ public class GameTime {
      */
     public void stopTimer() {
         timer.stop();
-        startTime = 0;
-        pausedTime = 0;
-        totalTime = 0;
     }
 
     /**
@@ -78,30 +75,13 @@ public class GameTime {
     }
 
     /**
-     * Displays the total time with formatting
-     */
-    private void displayTotalTime(long totalTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-        String formattedTotalTime = sdf.format(new Date(totalTime / 1000));
-    }
-
-    /**
      * Formats the time
-     * @param time the time to format
      * @return the formatted time as a string
      */
-    public String formatTime(long time) {
-        long seconds = time / 1_000;
-        long minutes = seconds / 60;
-        seconds = seconds % 60;
+    public String getFormattedTime() {
+        int totalSeconds = (int) (totalTime / 1_000_000_000);
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds - seconds) / 60;
         return String.format("%02d:%02d", minutes, seconds);
-    }
-
-    /**
-     * Gets the time
-     * @return the time as a long
-     */
-    public long getTime() {
-        return (totalTime / 1_000_000);
     }
 }
