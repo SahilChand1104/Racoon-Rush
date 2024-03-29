@@ -52,16 +52,20 @@ public class Menu implements GameManager {
         Config config = gamePanel.getConfig();
         ImageLoader imageLoader = gamePanel.getImageLoader();
 
-        MenuButton playButton = new MenuButton(gamePanel,
+        MenuButton playButton = new MenuButton(
+                gamePanel,
                 (config.screenWidth() - imageLoader.getMenuImage(ComponentType.PLAY).getWidth()) / 2, config.tileSize() * 4,
                 imageLoader.getMenuImage(ComponentType.PLAY), imageLoader.getMenuSelectedImage(ComponentType.PLAY),
-                ButtonType.PLAY);
+                ButtonType.PLAY
+        );
         playButton.setSelected(true);
 
-        MenuButton instructionsButton = new MenuButton(gamePanel,
+        MenuButton instructionsButton = new MenuButton(
+                gamePanel,
                 (config.screenWidth() - imageLoader.getMenuImage(ComponentType.SETTINGS).getWidth()) / 2, config.tileSize() * 8,
                 imageLoader.getMenuImage(ComponentType.SETTINGS), imageLoader.getMenuSelectedImage(ComponentType.SETTINGS),
-                ButtonType.SETTINGS);
+                ButtonType.SETTINGS
+        );
 
         // Add the selectable components to the array list
         // Load the selectable components in the order they appear on the screen, from top to bottom
@@ -69,10 +73,8 @@ public class Menu implements GameManager {
         buttonComponents.add(instructionsButton);
 
         // Add all components to the enum map
-        components.put(ComponentType.BG, new RacoonRush.game.menu.component.MenuComponent(gamePanel,
-                0, 0, imageLoader.getMenuImage(ComponentType.BG)));
-        components.put(ComponentType.BANNER, new MenuComponent(gamePanel,
-                0, config.tileSize(), imageLoader.getMenuImage(ComponentType.BANNER)));
+        components.put(ComponentType.BG, new MenuComponent(gamePanel, 0, 0, imageLoader.getMenuImage(ComponentType.BG)));
+        components.put(ComponentType.BANNER, new MenuComponent(gamePanel, 0, config.tileSize(), imageLoader.getMenuImage(ComponentType.BANNER)));
         components.put(ComponentType.PLAY, playButton);
         components.put(ComponentType.SETTINGS, instructionsButton);
     }
@@ -171,23 +173,23 @@ public class Menu implements GameManager {
         // Draw the background
         components.get(ComponentType.BG).draw(g2);
         // Draw the instructions
-        int x_align = 100;
-        int y_align = 100;
+        int xAlign = 100;
+        int yAlign = 100;
         g2.setFont(font.deriveFont(Font.BOLD, 40f));
         GradientPaint gp = new GradientPaint(0, 0, Color.MAGENTA, 500, 0, Color.ORANGE);
         g2.setPaint(gp);
-        g2.drawString("Instructions", x_align, y_align);
+        g2.drawString("Instructions", xAlign, yAlign);
         g2.setFont(font.deriveFont(Font.PLAIN, 20f));
-        g2.drawString("Collect all the donuts to win", x_align, y_align + 50);
-        g2.drawString("Avoid collecting the radioactive waste", x_align, y_align + 100);
-        g2.drawString("You lose if your score drops below 0!", x_align, y_align + 125);
-        y_align += 25;
-        g2.drawString("Use W A S D to move", x_align, y_align + 150);
-        g2.drawString("Press P to pause", x_align, y_align + 200);
-        g2.drawString("Try to catch Uncle Fatih's lost pizza as ", x_align, y_align + 250);
-        g2.drawString("it teleports around the map", x_align, y_align + 275);
+        g2.drawString("Collect all the donuts to win", xAlign, yAlign + 50);
+        g2.drawString("Avoid collecting the radioactive waste", xAlign, yAlign + 100);
+        g2.drawString("You lose if your score drops below 0!", xAlign, yAlign + 125);
+        yAlign += 25;
+        g2.drawString("Use W A S D to move", xAlign, yAlign + 150);
+        g2.drawString("Press P to pause", xAlign, yAlign + 200);
+        g2.drawString("Try to catch Uncle Fatih's lost pizza as ", xAlign, yAlign + 250);
+        g2.drawString("it teleports around the map", xAlign, yAlign + 275);
 
-        g2.drawString("Press ESC to exit...", x_align, y_align + 350);
+        g2.drawString("Press ESC to exit...", xAlign, yAlign + 350);
     }
 
     /**
@@ -219,7 +221,8 @@ public class Menu implements GameManager {
         }
 
         String exitMessage = "Press ESC to quit";
-        g2.drawString(exitMessage,
+        g2.drawString(
+                exitMessage,
                 (config.screenWidth() - fontMetrics.stringWidth(exitMessage)) / 2,
                 config.screenHeight() - config.tileSize() * 2
         );

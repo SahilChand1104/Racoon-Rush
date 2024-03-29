@@ -24,10 +24,11 @@ public class Player extends Entity implements GameManager {
 
     /**
      * Constructor for the player
+     *
      * @param gamePanel the gamePanel
      */
-    public Player(GamePanel gamePanel, int worldX, int worldY, int speed, Move direction, ArrayList<EnumMap<Move, BufferedImage>> images) {
-        super(gamePanel, worldX, worldY, speed, direction, images);
+    public Player(GamePanel gamePanel, ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction) {
+        super(gamePanel, images, worldX, worldY, speed, direction);
 
         // Centered in the middle of the map
         Config config = gamePanel.getConfig();

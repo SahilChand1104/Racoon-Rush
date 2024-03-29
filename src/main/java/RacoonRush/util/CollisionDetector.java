@@ -6,6 +6,7 @@ import RacoonRush.game.GamePanel;
 import RacoonRush.map.MapManager;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * This class represents the collision detector for the game.
@@ -67,6 +68,6 @@ public class CollisionDetector {
             }
         }
 
-        return moves.get((int) (Math.random() * moves.size()));
+        return moves.get(ThreadLocalRandom.current().nextInt(moves.size()));
     }
 }

@@ -28,7 +28,6 @@ public class KeyHandler implements KeyListener {
      * @return the boolean value of the move
      */
     public boolean get(Move move) {
-        //System.out.println(pressed.get(move));
         return pressed.get(move);
     }
 
@@ -42,14 +41,12 @@ public class KeyHandler implements KeyListener {
 
         if (code == KeyEvent.VK_W) {
             pressed.put(Move.UP, true);
-                   }
+        }
         if (code == KeyEvent.VK_S) {
             pressed.put(Move.DOWN, true);
-
         }
         if (code == KeyEvent.VK_A) {
             pressed.put(Move.LEFT, true);
-
         }
         if (code == KeyEvent.VK_D) {
             pressed.put(Move.RIGHT, true);
@@ -66,7 +63,7 @@ public class KeyHandler implements KeyListener {
 
         if (code == KeyEvent.VK_W) {
             pressed.put(Move.UP, false);
-                    }
+        }
         if (code == KeyEvent.VK_S) {
             pressed.put(Move.DOWN, false);
         }

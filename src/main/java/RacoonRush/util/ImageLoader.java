@@ -83,7 +83,6 @@ public class ImageLoader {
      */
     private BufferedImage loadImage(String path, int width) {
         BufferedImage image = loadImage(path);
-        assert image != null;
         image = resizeImage(image, width, image.getHeight());
         return image;
     }
@@ -121,7 +120,7 @@ public class ImageLoader {
         EnumMap<Move, BufferedImage> enemyRacoonImages0 = new EnumMap<>(Move.class);
         EnumMap<Move, BufferedImage> enemyRacoonImages1 = new EnumMap<>(Move.class);
         for (Move move : Move.values()) {
-            playerImages0.put(move, loadImageTile("/entity/player/player_" + move.name().toLowerCase() + "_0.png"));
+            playerImages0.put(move, loadImageTile("/entity/playe/player_" + move.name().toLowerCase() + "_0.png"));
             playerImages1.put(move, loadImageTile("/entity/player/player_" + move.name().toLowerCase() + "_1.png"));
             enemyRacoonImages0.put(move, loadImageTile("/entity/enemy/RacoonEnemy/enemy_racoon_" + move.name().toLowerCase() + "_0.png"));
             enemyRacoonImages1.put(move, loadImageTile("/entity/enemy/RacoonEnemy/enemy_racoon_" + move.name().toLowerCase() + "_1.png"));

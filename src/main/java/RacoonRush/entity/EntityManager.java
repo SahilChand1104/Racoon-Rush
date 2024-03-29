@@ -41,11 +41,12 @@ public class EntityManager implements GameManager {
         Config config = gamePanel.getConfig();
         return new Player(
                 gamePanel,
+                gamePanel.getImageLoader().getPlayerImages(),
                 config.tileSize() * (config.maxWorldCol() - 2),
                 config.tileSize() * (config.maxWorldRow() - 2),
                 4,
-                Move.DOWN,
-                gamePanel.getImageLoader().getPlayerImages());
+                Move.DOWN
+        );
     }
 
     /**
@@ -68,7 +69,7 @@ public class EntityManager implements GameManager {
         ImageLoader imageLoader = gamePanel.getImageLoader();
         enemyList.add(switch (type) {
             case RACOON -> new Racoon(
-                    gamePanel, startX * config.tileSize(), startY * config.tileSize(), 2, Move.LEFT, imageLoader.getEnemyRacoonImages(),
+                    gamePanel, imageLoader.getEnemyRacoonImages(), startX * config.tileSize(), startY * config.tileSize(), 2, Move.LEFT,
                     1, config.FPS() * 2, config.FPS() * 10
             );
             case CAFFEINE -> null;

@@ -39,7 +39,6 @@ public class MapLoader {
         List<TileType> tileTypes = new ArrayList<>(Arrays.asList(TileType.values()));
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filePath)));
-
             for (int i = 0; i < config.maxWorldRow(); i++) {
                 String[] tokens = br.readLine().split(" ");
                 for (int j = 0; j < config.maxWorldCol(); j++) {

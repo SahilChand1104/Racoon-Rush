@@ -21,7 +21,7 @@ public class MenuButton extends MenuComponent {
      * @param y             the y position of the component
      * @param image         the image of the component
      * @param selectedImage the selected image of the component
-     * @param buttonType          the type of the button component
+     * @param buttonType    the type of the button component
      */
     public MenuButton(GamePanel gamePanel, int x, int y, BufferedImage image, BufferedImage selectedImage, ButtonType buttonType) {
         super(gamePanel, x, y, image);
