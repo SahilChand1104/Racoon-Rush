@@ -67,7 +67,7 @@ public class SoundManager {
      * Method to play sound on loop indefinitely, used for background music
      * @param i the index of the sound file to loop indefinitely
      */
-    public void playSoundLooped(int i) {
+    public void playSoundLoop(int i) {
         sounds.get(i).loop(Clip.LOOP_CONTINUOUSLY);
     }
 
