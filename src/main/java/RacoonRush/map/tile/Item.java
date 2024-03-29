@@ -24,8 +24,9 @@ public class Item extends Tile {
 
     /**
      * Method to get the image of the item
-     * @param x x-coordinate of the item
-     * @param y y-coordinate of the item
+     * Utilizes the animation frame to get the correct image, x and y coordinates are not used and can be null
+     * @param x x-coordinate of the item, not used
+     * @param y y-coordinate of the item, not used
      * @param animationFrame animation frame of the item
      * @return BufferedImage of the item
      */
@@ -35,10 +36,19 @@ public class Item extends Tile {
         return collected ? null : images.get(animationFrame % images.size());
     }
 
+    /**
+     * Method to get the type of the item
+     * @return the type of the item
+     */
     public TileType getType() {
         return type;
     }
 
+    /**
+     * Method to check if the item has been collected
+     * If it has been collected, it will not be rendered
+     * @return boolean of whether the item has been collected
+     */
     public boolean isCollected() {
         return collected;
     }

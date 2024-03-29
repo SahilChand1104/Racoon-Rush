@@ -1,5 +1,6 @@
-package RacoonRush.game;
+package RacoonRush.util;
 
+import RacoonRush.game.GamePanel;
 import RacoonRush.map.tile.Item;
 
 import javax.swing.*;
@@ -32,13 +33,13 @@ public class Scoreboard extends JPanel {
 
         // Set font and size for labels
         try {
-            Font labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
-            scoreLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-            timerLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-            messageLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-
+            Font font = Font
+                    .createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"))
+                    .deriveFont(Font.BOLD, 24f);
+            scoreLabel.setFont(font);
+            timerLabel.setFont(font);
+            messageLabel.setFont(font);
         } catch (IOException | FontFormatException e) {
-            // Handle font loading exception
             e.printStackTrace();
         }
 
@@ -86,7 +87,7 @@ public class Scoreboard extends JPanel {
         if (isVisible()) {
             messageLabel.setText(message);
             // Create a javax.swing.Timer to clear the message after 3 seconds
-            Timer timer = new Timer(2000, new ActionListener() {
+            Timer timer = new Timer(3000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     messageLabel.setText(" "); // Clear the message
@@ -104,18 +105,18 @@ public class Scoreboard extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g.create();
 
         // Create a gradient paint for the background
         GradientPaint gradient = new GradientPaint(
-                0, 0, Color.MAGENTA,
-                getWidth(), getHeight(), Color.ORANGE);
+                0, 0, Color.MAGENTA, getWidth(), getHeight(), Color.ORANGE
+        );
 
         // Set the paint and fill the background with the gradient
-        g2d.setPaint(gradient);
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2.setPaint(gradient);
+        g2.fillRect(0, 0, getWidth(), getHeight());
 
-        g2d.dispose();
+        g2.dispose();
     }
 
     public void collectItemMessage(Item item, int donutsLeft) {
@@ -126,7 +127,7 @@ public class Scoreboard extends JPanel {
             case DONUT -> "+10 points! " + switch (donutsLeft) {
                 case 0 -> "Hurry to the exit!";
                 case 1 -> "1 more donut left.";
-                default -> donutsLeft + " more donuts left.";
+                default -> donutsLeft + " donuts remaining.";
             };
             case LEFTOVER -> "-20 points...";
             case PIZZA -> "+50 points! You found Uncle Fatih's lost pizza!";

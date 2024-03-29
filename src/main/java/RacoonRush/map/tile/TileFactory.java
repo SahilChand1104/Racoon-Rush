@@ -1,12 +1,11 @@
 package RacoonRush.map.tile;
 
 import RacoonRush.game.GamePanel;
-import RacoonRush.game.ImageLoader;
+import RacoonRush.util.ImageLoader;
 
 /**
  * TileFactory class is used to create Tile objects based on the TileType.
  * It uses a factory design pattern to create the Tile objects.
-
  */
 public class TileFactory {
     private final GamePanel gamePanel;

@@ -1,7 +1,8 @@
-package RacoonRush.game;
+package RacoonRush.util;
 
 import RacoonRush.entity.Entity;
 import RacoonRush.entity.enemy.Enemy;
+import RacoonRush.game.GamePanel;
 import RacoonRush.map.MapManager;
 
 import java.util.ArrayList;
@@ -53,6 +54,11 @@ public class CollisionDetector {
         };
     }
 
+    /**
+     * This method returns a random direction for the enemy to move based the valid directions.
+     * @param enemy The enemy object.
+     * @return The next direction for the enemy to move.
+     */
     public Move nextDirection(Enemy enemy) {
         ArrayList<Move> moves = new ArrayList<>();
         for (Move move : Move.values()) {

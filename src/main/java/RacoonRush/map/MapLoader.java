@@ -1,6 +1,6 @@
 package RacoonRush.map;
 
-import RacoonRush.game.Config;
+import RacoonRush.util.Config;
 import RacoonRush.game.GamePanel;
 import RacoonRush.map.tile.Item;
 import RacoonRush.map.tile.Tile;
@@ -17,7 +17,6 @@ import java.util.List;
  * MapLoader class is used to load and create the map from a text file.
  */
 public class MapLoader {
-
     private final GamePanel gamePanel;
 
     /**

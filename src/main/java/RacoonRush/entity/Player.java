@@ -2,8 +2,12 @@ package RacoonRush.entity;
 
 import RacoonRush.entity.enemy.Enemy;
 import RacoonRush.game.*;
-import RacoonRush.game.menu.UIKeyHandler;
-import RacoonRush.game.menu.UI_Pressed;
+import RacoonRush.game.menu.MenuKeyHandler;
+import RacoonRush.game.menu.MenuKey;
+import RacoonRush.util.CollisionDetector;
+import RacoonRush.util.Config;
+import RacoonRush.util.KeyHandler;
+import RacoonRush.util.Move;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,7 +18,7 @@ import java.util.EnumMap;
  * Class for the player entity
  * This class should only have one instance
  */
-public class Player extends Entity implements Manager {
+public class Player extends Entity implements GameManager {
     public final int screenX, screenY, invincibilityDuration;
     private int invincibilityFrames;
 
@@ -39,11 +43,11 @@ public class Player extends Entity implements Manager {
     public void update() {
         // Use the game keyhandler for player movement
         KeyHandler keyHandler = gamePanel.getKeyHandler();
-        // Use the UI keyhandler for pausing/playing the game
-        UIKeyHandler uiKeyHandler = gamePanel.getUIKeyHandler();
+        // Use the Menu keyhandler for pausing/playing the game
+        MenuKeyHandler menuKeyHandler = gamePanel.getUIKeyHandler();
         CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
-        if (uiKeyHandler.get(UI_Pressed.PAUSE)) {
-            gamePanel.openMenu();
+        if (menuKeyHandler.get(MenuKey.PAUSE)) {
+            gamePanel.pauseGame();
         }
         if (!keyHandler.get(Move.UP) && !keyHandler.get(Move.DOWN) && !keyHandler.get(Move.LEFT) && !keyHandler.get(Move.RIGHT)) {
             return;
@@ -83,12 +87,19 @@ public class Player extends Entity implements Manager {
         );
     }
 
+    /**
+     * Checks if the player is invincible based on the invincibility frames they have remaining, 1 invincibility frame is lost per update
+     * @return boolean value of whether the play has more than 0 invincibility frames remaining
+     */
     public boolean isInvincible() {
         return invincibilityFrames > 0;
     }
 
+    /**
+     * @param enemy the enemy that the player has collided with
+     */
     public void onCollide(Enemy enemy) {
-        gamePanel.loseGame(); // For now, lose game as per assignment instructions, but can be removed if desired
+        gamePanel.stopGame(false); // For now, lose game as per assignment instructions, but can be removed if desired
         // updateScore(-enemy.getDamage());
         invincibilityFrames = invincibilityDuration;
     }

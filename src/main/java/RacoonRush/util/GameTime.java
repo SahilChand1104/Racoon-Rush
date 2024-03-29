@@ -1,10 +1,15 @@
-package RacoonRush.game;
+package RacoonRush.util;
+
+import RacoonRush.game.GamePanel;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * GameTime class is used to keep track of the time elapsed during the game.
+ */
 public class GameTime {
     private final GamePanel gamePanel;
     private final Timer timer;

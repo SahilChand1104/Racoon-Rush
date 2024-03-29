@@ -1,4 +1,4 @@
-package RacoonRush.game;
+package RacoonRush.util;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -20,7 +20,6 @@ public class KeyHandler implements KeyListener {
         for (Move move : Move.values()) {
             pressed.put(move, false);
         }
-
     }
 
     /**
@@ -32,8 +31,6 @@ public class KeyHandler implements KeyListener {
         //System.out.println(pressed.get(move));
         return pressed.get(move);
     }
-
-
 
     /**
      * Method to handle the key being pressed
@@ -82,7 +79,7 @@ public class KeyHandler implements KeyListener {
     }
 
     /**
-     * (NOT IMPLEMENTED) Method to handle the key being typed
+     * (NOT USED) Method to handle the key being typed
      * @param e the KeyEvent
      */
     @Override
