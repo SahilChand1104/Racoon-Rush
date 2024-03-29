@@ -1,5 +1,8 @@
 package RacoonRush.game;
 
+/**
+ * Enum for the different states that the game can be in
+ */
 public enum GameState {
-    MENU, PLAY, GAMEOVER, WIN, QUIT;
+    MENU, PLAY, PAUSE, GAMEOVER
 }

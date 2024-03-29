@@ -1,51 +1,37 @@
 package RacoonRush.game;
 
 import RacoonRush.entity.EntityManager;
-import RacoonRush.entity.EntityManager;
-import RacoonRush.entity.Player;
-import RacoonRush.game.menu.UI;
-import RacoonRush.game.menu.UIKeyHandler;
-import RacoonRush.game.menu.UI_Pressed;
+import RacoonRush.game.menu.Menu;
+import RacoonRush.game.menu.MenuKeyHandler;
+import RacoonRush.util.*;
 import RacoonRush.map.MapManager;
 import RacoonRush.map.tile.Item;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
- * This class represents the manager for all aspects of the game.
+ * This class represents the main manager for of the game.
  * It extends JPanel and implements Runnable.
- * The fields include gameOverMessage, winMessage, config, imageLoader, mapManager, keyHandler, sound, uiKeyHandler, collisionDetector, player, ui, gameState, scoreboard, gameThread, playerAnimationFrame, collectibleAnimationFrame, time, pizzas, numPizzas, pizzaSpawn, and labelFont.
- * The methods include loadMap, startGameThread, run, update, paintComponent, playMusic, stopMusic, PlaySoundEffect, disableScoreboard, enableScoreboard, hideScoreboard, showScoreboard, getConfig, getImageLoader, getKeyHandler, getUIKeyHandler, getMapManager, getCollisionDetector, getPlayer, getPlayerAnimationFrame, getCollectibleAnimationFrame, getScoreboard, setGameState, getGameState, isGameRunning, openMenu, closeMenu, startGame, stopGame, winGame, loseGame, getMenuUI, and addPizzas.
+ * It is used to manage the game loop, the game state, and the game components.
  */
 public class GamePanel extends JPanel implements Runnable {
-    private String gameOverMessage = "";
-    private String winMessage = "";
     private final Config config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
     private final ImageLoader imageLoader;
     private final MapManager mapManager;
     private final EntityManager entityManager;
-    private final Player player;
     private final KeyHandler keyHandler;
-    private final Sound sound;
-    private final UIKeyHandler uiKeyHandler;
+    private final SoundManager soundManager;
+    private final MenuKeyHandler menuKeyHandler;
     private final CollisionDetector collisionDetector;
-    private final UI ui;
+    private final Menu menu;
     private GameState gameState;
     private final Scoreboard scoreboard;
     private Thread gameThread;
     private int playerAnimationFrame;
     private int itemAnimationFrame;
-    private final GameTime time;
-    private final ArrayList<Item> pizzas;
-    private int numPizzas;
-    private int pizzaSpawn;
-    private Font labelFont;
-
-    private boolean gameRunning = false;
+    private final GameTime gameTime;
+    private int score;
 
     /**
      * Constructor for the GamePanel class
@@ -55,50 +41,67 @@ public class GamePanel extends JPanel implements Runnable {
         keyHandler = new KeyHandler();
         mapManager = new MapManager(this);
         entityManager = new EntityManager(this);
-        player = entityManager.getPlayer();
         collisionDetector = new CollisionDetector(this);
-        sound  = new Sound();
-        scoreboard = new Scoreboard();
-        playMusic(0);
-        uiKeyHandler = new UIKeyHandler();
-        ui = new UI(this);
+        soundManager = new SoundManager();
+        scoreboard = new Scoreboard(this);
+        menuKeyHandler = new MenuKeyHandler();
+        menu = new Menu(this);
+        gameTime = new GameTime(this);
         gameState = GameState.MENU;
-        time = new GameTime(scoreboard);
-        pizzas = new ArrayList<>();
-        numPizzas = 0;
-        pizzaSpawn = 0;
-        try {
-            labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"));
-        } catch (IOException | FontFormatException e) {
-            e.printStackTrace();
-        }
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
-        this.addKeyListener(uiKeyHandler);
+        this.addKeyListener(menuKeyHandler);
         this.setFocusable(true);
-        disableScoreboard();
     }
 
     /**
-     * Method to load the map from a file
-     * @param filePath the file path of the map
+     * Method to start the game
      */
-    public void loadMap(String filePath) {
-        mapManager.loadMap(filePath);
-    }
-
-    /**
-     * Method to start the game thread
-     */
-    public void startGameThread() {
+    public void startGame() {
         gameThread = new Thread(this);
         gameThread.start();
-        time.startTimer();
+        soundManager.playSoundLooped(0);
     }
 
+    /**
+     * Starts playing the game by setting the game state to PLAY and enabling the scoreboard.
+     * Will resume the game if it was paused.
+     */
+    public void playGame() {
+        if (gameState == GameState.MENU) {
+            mapManager.loadMap("/maps/world_map.txt");
+            gameTime.startTimer();
+            score = 0;
+        } else if (gameState == GameState.PAUSE) {
+            gameTime.resumeTimer();
+        }
+
+        scoreboard.setVisible(true);
+        gameState = GameState.PLAY;
+    }
+
+    /**
+     * Sets the game state to PAUSE and hides the scoreboard.
+     */
+    public void pauseGame() {
+        gameTime.pauseTimer();
+        scoreboard.setVisible(false);
+        gameState = GameState.PAUSE;
+    }
+
+    /**
+     * Displays the gameover screen by setting the game state to GAMEOVER and hiding the scoreboard.
+     * @param winStatus whether the game has been won
+     */
+    public void stopGame(boolean winStatus) {
+        gameTime.stopTimer();
+        scoreboard.setVisible(false);
+        menu.stopGame(winStatus);
+        gameState = GameState.MENU;
+    }
 
     /**
      * Implementation of the run method from the Runnable interface
@@ -119,8 +122,7 @@ public class GamePanel extends JPanel implements Runnable {
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             if (delta >= 1) {
-                animationCounter++;
-                if (animationCounter % animationInterval == 0) {
+                if (++animationCounter % animationInterval == 0) {
                     playerAnimationFrame = (playerAnimationFrame == 0) ? 1 : 0;
                     itemAnimationFrame = (itemAnimationFrame < 11) ? itemAnimationFrame + 1 : 0;
                     animationCounter = 0;
@@ -137,49 +139,13 @@ public class GamePanel extends JPanel implements Runnable {
      */
     public void update() {
         switch (gameState) {
-            case MENU:
-                ui.update();
+            case MENU, PAUSE, GAMEOVER:
+                menu.update();
                 break;
             case PLAY:
+                mapManager.update();
                 entityManager.update();
-                Random rand = new Random();
-                int ranPizza = rand.nextInt(numPizzas);
-                for (int i = 0; i < numPizzas; i++) {
-                    if (i == ranPizza && pizzaSpawn == config.FPS() * 3) {
-                        pizzas.get(i).setCollected(false);
-                    } else if (pizzaSpawn == config.FPS() * 3 || pizzaSpawn == rand.nextInt(config.FPS() * 3) + config.FPS() / 2) {
-                        pizzas.get(i).setCollected(true);
-                    }
-                }
-                if (pizzaSpawn == config.FPS() * 3) {
-                    pizzaSpawn = -1;
-                } else {
-                    pizzaSpawn++;
-                }
-                break;
-            case QUIT:
-                gameThread = null;
-                System.exit(0);
-                break;
-            case GAMEOVER:
-                if (time.getTime() / 1000 != 0) {
-                    gameOverMessage = "You lose! Better luck next time!";
-                    time.stopTimer();
-                }
-                if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
-                    System.exit(0);
-                }
-                break;
-            case WIN:
-                if (time.getTime() / 1000 != 0) {
-                    winMessage = "You win!\nScore: " + player.getScore() + "\nTime: " + time.formatTime(time.getTime());
-                    time.stopTimer();
-                }
-                if (uiKeyHandler.get(UI_Pressed.ESCAPE)) {
-                    System.exit(0);
-                }
-                break;
-            default:
+                if (score < 0) { stopGame(false); }
                 break;
         }
     }
@@ -188,133 +154,38 @@ public class GamePanel extends JPanel implements Runnable {
      * Method to render the game based on the current game state
      * @param g the graphics object
      */
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
         switch (gameState) {
-            case MENU:
-                ui.draw(g2);
+            case MENU, PAUSE, GAMEOVER:
+                menu.draw(g2);
                 break;
             case PLAY:
                 mapManager.draw(g2);
                 entityManager.draw(g2);
-                break;
-            case GAMEOVER:
-                g2.setColor(Color.RED);
-                g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-                FontMetrics fontMetricsLose = g2.getFontMetrics();
-                int loseWidth = fontMetricsLose.stringWidth(gameOverMessage);
-                int x = (getWidth() - loseWidth) / 2;
-                int y = getHeight() / 2;
-                g2.drawString(gameOverMessage, x, y);
-
-                String gameOverMessage2 = "Press ESC to quit";
-                loseWidth = fontMetricsLose.stringWidth(gameOverMessage2);
-                int x1 = (getWidth() - loseWidth) / 2;
-                int y1 = getHeight() / 2 + 200;
-                g2.drawString(gameOverMessage2, x1, y1);
-                break;
-            case WIN:
-                g2.setColor(Color.GREEN);
-                g2.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-                FontMetrics fontMetricsWin = g2.getFontMetrics();
-
-                String[] winMessages = winMessage.split("\n");
-                int winWidth = fontMetricsWin.stringWidth(winMessages[0]); // Width of "You win!" message
-                int winX = (getWidth() - winWidth) / 2;
-                int winY = getHeight() / 2;
-                g2.drawString(winMessages[0], winX, winY);
-
-                for (int i = 1; i < winMessages.length; i++) {
-                    int messageWidth = fontMetricsWin.stringWidth(winMessages[i]);
-                    int messageX = (getWidth() - messageWidth) / 2;
-                    int messageY = winY + fontMetricsWin.getHeight() * i;
-                    g2.drawString(winMessages[i], messageX, messageY);
-                }
-
-                gameOverMessage2 = "Press ESC to quit";
-                loseWidth = fontMetricsWin.stringWidth(gameOverMessage2);
-                x1 = (getWidth() - loseWidth) / 2;
-                y1 = getHeight() / 2 + 200;
-                g2.drawString(gameOverMessage2, x1, y1);
-                break;
-            default:
                 break;
         }
         g2.dispose();
     }
 
     /**
-     * Method to play music
-     * @param i the index of the music file
+     * Updates the score
+     * @param item the item to update the score, each item has a different score value
      */
-    public void playMusic(int i ){
-        sound.setFile(i);
-        sound.play();
-        sound.loop();
+    public void updateScore(Item item) {
+        score += switch (item.getType()) {
+            case DONUT -> 10;
+            case LEFTOVER -> -20;
+            case PIZZA -> 50;
+            default -> 0;
+        };
     }
 
     /**
-     * Method to stop music
-     */
-    public void stopMusic(){
-        sound.stop();
-    }
-
-    /**
-     * Method to play sound effect
-     * @param i the index of the sound effect file
-     */
-    public void PlaySoundEffect(int i){
-        sound.setFile(i);
-        sound.play();
-    }
-
-    /**
-     * Method to disable the scoreboard
-     * This method also stops the timer and resets the player's score
-     */
-    public void disableScoreboard() {
-        scoreboard.setVisible(false);
-        time.stopTimer();
-        scoreboard.reset();
-        scoreboard.setDisabled(true);
-        player.resetScore();
-    }
-
-    /**
-     * Method to enable/reset the scoreboard
-     * This method also resets the timer amd the player's score
-     */
-    public void enableScoreboard() {
-        scoreboard.setVisible(true);
-        time.startTimer();
-        scoreboard.reset();
-        scoreboard.setDisabled(false);
-        player.resetScore();
-    }
-
-    /**
-     * Method to hide the scoreboard
-     */
-    public void hideScoreboard() {
-        time.pauseTimer();
-        scoreboard.setVisible(false);
-        scoreboard.setDisabled(true);
-    }
-
-    /**
-     * Method to show the scoreboard
-     */
-    public void showScoreboard() {
-        time.resumeTimer();
-        scoreboard.setVisible(true);
-        scoreboard.setDisabled(false);
-    }
-
-    /**
-     * Method to get the game panel's constant values like tilesize, screen width, screen height, etc.
+     * Method to get the game panel's constant values like tile size, screen width, screen height, etc.
      * @return the config object
      */
     public Config getConfig() {
@@ -322,7 +193,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Method to get the gamepanel's image loader
+     * Method to get the GamePanel's image loader
      * @return the image loader object
      */
     public ImageLoader getImageLoader() {
@@ -330,7 +201,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Method to get the gamepanel's key handler
+     * Method to get the GamePanel's key handler
      * @return the key handler object
      */
     public KeyHandler getKeyHandler() {
@@ -338,16 +209,20 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Method to get the gamepanel's UI key handler
+     * Method to get the GamePanel's Menu key handler
      * This is used for handling key events in the menu
      * @return the sound object
      */
-    public UIKeyHandler getUIKeyHandler() {
-        return uiKeyHandler;
+    public MenuKeyHandler getUIKeyHandler() {
+        return menuKeyHandler;
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 
     /**
-     * Method to get the gamepanel's map manager
+     * Method to get the GamePanel's map manager
      * @return the map manager object
      */
     public MapManager getMapManager() {
@@ -355,7 +230,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Method to get the gamepanel's map manager
+     * Method to get the GamePanel's map manager
      * @return the map manager object
      */
     public EntityManager getEntityManager() {
@@ -363,7 +238,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Method to get the gamepanel's collision detector
+     * Method to get the GamePanel's collision detector
      * @return the collision object
      */
     public CollisionDetector getCollisionDetector() {
@@ -371,14 +246,24 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Method to get the gamepanel's player object
-     * @return the player object
+     * Returns the scoreboard object.
+     * @return The scoreboard object.
      */
-    public Player getPlayer() {
-        return entityManager.getPlayer();
+    public Scoreboard getScoreboard() {
+        return scoreboard;
     }
 
+    /**
+     * Returns the Menu object associated with the game menu.
+     * @return The Menu object associated with the game menu.
+     */
+    public Menu getMenu() {
+        return menu;
+    }
 
+    public GameTime getGameTime() {
+        return gameTime;
+    }
 
     /**
      * Returns the current frame index for the player animation.
@@ -397,100 +282,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Returns the scoreboard object.
-     * @return The scoreboard object.
+     * Returns the current score.
+     * @return the current score.
      */
-    public Scoreboard getScoreboard() {
-        return scoreboard;
-    }
-
-    /**
-     * Sets the game state to the provided state.
-     * @param gameState The new game state.
-     */
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
-    /**
-     * Returns the current game state.
-     * @return The current game state.
-     */
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    /**
-     * Checks whether the game is currently running.
-     * @return True if the game is running, false otherwise.
-     */
-    public boolean isGameRunning() {
-        return gameRunning;
-    }
-
-    /**
-     * Sets the game state to MENU and hides the scoreboard.
-     */
-    public void openMenu() {
-        hideScoreboard();
-        gameState = GameState.MENU;
-    }
-
-    /**
-     * Sets the game state to PLAY and shows the scoreboard.
-     */
-    public void closeMenu() {
-        showScoreboard();
-        gameState = GameState.PLAY;
-    }
-
-    /**
-     * Starts the game by setting the game state to PLAY and enabling the scoreboard.
-     */
-    public void startGame() {
-        gameRunning = true;
-        enableScoreboard();
-        gameState = GameState.PLAY;
-    }
-
-    /**
-     * Stops the game by setting the game state to QUIT and hides the scoreboard.
-     */
-    public void stopGame() {
-        hideScoreboard();
-        gameState = GameState.QUIT;
-    }
-
-    /**
-     * Indicates that the game has been won by setting the game state to WIN and hiding the scoreboard.
-     */
-    public void winGame() {
-        hideScoreboard();
-        gameState = GameState.WIN;
-    }
-
-    /**
-     * Indicates that the game has been lost by setting the game state to GAMEOVER and hiding the scoreboard.
-     */
-    public void loseGame() {
-        hideScoreboard();
-        gameState = GameState.GAMEOVER;
-    }
-
-    /**
-     * Returns the UI object associated with the game menu.
-     * @return The UI object associated with the game menu.
-     */
-    public UI getMenuUI() {
-        return ui;
-    }
-
-    /**
-     * Adds a pizza item to the game.
-     * @param p The pizza item to be added.
-     */
-    public void addPizzas(Item p) {
-        pizzas.add(p);
-        numPizzas++;
+    public int getScore() {
+        return score;
     }
 }

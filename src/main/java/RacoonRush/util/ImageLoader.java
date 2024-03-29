@@ -1,6 +1,7 @@
-package RacoonRush.game;
+package RacoonRush.util;
 
-import RacoonRush.game.menu.ComponentType;
+import RacoonRush.game.GamePanel;
+import RacoonRush.game.menu.component.ComponentType;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -61,23 +62,53 @@ public class ImageLoader {
     }
 
     /**
-     * This method loads the image from the specified path and resizes it to the appropriate size.
+     * This method loads the image from the specified path.
      * @param path The path of the image to be loaded.
-     * @param isTileSize A boolean value to indicate if the image should be resized to the tile size.
      * @return The loaded and resized image.
      */
-    private BufferedImage loadImage(String path, boolean isTileSize) {
-        BufferedImage image = null;
+    private BufferedImage loadImage(String path) {
         try {
-            image = ImageIO.read(getClass().getResourceAsStream(path));
-            if (isTileSize) {
-                Config config = gamePanel.getConfig();
-                image = resizeImage(image, config.tileSize(), config.tileSize());
-            }
+            return ImageIO.read(getClass().getResourceAsStream(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    /**
+     * This method loads the image from the specified path and resizes it in the horizontal direction based on the provided width.
+     * @param path The path of the image to be loaded.
+     * @param width The width of the resized image.
+     * @return The loaded and resized image.
+     */
+    private BufferedImage loadImage(String path, int width) {
+        BufferedImage image = loadImage(path);
+        assert image != null;
+        image = resizeImage(image, width, image.getHeight());
         return image;
+    }
+
+    /**
+     * This method loads the image from the specified path and resizes it to the appropriate size.
+     * @param path The path of the image to be loaded.
+     * @param width The width of the resized image.
+     * @param height The height of the resized image.
+     * @return The loaded and resized image.
+     */
+    private BufferedImage loadImage(String path, int width, int height) {
+        BufferedImage image = loadImage(path);
+        image = resizeImage(image, width, height);
+        return image;
+    }
+
+    /**
+     * This method loads the image from the specified path and resizes it as a tile.
+     * @param path The path of the image to be loaded.
+     * @return The loaded and resized image.
+     */
+    private BufferedImage loadImageTile(String path) {
+        Config config = gamePanel.getConfig();
+        return resizeImage(loadImage(path), config.tileSize(), config.tileSize());
     }
 
     /**
@@ -90,10 +121,10 @@ public class ImageLoader {
         EnumMap<Move, BufferedImage> enemyRacoonImages0 = new EnumMap<>(Move.class);
         EnumMap<Move, BufferedImage> enemyRacoonImages1 = new EnumMap<>(Move.class);
         for (Move move : Move.values()) {
-            playerImages0.put(move, loadImage("/entity/player/player_" + move.name().toLowerCase() + "_0.png", true));
-            playerImages1.put(move, loadImage("/entity/player/player_" + move.name().toLowerCase() + "_1.png", true));
-            enemyRacoonImages0.put(move, loadImage("/entity/enemy/RacoonEnemy/enemy_racoon_" + move.name().toLowerCase() + "_0.png", true));
-            enemyRacoonImages1.put(move, loadImage("/entity/enemy/RacoonEnemy/enemy_racoon_" + move.name().toLowerCase() + "_1.png", true));
+            playerImages0.put(move, loadImageTile("/entity/player/player_" + move.name().toLowerCase() + "_0.png"));
+            playerImages1.put(move, loadImageTile("/entity/player/player_" + move.name().toLowerCase() + "_1.png"));
+            enemyRacoonImages0.put(move, loadImageTile("/entity/enemy/RacoonEnemy/enemy_racoon_" + move.name().toLowerCase() + "_0.png"));
+            enemyRacoonImages1.put(move, loadImageTile("/entity/enemy/RacoonEnemy/enemy_racoon_" + move.name().toLowerCase() + "_1.png"));
         }
 
         playerImages.add(playerImages0);
@@ -103,35 +134,37 @@ public class ImageLoader {
 
         // Load background images
         for (int i = 0; i < 4; i++) {
-            backgroundImages.add(loadImage("/maps/map_bg_0" + (i + 1) + ".png", false));
+            backgroundImages.add(loadImage("/maps/map_bg_0" + (i + 1) + ".png"));
         }
         // Load wall images
         for (int i = 0; i < 4; i++) {
-            wallImages.add(loadImage("/tile/wall_v3_" + (i + 1) + ".png", true));
+            wallImages.add(loadImageTile("/tile/wall_v3_" + (i + 1) + ".png"));
         }
         // Load tree image
-        treeImages.add(loadImage("/tile/tree_v4.png", true));
+        treeImages.add(loadImageTile("/tile/tree_v4.png"));
         // Load donut images for the animation
         for (int i = 0; i < 12; i++) {
-            donutImages.add(loadImage("/entity/collectible/donut_" + (i + 1) + ".png", true));
+            donutImages.add(loadImageTile("/item/donut_" + (i + 1) + ".png"));
         }
         // Load leftover image
-        leftoverImages.add(loadImage("/entity/collectible/leftovers_v4.png", true));
+        leftoverImages.add(loadImageTile("/item/leftovers_v4.png"));
         // Load pizza image
-        pizzaImages.add(loadImage("/entity/collectible/golden_pizza_v1.png", true));
+        pizzaImages.add(loadImageTile("/item/golden_pizza_v1.png"));
 
         // Load menu images and store them in EnumMaps corresponding to their type
-        menuImages.put(ComponentType.BG, loadImage("/menu/menu_bg.png", false));
-        menuImages.put(ComponentType.BANNER, loadImage("/menu/menu_title_v2.png", false));
-        menuImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_0.png", false));
-        menuImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_0.png", false));
-        menuSelectedImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_1.png", false));
-        menuSelectedImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_1.png", false));
+        menuImages.put(ComponentType.BG, loadImage("/menu/menu_bg.png",
+                gamePanel.getConfig().screenWidth(), gamePanel.getConfig().screenHeight()));
+        menuImages.put(ComponentType.BANNER, loadImage("/menu/menu_title_v2.png",
+                gamePanel.getConfig().screenWidth()));
+        menuImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_0.png"));
+        menuImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_0.png"));
+        menuSelectedImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_1.png"));
+        menuSelectedImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_1.png"));
     }
 
     /**
      *  This method returns all images of the player.
-     * @return Array containing all images of the player.
+     * @return ArrayList containing all images of the player.
      */
     public ArrayList<EnumMap<Move, BufferedImage>> getPlayerImages() {
         return playerImages;
@@ -139,19 +172,18 @@ public class ImageLoader {
 
     /**
      *  This method returns all images of the racoon enemy.
-     * @return Array containing all images of the racoon enemy.
+     * @return ArrayList containing all images of the racoon enemy.
      */
     public ArrayList<EnumMap<Move, BufferedImage>> getEnemyRacoonImages() {
         return enemyRacoonImages;
     }
 
     /**
-     * This method returns the background image based on its position.
-     * @param index The index of the background image (top left, top right, bottom left, bottom right).
-     * @return The background image.
+     * This method returns an array list containing the background images.
+     * @return The array list containing the background images.
      */
-    public BufferedImage getBackground(int index) {
-        return backgroundImages.get(index);
+    public ArrayList<BufferedImage> getBackgroundImages() {
+        return backgroundImages;
     }
 
     /**

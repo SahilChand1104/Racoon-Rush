@@ -1,23 +1,31 @@
 package RacoonRush.entity;
 
-import RacoonRush.entity.enemy.Caffeine;
 import RacoonRush.entity.enemy.Enemy;
 import RacoonRush.entity.enemy.EnemyType;
 import RacoonRush.entity.enemy.Racoon;
-import RacoonRush.game.Config;
+import RacoonRush.game.GameManager;
+import RacoonRush.util.Config;
 import RacoonRush.game.GamePanel;
-import RacoonRush.game.ImageLoader;
-import RacoonRush.game.Move;
+import RacoonRush.util.ImageLoader;
+import RacoonRush.util.Move;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class EntityManager {
+/**
+ * EntityManager class manages the player and enemies
+ * This class should only have one instance
+ */
+public class EntityManager implements GameManager {
     private final GamePanel gamePanel;
     private final Player player;
     private final ArrayList<Enemy> enemyList;
 
+    /**
+     * Constructor for the EntityManager
+     * @param gamePanel the gamePanel
+     */
     public EntityManager (GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         player = createPlayer();
@@ -25,6 +33,10 @@ public class EntityManager {
         createEnemyList();
     }
 
+    /**
+     * Creates the player
+     * @return the player
+     */
     private Player createPlayer() {
         Config config = gamePanel.getConfig();
         return new Player(
@@ -36,24 +48,36 @@ public class EntityManager {
                 gamePanel.getImageLoader().getPlayerImages());
     }
 
+    /**
+     * Creates the enemy list
+     */
     private void createEnemyList() {
         Config config = gamePanel.getConfig();
         createEnemy(EnemyType.RACOON, config.maxWorldCol() - 10, config.maxWorldRow() - 10);
         createEnemy(EnemyType.RACOON, 5, 5);
     }
 
+    /**
+     * Creates an enemy
+     * @param type the type of enemy
+     * @param startX the starting x position
+     * @param startY the starting y position
+     */
     private void createEnemy(EnemyType type, int startX, int startY) {
         Config config = gamePanel.getConfig();
         ImageLoader imageLoader = gamePanel.getImageLoader();
         enemyList.add(switch (type) {
             case RACOON -> new Racoon(
                     gamePanel, startX * config.tileSize(), startY * config.tileSize(), 2, Move.LEFT, imageLoader.getEnemyRacoonImages(),
-                    1, 30, 480
+                    1, config.FPS() * 2, config.FPS() * 10
             );
             case CAFFEINE -> null;
         });
     }
 
+    /**
+     * Updates the player and enemies
+     */
     public void update() {
         player.update();
         for (Enemy enemy : enemyList) {
@@ -64,6 +88,10 @@ public class EntityManager {
         }
     }
 
+    /**
+     * Draws the player and enemies
+     * @param g2 the graphics2D object
+     */
     public void draw(Graphics2D g2) {
         ArrayList<Entity> entityList = new ArrayList<>(enemyList);
         entityList.add(player);
@@ -73,6 +101,10 @@ public class EntityManager {
         }
     }
 
+    /**
+     * Returns the player
+     * @return the player
+     */
     public Player getPlayer() {
         return player;
     }

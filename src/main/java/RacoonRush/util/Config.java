@@ -1,4 +1,4 @@
-package RacoonRush.game;
+package RacoonRush.util;
 
 /**
  * This record represents the configuration for the game.

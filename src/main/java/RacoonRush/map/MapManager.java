@@ -2,9 +2,10 @@ package RacoonRush.map;
 
 import RacoonRush.entity.Entity;
 import RacoonRush.entity.Player;
-import RacoonRush.game.Config;
+import RacoonRush.util.Config;
 import RacoonRush.game.GamePanel;
-import RacoonRush.game.Manager;
+import RacoonRush.game.GameManager;
+import RacoonRush.map.tile.Item;
 import RacoonRush.map.tile.Tile;
 
 import java.awt.*;
@@ -12,15 +13,13 @@ import java.awt.image.BufferedImage;
 
 /**
  * MapManager class is used to manage the map of the game.
- * It is used to load the map, draw the map, and check for collisions.
+ * It is used to load the map, draw the map, and handle collisions.
  */
-public class MapManager implements Manager {
-
+public class MapManager implements GameManager {
     private final GamePanel gamePanel;
+    private final ItemManager itemManager;
     private final MapLoader mapLoader;
     private Tile[][] map;
-
-
     private final BufferedImage[] background;
 
     /**
@@ -29,12 +28,10 @@ public class MapManager implements Manager {
      */
     public MapManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
+        itemManager = new ItemManager(gamePanel);
         mapLoader = new MapLoader(gamePanel);
         // Background is made of 4 background tiles each 768x768 in size that are drawn in a 2x2 grid
-        background = new BufferedImage[4];
-        for (int i = 0; i < 4; i++) {
-            background[i] = gamePanel.getImageLoader().getBackground(i);
-        }
+        background = gamePanel.getImageLoader().getBackgroundImages().toArray(new BufferedImage[0]);
     }
 
     /**
@@ -56,7 +53,7 @@ public class MapManager implements Manager {
      */
     private void drawBackground(Graphics2D g2) {
         Config config = gamePanel.getConfig();
-        Player player = gamePanel.getPlayer();
+        Player player = gamePanel.getEntityManager().getPlayer();
         int worldX = player.getWorldX();
         int worldY = player.getWorldY();
         int screenX = player.getScreenX();
@@ -77,7 +74,7 @@ public class MapManager implements Manager {
      */
     private void drawTile(Graphics2D g2, int i, int j) {
         Config config = gamePanel.getConfig();
-        Player player = gamePanel.getPlayer();
+        Player player = gamePanel.getEntityManager().getPlayer();
 
         int screenX = getScreenCoordinate(j, player.getWorldX(), player.getScreenX());
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
@@ -110,7 +107,12 @@ public class MapManager implements Manager {
         return Math.min((world + screen) / config.tileSize() + 2, max);
     }
 
-    public void update() {}
+    /**
+     * Method to update the map
+     */
+    public void update() {
+        itemManager.update();
+    }
 
     /**
      * Method to draw the map on the screen
@@ -118,16 +120,14 @@ public class MapManager implements Manager {
      */
     public void draw(Graphics2D g2) {
         Config config = gamePanel.getConfig();
-        Player player = gamePanel.getPlayer();
+        Player player = gamePanel.getEntityManager().getPlayer();
         int startX = getStart(player.getWorldX(), player.getScreenX());
         int startY = getStart(player.getWorldY(), player.getScreenY());
         int endX = getEnd(player.getWorldX(), player.getScreenX(), config.maxWorldCol());
         int endY = getEnd(player.getWorldY(), player.getScreenY(), config.maxWorldRow());
 
-        // draw the background
+        // Draw the background first before the tiles
         drawBackground(g2);
-
-        // draw the tiles over the background
         for (int i = startY; i < endY; i++) {
             for (int j = startX; j < endX; j++) {
                 if (map[i][j] != null) {
@@ -138,12 +138,12 @@ public class MapManager implements Manager {
     }
 
     /**
-     * Method to call the maploader to load the map from a text file
+     * Method to call the MapLoader to load the map from a text file
      * Loads the map array with Tile objects
      * @param filePath path to the text file
      */
     public void loadMap(String filePath) {
-        map = mapLoader.loadMap(filePath);
+        map = mapLoader.loadMap(itemManager, filePath);
     }
 
     /**
@@ -159,6 +159,17 @@ public class MapManager implements Manager {
         if (map[row][column] == null) {
             return true;
         }
+        if (entity instanceof Player && map[row][column] instanceof Item item && !item.isCollected()) {
+            itemManager.collectItem(item);
+        }
         return map[row][column].onCollide(entity);
+    }
+
+    /**
+     * Method to get the number of donuts left
+     * @return the number of donuts left
+     */
+    public int getDonutsLeft() {
+        return itemManager.getDonutsLeft();
     }
 }

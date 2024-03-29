@@ -1,6 +1,7 @@
-package RacoonRush.game;
+package RacoonRush.util;
 
-import RacoonRush.entity.Player;
+import RacoonRush.game.GamePanel;
+import RacoonRush.map.tile.Item;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,15 +13,16 @@ import java.io.IOException;
  * Scoreboard class for the game
  */
 public class Scoreboard extends JPanel {
-    private JLabel scoreLabel;
-    private JLabel timerLabel;
-    private JLabel messageLabel;
-    private boolean isDisabled;
+    private final GamePanel gamePanel;
+    private final JLabel scoreLabel;
+    private final JLabel timerLabel;
+    private final JLabel messageLabel;
 
     /**
      * Constructor for the Scoreboard
      */
-    public Scoreboard() {
+    public Scoreboard(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.BLACK);
@@ -31,13 +33,13 @@ public class Scoreboard extends JPanel {
 
         // Set font and size for labels
         try {
-            Font labelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/font/VCR_OSD_MONO_1.001.ttf").openStream());
-            scoreLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-            timerLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-            messageLabel.setFont(labelFont.deriveFont(Font.BOLD, 24f));
-
+            Font font = Font
+                    .createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/VCR_OSD_MONO_1.001.ttf"))
+                    .deriveFont(Font.BOLD, 24f);
+            scoreLabel.setFont(font);
+            timerLabel.setFont(font);
+            messageLabel.setFont(font);
         } catch (IOException | FontFormatException e) {
-            // Handle font loading exception
             e.printStackTrace();
         }
 
@@ -54,15 +56,16 @@ public class Scoreboard extends JPanel {
         add(scoreLabel);
         add(timerLabel);
         add(messageLabel);
+
+        setVisible(false);
     }
 
     /**
      * Update the score on the scoreboard
-     * @param score The new score
      */
-    public void updateScore(int score) {
-        if (!isDisabled) {
-            scoreLabel.setText("Score: " + score);
+    public void updateScore() {
+        if (isVisible()) {
+            scoreLabel.setText("Score: " + gamePanel.getScore());
         }
     }
 
@@ -71,7 +74,7 @@ public class Scoreboard extends JPanel {
      * @param timeInSeconds The new time in seconds
      */
     public void updateTimer(String timeInSeconds) {
-        if (!isDisabled) {
+        if (isVisible()) {
             timerLabel.setText("Time: " + timeInSeconds);
         }
     }
@@ -81,10 +84,10 @@ public class Scoreboard extends JPanel {
      * @param message The string message to show
      */
     public void showMessage(String message) {
-        if (!isDisabled) {
+        if (isVisible()) {
             messageLabel.setText(message);
             // Create a javax.swing.Timer to clear the message after 3 seconds
-            Timer timer = new Timer(2000, new ActionListener() {
+            Timer timer = new Timer(3000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     messageLabel.setText(" "); // Clear the message
@@ -96,41 +99,40 @@ public class Scoreboard extends JPanel {
     }
 
     /**
-     * Reset the scoreboard
-     */
-    public void reset() {
-        scoreLabel.setText("Score: 0");
-        timerLabel.setText("Time: 00:00");
-        messageLabel.setText(" ");
-    }
-
-    /**
      * Paint the background of the scoreboard with a gradient
      * @param g The Graphics object to paint with
      */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g.create();
 
         // Create a gradient paint for the background
         GradientPaint gradient = new GradientPaint(
-                0, 0, Color.MAGENTA,
-                getWidth(), getHeight(), Color.ORANGE);
+                0, 0, Color.MAGENTA, getWidth(), getHeight(), Color.ORANGE
+        );
 
         // Set the paint and fill the background with the gradient
-        g2d.setPaint(gradient);
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2.setPaint(gradient);
+        g2.fillRect(0, 0, getWidth(), getHeight());
 
-        g2d.dispose();
+        g2.dispose();
     }
 
-    /**
-     * Set the disabled state of the scoreboard
-     * @param bool The new disabled state
-     * @return The new disabled state
-     */
-    public boolean setDisabled(boolean bool) {
-        return isDisabled = bool;
+    public void collectItemMessage(Item item, int donutsLeft) {
+        if (!isVisible()) {
+            return;
+        }
+        showMessage(switch (item.getType()) {
+            case DONUT -> "+10 points! " + switch (donutsLeft) {
+                case 0 -> "Hurry to the exit!";
+                case 1 -> "1 more donut left.";
+                default -> donutsLeft + " donuts remaining.";
+            };
+            case LEFTOVER -> "-20 points...";
+            case PIZZA -> "+50 points! You found Uncle Fatih's lost pizza!";
+            default -> "";
+        });
+        updateScore();
     }
 }

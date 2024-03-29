@@ -1,5 +1,6 @@
 package RacoonRush.game;
 
+import RacoonRush.util.Scoreboard;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,8 +36,7 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
-        // Load the map and start the game thread
-        gamePanel.loadMap("/maps/world_map.txt");
-        gamePanel.startGameThread();
+        // Start the game
+        gamePanel.startGame();
     }
 }

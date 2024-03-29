@@ -29,9 +29,10 @@ public class Wall extends Tile {
 
     /**
      * Method to get the image of the wall
+     * Utilizes the x and y coordinates to get the correct image, animation frame is not used and can be null
      * @param x x-coordinate of the tile
      * @param y y-coordinate of the tile
-     * @param animationFrame animation frame
+     * @param animationFrame animation frame, not used
      * @return BufferedImage
      */
     @Override

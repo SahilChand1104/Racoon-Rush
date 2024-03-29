@@ -1,12 +1,11 @@
 package RacoonRush.map.tile;
 
 import RacoonRush.game.GamePanel;
-import RacoonRush.game.ImageLoader;
+import RacoonRush.util.ImageLoader;
 
 /**
  * TileFactory class is used to create Tile objects based on the TileType.
  * It uses a factory design pattern to create the Tile objects.
-
  */
 public class TileFactory {
     private final GamePanel gamePanel;
@@ -30,10 +29,10 @@ public class TileFactory {
             case EMPTY -> null;
             case WALL -> new Wall(imageLoader.getWallImages());
             case TREE -> new Wall(imageLoader.getTreeImages());
-            case DONUT -> new Item(imageLoader.getDonutImages(), 10, gamePanel);
-            case LEFTOVER -> new Item(imageLoader.getLeftoverImages(), -20, gamePanel);
-            case PIZZA -> new Item(imageLoader.getPizzaImages(), 50, gamePanel);
-            case END -> new Item(null, 0, gamePanel);
+            case DONUT -> new Item(imageLoader.getDonutImages(), type);
+            case LEFTOVER -> new Item(imageLoader.getLeftoverImages(), type);
+            case PIZZA -> new Item(imageLoader.getPizzaImages(), type);
+            case END -> new Item(null, type);
         };
     }
 }

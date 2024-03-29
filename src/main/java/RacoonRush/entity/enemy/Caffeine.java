@@ -1,7 +1,7 @@
 package RacoonRush.entity.enemy;
 
 import RacoonRush.game.GamePanel;
-import RacoonRush.game.Move;
+import RacoonRush.util.Move;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

@@ -2,8 +2,12 @@ package RacoonRush.entity;
 
 import RacoonRush.entity.enemy.Enemy;
 import RacoonRush.game.*;
-import RacoonRush.game.menu.UIKeyHandler;
-import RacoonRush.game.menu.UI_Pressed;
+import RacoonRush.game.menu.MenuKeyHandler;
+import RacoonRush.game.menu.MenuKey;
+import RacoonRush.util.CollisionDetector;
+import RacoonRush.util.Config;
+import RacoonRush.util.KeyHandler;
+import RacoonRush.util.Move;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,9 +18,9 @@ import java.util.EnumMap;
  * Class for the player entity
  * This class should only have one instance
  */
-public class Player extends Entity implements Manager {
+public class Player extends Entity implements GameManager {
     public final int screenX, screenY, invincibilityDuration;
-    private int score, invincibilityFrames, donutsLeft;
+    private int invincibilityFrames;
 
     /**
      * Constructor for the player
@@ -30,8 +34,6 @@ public class Player extends Entity implements Manager {
         screenX = config.screenWidth() / 2 - config.tileSize() / 2;
         screenY = config.screenHeight() / 2 - config.tileSize() / 2;
         invincibilityDuration = 120;
-        score = 0;
-        donutsLeft = 0;
     }
 
     /**
@@ -41,11 +43,11 @@ public class Player extends Entity implements Manager {
     public void update() {
         // Use the game keyhandler for player movement
         KeyHandler keyHandler = gamePanel.getKeyHandler();
-        // Use the UI keyhandler for pausing/playing the game
-        UIKeyHandler uiKeyHandler = gamePanel.getUIKeyHandler();
+        // Use the Menu keyhandler for pausing/playing the game
+        MenuKeyHandler menuKeyHandler = gamePanel.getUIKeyHandler();
         CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
-        if (uiKeyHandler.get(UI_Pressed.PAUSE)) {
-            gamePanel.openMenu();
+        if (menuKeyHandler.get(MenuKey.PAUSE)) {
+            gamePanel.pauseGame();
         }
         if (!keyHandler.get(Move.UP) && !keyHandler.get(Move.DOWN) && !keyHandler.get(Move.LEFT) && !keyHandler.get(Move.RIGHT)) {
             return;
@@ -64,9 +66,6 @@ public class Player extends Entity implements Manager {
         } else if (keyHandler.get(Move.RIGHT) && collisionDetector.move(this, Move.RIGHT)) {
             direction = Move.RIGHT;
             worldX += speed;
-        }
-        if (score < 0) {
-            gamePanel.loseGame();
         }
         invincibilityFrames = isInvincible() ? invincibilityFrames - 1 : invincibilityFrames;
     }
@@ -88,38 +87,21 @@ public class Player extends Entity implements Manager {
         );
     }
 
+    /**
+     * Checks if the player is invincible based on the invincibility frames they have remaining, 1 invincibility frame is lost per update
+     * @return boolean value of whether the play has more than 0 invincibility frames remaining
+     */
     public boolean isInvincible() {
         return invincibilityFrames > 0;
     }
 
-    public void onCollide(Enemy enemy) {
-        gamePanel.loseGame(); // For now, lose game as per assignment instructions, but can be removed if desired
-        updateScore(-enemy.getDamage());
-        invincibilityFrames = invincibilityDuration;
-    }
-
     /**
-     * Updates the score
-     * @param score the score
+     * @param enemy the enemy that the player has collided with
      */
-    public void updateScore(int score) {
-        Scoreboard scoreboard = gamePanel.getScoreboard();
-        this.score += score;
-        scoreboard.updateScore(this.score);
-        if (score == 10) {
-            donutsLeft--;
-            if (donutsLeft == 0) {
-                scoreboard.showMessage("+10 points! Hurry to the exit!");
-            } else if (donutsLeft == 1) {
-                scoreboard.showMessage("+10 points! 1 more donut left.");
-            } else {
-                scoreboard.showMessage("+10 points! " + donutsLeft + " more donuts left.");
-            }
-        } else if (score == -20) {
-            scoreboard.showMessage("-20 points...");
-        } else if (score == 50) {
-            scoreboard.showMessage("+50 points! You found Uncle Fatih's lost pizza!");
-        }
+    public void onCollide(Enemy enemy) {
+        gamePanel.stopGame(false); // For now, lose game as per assignment instructions, but can be removed if desired
+        // updateScore(-enemy.getDamage());
+        invincibilityFrames = invincibilityDuration;
     }
 
     /**
@@ -137,22 +119,4 @@ public class Player extends Entity implements Manager {
     public int getScreenY() {
         return screenY;
     }
-
-    /**
-     * Add a donut to the donutsLeft count
-     */
-    public void addDonutsLeft() { donutsLeft++; }
-    /**
-     * Remove a donut from the donutsLeft count
-     */
-    public int getDonutsLeft() { return donutsLeft; }
-    /**
-     * Returns the score
-     * @return the score
-     */
-    public int getScore() { return score; }
-    /**
-     * Resets the score
-     */
-    public void resetScore() { score = 0; }
 }
