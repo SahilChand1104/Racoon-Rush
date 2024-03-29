@@ -10,13 +10,12 @@ import java.awt.image.BufferedImage;
  * Main class for the game
  */
 public class Main {
-
     public static void main(String[] args) {
         Taskbar taskbar = Taskbar.getTaskbar();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image icon_img = toolkit.getImage("src/main/resources/menu/icon.png");
+        Image iconImage = toolkit.getImage("src/main/resources/menu/icon.png");
         try {
-            taskbar.setIconImage(icon_img);
+            taskbar.setIconImage(iconImage);
         } catch (UnsupportedOperationException e) {
             System.out.println("The os does not support setting the icon for the taskbar");
         }
@@ -25,6 +24,7 @@ public class Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(true);
         window.setTitle("Racoon Rush");
+        window.setIconImage(iconImage);
 
         // Create a new game panel
         GamePanel gamePanel = new GamePanel();
