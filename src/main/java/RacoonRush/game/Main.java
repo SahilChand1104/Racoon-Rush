@@ -3,18 +3,29 @@ package RacoonRush.game;
 import RacoonRush.util.Scoreboard;
 
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Main class for the game
  */
 public class Main {
     public static void main(String[] args) {
+        Taskbar taskbar = Taskbar.getTaskbar();
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image iconImage = toolkit.getImage("src/main/resources/menu/icon.png");
+        try {
+            taskbar.setIconImage(iconImage);
+        } catch (UnsupportedOperationException e) {
+            System.out.println("The os does not support setting the icon for the taskbar");
+        }
         // Make a new window
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(true);
         window.setTitle("Racoon Rush");
+        window.setIconImage(iconImage);
 
         // Create a new game panel
         GamePanel gamePanel = new GamePanel();
