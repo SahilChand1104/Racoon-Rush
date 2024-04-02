@@ -45,6 +45,14 @@ public class Menu implements GameManager {
         }
     }
 
+    public EnumMap<ComponentType, MenuComponent> getComponents() {
+        return components;
+    }
+
+    public ArrayList<MenuButton> getButtonComponents() {
+        return buttonComponents;
+    }
+
     /**
      * Loads the menu components
      */
@@ -227,4 +235,13 @@ public class Menu implements GameManager {
                 config.screenHeight() - config.tileSize() * 2
         );
     }
+
+    /**
+     * Returns the index of the currently selected button component
+     * @return the index of the currently selected button component
+     */
+    public int getButtonComponentIndex() {return buttonComponentIndex;}
+
+    public MenuState getMenuState() { return menuState; }
+
 }

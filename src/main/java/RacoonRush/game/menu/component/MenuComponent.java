@@ -35,4 +35,17 @@ public class MenuComponent {
     public void draw(Graphics2D g2) {
         g2.drawImage(image, x, y, null);
     }
+
+    /**
+     * Returns the x position of the component
+     * @return int
+     */
+    public int getX() {return x;}
+
+    /**
+     * Returns the y position of the component
+     * @return int
+     */
+    public int getY() {return y;}
+
 }
