@@ -2,7 +2,6 @@ package RacoonRush.entity;
 
 import RacoonRush.entity.enemy.Enemy;
 import RacoonRush.game.*;
-import RacoonRush.game.menu.MenuKeyHandler;
 import RacoonRush.game.menu.MenuKey;
 import RacoonRush.util.CollisionDetector;
 import RacoonRush.util.Config;
@@ -42,19 +41,21 @@ public class Player extends Entity implements GameManager {
      */
     @Override
     public void update() {
-        // Use the game keyhandler for player movement
-        KeyHandler keyHandler = gamePanel.getKeyHandler();
-        // Use the Menu keyhandler for pausing/playing the game
-        MenuKeyHandler menuKeyHandler = gamePanel.getUIKeyHandler();
-        CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
-        if (menuKeyHandler.get(MenuKey.PAUSE)) {
+        // Use the Menu KeyHandler to check if the game needs to be paused
+        if (gamePanel.getMenuKeyHandler().get(MenuKey.PAUSE)) {
             gamePanel.pauseGame();
         }
+
+        // Use the Game KeyHandler for player movement
+        KeyHandler keyHandler = gamePanel.getKeyHandler();
+
         if (!keyHandler.get(Move.UP) && !keyHandler.get(Move.DOWN) && !keyHandler.get(Move.LEFT) && !keyHandler.get(Move.RIGHT)) {
             return;
         }
 
-        // Movement causes world coordinates to change, imitating a camera
+        CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
+
+        // Movement changes world coordinates, imitating a camera since the player is technically never moving on the screen
         if (keyHandler.get(Move.UP) && collisionDetector.move(this, Move.UP)) {
             direction = Move.UP;
             worldY -= speed;

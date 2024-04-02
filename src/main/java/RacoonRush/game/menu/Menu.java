@@ -92,7 +92,7 @@ public class Menu implements GameManager {
      */
     public void update() {
         // Use the Menu key handler, not the game key handler
-        MenuKeyHandler menuKeyHandler = gamePanel.getUIKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         // Handle key press
         if (menuKeyHandler.get(MenuKey.ESCAPE)) {

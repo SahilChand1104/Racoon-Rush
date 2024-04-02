@@ -213,7 +213,7 @@ public class GamePanel extends JPanel implements Runnable {
      * This is used for handling key events in the menu
      * @return the sound object
      */
-    public MenuKeyHandler getUIKeyHandler() {
+    public MenuKeyHandler getMenuKeyHandler() {
         return menuKeyHandler;
     }
 

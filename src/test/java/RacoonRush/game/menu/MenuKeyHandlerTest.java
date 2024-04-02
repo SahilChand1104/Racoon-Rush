@@ -7,9 +7,9 @@ import java.awt.event.KeyEvent;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
 
 public class MenuKeyHandlerTest {
-
     void checkKeysPressed(MenuKeyHandler menuKeyHandler, MenuKey key) {
         for (MenuKey menuKey : MenuKey.values()) {
             if (menuKey == key) {
@@ -26,160 +26,150 @@ public class MenuKeyHandlerTest {
         }
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyWPressed() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_W, 'W');
         menuKeyHandler.keyPressed(e);
         checkKeysPressed(menuKeyHandler, MenuKey.UP);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeySPressed() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_S, 'S');
         menuKeyHandler.keyPressed(e);
         checkKeysPressed(menuKeyHandler, MenuKey.DOWN);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyAPressed() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_A, 'A');
         menuKeyHandler.keyPressed(e);
         checkKeysPressed(menuKeyHandler, MenuKey.LEFT);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyDPressed() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_D, 'D');
         menuKeyHandler.keyPressed(e);
         checkKeysPressed(menuKeyHandler, MenuKey.RIGHT);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyEnterPressed() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, 'E');
         menuKeyHandler.keyPressed(e);
         checkKeysPressed(menuKeyHandler, MenuKey.ENTER);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyEscapePressed() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ESCAPE, 'E');
         menuKeyHandler.keyPressed(e);
         checkKeysPressed(menuKeyHandler, MenuKey.ESCAPE);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyPPressed() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_P, 'P');
         menuKeyHandler.keyPressed(e);
         checkKeysPressed(menuKeyHandler, MenuKey.PAUSE);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyWReleased() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_W, 'W');
         menuKeyHandler.keyReleased(e);
         checkKeysReleased(menuKeyHandler, MenuKey.UP);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeySReleased() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_S, 'S');
         menuKeyHandler.keyReleased(e);
         checkKeysReleased(menuKeyHandler, MenuKey.DOWN);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyAReleased() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_A, 'A');
         menuKeyHandler.keyReleased(e);
         checkKeysReleased(menuKeyHandler, MenuKey.LEFT);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyDReleased() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_D, 'D');
         menuKeyHandler.keyReleased(e);
         checkKeysReleased(menuKeyHandler, MenuKey.RIGHT);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyEnterReleased() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, 'E');
         menuKeyHandler.keyReleased(e);
         checkKeysReleased(menuKeyHandler, MenuKey.ENTER);
-
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyEscapeReleased() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_ESCAPE, 'E');
         menuKeyHandler.keyReleased(e);
         checkKeysReleased(menuKeyHandler, MenuKey.ESCAPE);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyPReleased() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_P, 'P');
         menuKeyHandler.keyReleased(e);
         checkKeysReleased(menuKeyHandler, MenuKey.PAUSE);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testKeyTyped() {
         GamePanel gamePanel = new GamePanel();
-        MenuKeyHandler menuKeyHandler = new MenuKeyHandler();
+        MenuKeyHandler menuKeyHandler = gamePanel.getMenuKeyHandler();
 
         KeyEvent e = new KeyEvent(gamePanel, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_P, 'P');
         menuKeyHandler.keyTyped(e);
@@ -187,5 +177,4 @@ public class MenuKeyHandlerTest {
             assertFalse(menuKeyHandler.get(menuKey));
         }
     }
-
 }
