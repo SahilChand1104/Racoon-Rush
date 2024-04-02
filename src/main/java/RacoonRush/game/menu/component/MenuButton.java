@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
  * Represents a button component in the menu
  */
 public class MenuButton extends MenuComponent {
-    private final BufferedImage selectedImage;
+    protected final BufferedImage selectedImage;
     private final ButtonType buttonType;
     private boolean selected;
 
@@ -24,6 +24,7 @@ public class MenuButton extends MenuComponent {
      * @param buttonType    the type of the button component
      */
     public MenuButton(GamePanel gamePanel, int x, int y, BufferedImage image, BufferedImage selectedImage, ButtonType buttonType) {
+
         super(gamePanel, x, y, image);
         this.selectedImage = selectedImage;
         this.buttonType = buttonType;
@@ -47,10 +48,32 @@ public class MenuButton extends MenuComponent {
     }
 
     /**
+     * Returns whether the component is selected
+     * @return boolean
+     */
+    public boolean isSelected() {return selected;}
+
+    /**
      * Returns the type of the component
      * @return ComponentType
      */
     public ButtonType getButtonType() {
         return buttonType;
+    }
+
+    /**
+     * Returns the x position of the component
+     * @return int
+     */
+    public int getX() {
+        return x;
+    }
+
+    /**
+     * Returns the y position of the component
+     * @return int
+     */
+    public int getY() {
+        return y;
     }
 }
