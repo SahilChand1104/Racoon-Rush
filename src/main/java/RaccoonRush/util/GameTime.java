@@ -89,4 +89,12 @@ public class GameTime {
         int minutes = (totalSeconds - seconds) / 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
+
+    /**
+     * Checks if the timer is running
+     * @return true if the timer is running, false otherwise
+     */
+    public boolean isRunning() {
+        return timer.isRunning();
+    }
 }

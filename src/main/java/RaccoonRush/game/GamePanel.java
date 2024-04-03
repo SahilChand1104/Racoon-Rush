@@ -185,6 +185,22 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
+     * Method to set the game state
+     * @param gameState the game state to set
+     */
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    /**
+     * Method to get the game state
+     * @return the game state
+     */
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    /**
      * Method to get the game panel's constant values like tile size, screen width, screen height, etc.
      * @return the config object
      */
@@ -287,5 +303,13 @@ public class GamePanel extends JPanel implements Runnable {
      */
     public int getScore() {
         return score;
+    }
+
+    /**
+     * Returns the game thread.
+     * @return the game thread.
+     */
+    public Thread getGameThread() {
+        return gameThread;
     }
 }
