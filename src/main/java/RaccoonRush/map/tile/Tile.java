@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Tile class is an abstract class that is used to create the different types of tiles in the game.
  */
 public abstract class Tile {
-    protected ArrayList<BufferedImage> images;
+    protected final ArrayList<BufferedImage> images;
 
     /**
      * Constructor for Tile class
