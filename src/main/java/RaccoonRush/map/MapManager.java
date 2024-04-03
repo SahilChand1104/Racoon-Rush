@@ -172,4 +172,12 @@ public class MapManager implements GameManager {
     public int getDonutsLeft() {
         return itemManager.getDonutsLeft();
     }
+
+    /**
+     * Method to get the map array
+     * @return the map array
+     */
+    public Tile[][] getMap() {
+        return map;
+    }
 }
