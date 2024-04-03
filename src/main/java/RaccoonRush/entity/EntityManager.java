@@ -109,4 +109,12 @@ public class EntityManager implements GameManager {
     public Player getPlayer() {
         return player;
     }
+
+    /**
+     * Returns the enemy list
+     * @return the enemy list
+     */
+    public ArrayList<Enemy> getEnemyList() {
+        return enemyList;
+    }
 }
