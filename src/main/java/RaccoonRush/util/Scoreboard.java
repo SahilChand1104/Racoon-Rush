@@ -99,6 +99,31 @@ public class Scoreboard extends JPanel {
     }
 
     /**
+     * Returns the text displayed on the score label.
+     * @return The text displayed on the score label.
+     */
+    public String getScoreLabelText() {
+        return scoreLabel.getText();
+    }
+
+    /**
+     * Returns the text displayed on the timer label.
+     * @return The text displayed on the timer label.
+     */
+    public String getTimerLabelText() {
+        return timerLabel.getText();
+    }
+
+    /**
+     * Returns the text displayed on the message label.
+     * @return The text displayed on the message label.
+     */
+    public String getMessageLabelText() {
+        return messageLabel.getText();
+    }
+
+
+    /**
      * Paint the background of the scoreboard with a gradient
      * @param g The Graphics object to paint with
      */
