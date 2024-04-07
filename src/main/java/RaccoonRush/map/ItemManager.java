@@ -79,4 +79,10 @@ public class ItemManager {
     public int getDonutsLeft() {
         return donutsLeft;
     }
+
+    /**
+     * Gets the number of frames the pizza has been active for.
+     * @return the number of frames the pizza has been active for.
+     */
+    public int getPizzaFrames() { return pizzaFrames; }
 }
