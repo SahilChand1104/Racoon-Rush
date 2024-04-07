@@ -4,8 +4,9 @@ import RaccoonRush.map.tile.Item;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
-import java.util.ArrayList;
-
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SoundManager class is used to load and play sound effects and background music in the game.
@@ -19,39 +20,58 @@ import java.util.ArrayList;
  * 5 - Splashing.wav (Sound effect for water splashing)
  */
 public class SoundManager {
-    private final ArrayList<Clip> sounds;
-
-    /**
-     * Constructor for the Sound class. It loads all sounds into the clips ArrayList.
-     */
-    public SoundManager() {
-        sounds = new ArrayList<>();
-        loadAllSounds();
-    }
-
-    /**
-     * This method loads all the sound files into the clips ArrayList.
-     */
-    private void loadAllSounds() {
-        String[] soundFiles = new String[] {
+    private final Map<Integer, Clip> sounds;
+    private final String[] soundFiles = {
             "/Sounds/Music.wav",
             "/Sounds/Eating a Donut.wav",
             "/Sounds/Eating Leftovers.wav",
             "/Sounds/Raccoon enemy.wav",
             "/Sounds/Footsteps.wav",
             "/Sounds/Splashing.wav"
-        };
+    };
 
-        for (String soundFile : soundFiles) {
-            try {
-                AudioInputStream ais = AudioSystem.getAudioInputStream(getClass().getResource(soundFile));
-                Clip clip = AudioSystem.getClip();
-                clip.open(ais);
-                sounds.add(clip);
-            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                e.printStackTrace();
-            }
+    /**
+     * Constructor for the SoundManager class.
+     * Initializes the map to store loaded sound clips.
+     */
+    public SoundManager() {
+        sounds = new HashMap<>();
+    }
+
+    /**
+     * Load a sound clip from a sound file.
+     * @param i the index of the sound file to load
+     * @return the loaded Clip object
+     * @throws IOException                  if an I/O error occurs
+     * @throws UnsupportedAudioFileException if the audio file is not supported
+     * @throws LineUnavailableException     if a line cannot be opened
+     */
+    private Clip loadSound(int i) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        URL soundFileURL = getClass().getResource(soundFiles[i]);
+        if (soundFileURL == null) {
+            throw new IOException("Sound file not found: " + soundFiles[i]);
         }
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFileURL);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        return clip;
+    }
+
+    /**
+     * Get the clip for a sound file.
+     * If the clip is not already loaded, it is loaded and cached.
+     * @param i the index of the sound file
+     * @return the Clip object for the specified sound file
+     */
+    private synchronized Clip getClip(int i) {
+        return sounds.computeIfAbsent(i, idx -> {
+            try {
+                return loadSound(idx);
+            } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+                e.printStackTrace();
+                return null;
+            }
+        });
     }
 
     /**
@@ -59,8 +79,11 @@ public class SoundManager {
      * @param i the index of the sound file
      */
     public void playSound(int i) {
-        sounds.get(i).setFramePosition(0);
-        sounds.get(i).start();
+        Clip clip = getClip(i);
+        if (clip != null) {
+            clip.setFramePosition(0);
+            clip.start();
+        }
     }
 
     /**
@@ -68,7 +91,10 @@ public class SoundManager {
      * @param i the index of the sound file to loop indefinitely
      */
     public void playSoundLoop(int i) {
-        sounds.get(i).loop(Clip.LOOP_CONTINUOUSLY);
+        Clip clip = getClip(i);
+        if (clip != null) {
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
     }
 
     /**
@@ -76,7 +102,10 @@ public class SoundManager {
      * @param i the index of the sound file to stop
      */
     public void stopSound(int i) {
-        sounds.get(i).stop();
+        Clip clip = getClip(i);
+        if (clip != null) {
+            clip.stop();
+        }
     }
 
     /**
