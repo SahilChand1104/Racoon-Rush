@@ -72,4 +72,13 @@ public class MapManagerTest {
         Config config = gamePanel.getConfig();
         assertEquals(config.screenWidth(), background[0].getWidth());
     }
+
+    @Test
+    public void testPizzaUpdate() {
+        ItemManager items = new ItemManager(gamePanel);
+        int beforeFrames = items.getPizzaFrames();
+        items.update();
+        int afterFrames = items.getPizzaFrames();
+        assertNotEquals(beforeFrames, afterFrames);
+    }
 }

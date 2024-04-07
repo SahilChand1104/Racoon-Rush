@@ -39,7 +39,10 @@ public class EnemyTest {
         enemies.getFirst().draw(g2);
         gamePanel.getEntityManager().draw(g2);
         Config config = gamePanel.getConfig();
-        assertEquals(2, enemies.getFirst().getSpeed());
+        assertEquals(enemyImage, enemies.getFirst().getImage(0, Move.UP));
+        assertEquals(1056, enemies.getFirst().getWorldX());
+        assertEquals(1056, enemies.getFirst().getWorldY());
+        assertEquals(48, config.tileSize());
     }
 
     @Test
