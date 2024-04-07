@@ -18,6 +18,7 @@ The game can then be built and run respectively by using the following:
 mvn clean package
 java -cp target/RaccoonRush-1.0-SNAPSHOT.jar RaccoonRush.game.Main
 ```
+For reference, the newly compiled and packaged jar file will be located in `${basedir}/target`.
 
 ## Test
 To run the unit and integration tests for the game, use the following:
