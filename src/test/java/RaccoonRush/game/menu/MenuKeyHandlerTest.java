@@ -11,19 +11,11 @@ import org.junit.jupiter.api.Test;
 
 public class MenuKeyHandlerTest {
     void checkKeysPressed(MenuKeyHandler menuKeyHandler, MenuKey key) {
-        for (MenuKey menuKey : MenuKey.values()) {
-            if (menuKey == key) {
-                assertTrue(menuKeyHandler.get(menuKey));
-            } else {
-                assertFalse(menuKeyHandler.get(menuKey));
-            }
-        }
+        assertTrue(menuKeyHandler.get(key));
     }
 
     void checkKeysReleased(MenuKeyHandler menuKeyHandler, MenuKey key) {
-        for (MenuKey menuKey : MenuKey.values()) {
-            assertFalse(menuKeyHandler.get(menuKey));
-        }
+        assertFalse(menuKeyHandler.get(key));
     }
 
     @Test
