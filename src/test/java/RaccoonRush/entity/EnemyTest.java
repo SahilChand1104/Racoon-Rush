@@ -36,7 +36,7 @@ public class EnemyTest {
     public void testDraw() {
         BufferedImage enemyImage = enemies.getFirst().getImage(0, Move.UP);
         Graphics2D g2 = enemyImage.createGraphics();
-        enemies.getFirst().draw(g2);
+        enemies.getLast().draw(g2);
         gamePanel.getEntityManager().draw(g2);
         Config config = gamePanel.getConfig();
         assertEquals(enemyImage, enemies.getFirst().getImage(0, Move.UP));
