@@ -1,5 +1,7 @@
-# CMPT276S24_group12
+# CMPT276S24_group12: Raccoon Rush
 This is the github repository for Group 12, CMPT 276.  
+
+![Raccoon Rush](https://github.sfu.ca/gna22/CMPT276S24_group12/blob/main/src/main/resources/menu/menu_title.png?raw=true)
 
 ## Group Members:
 - Max Bodifee
@@ -11,7 +13,7 @@ This is the github repository for Group 12, CMPT 276.
 - [Java JDK](https://www.oracle.com/java/technologies/downloads/)
 - [Apache Maven](https://maven.apache.org/download.cgi)
 
-## Build and Play
+## Build and Run
 First clone this repository onto your machine. Then navigate to the project directory. <br>
 The game can then be built and run respectively by using the following:
 ```
