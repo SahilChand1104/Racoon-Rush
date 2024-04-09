@@ -114,10 +114,42 @@ public abstract class Enemy extends Entity {
     }
 
     /**
+     * Set the direction the enemy is facing
+     * @param direction the direction to set
+     */
+    public void setDirection(Move direction) {
+        this.direction = direction;
+    }
+
+    /**
      * Returns the damage the enemy deals
      * @return the damage the enemy deals
      */
     public int getDamage() {
         return damage;
+    }
+
+    /**
+     * Returns the ability active status
+     * @return boolean indicating if the ability is active
+     */
+    public boolean isAbilityActive() {
+        return abilityActive;
+    }
+
+    /**
+     * Returns the ability frames remaining
+     * @return the ability frames remaining
+     */
+    public int getAbilityFrames() {
+        return abilityFrames;
+    }
+
+    /**
+     * Returns the ability cooldown frames remaining
+     * @return the ability cooldown frames remaining
+     */
+    public int getAbilityCooldownFrames() {
+        return abilityCooldownFrames;
     }
 }

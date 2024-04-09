@@ -1,21 +1,19 @@
 package RaccoonRush.entity;
 
-import RaccoonRush.entity.enemy.Raccoon;
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.entity.enemy.Enemy;
-
 import RaccoonRush.util.Config;
 import RaccoonRush.util.Move;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 public class EnemyTest {
     private GamePanel gamePanel;
     private ArrayList<Enemy> enemies;
@@ -47,18 +45,51 @@ public class EnemyTest {
 
     @Test
     public void testAbility() {
-        enemies.getFirst().activateAbility();
-        assertEquals(4, enemies.getFirst().getSpeed());
-        enemies.getFirst().deactivateAbility();
-        assertEquals(2, enemies.getFirst().getSpeed());
+        Enemy enemy = enemies.getFirst();
+        assertFalse(enemy.isAbilityActive());
+        while (enemy.getAbilityCooldownFrames() > 0) {
+            enemy.update();
+        }
+        assertTrue(enemy.isAbilityActive());
+        while (enemy.getAbilityFrames() > 0) {
+            enemy.update();
+        }
+        assertFalse(enemy.isAbilityActive());
     }
 
     @Test
-    public void testUpdate() {
-        enemies.getFirst().update();
-        int worldXBefore = enemies.getFirst().getWorldX();
-        gamePanel.getEntityManager().update();
-        int worldXAfter= enemies.getFirst().getWorldX();
-        assertTrue(worldXBefore > worldXAfter);
+    public void testUpdate_moveUp() {
+        Enemy enemy = enemies.getFirst();
+        int initialWorldY = enemy.getWorldY();
+        enemy.setDirection(Move.UP);
+        enemy.update();
+        assertEquals(initialWorldY - enemy.getSpeed(), enemy.getWorldY());
+    }
+
+    @Test
+    public void testUpdate_moveDown() {
+        Enemy enemy = enemies.getFirst();
+        int initialWorldY = enemy.getWorldY();
+        enemy.setDirection(Move.DOWN);
+        enemy.update();
+        assertEquals(initialWorldY + enemy.getSpeed(), enemy.getWorldY());
+    }
+
+    @Test
+    public void testUpdate_moveLeft() {
+        Enemy enemy = enemies.getFirst();
+        int initialWorldX = enemy.getWorldX();
+        enemy.setDirection(Move.LEFT);
+        enemy.update();
+        assertEquals(initialWorldX - enemy.getSpeed(), enemy.getWorldX());
+    }
+
+    @Test
+    public void testUpdate_moveRight() {
+        Enemy enemy = enemies.getFirst();
+        int initialWorldX = enemy.getWorldX();
+        enemy.setDirection(Move.RIGHT);
+        enemy.update();
+        assertEquals(initialWorldX + enemy.getSpeed(), enemy.getWorldX());
     }
 }
