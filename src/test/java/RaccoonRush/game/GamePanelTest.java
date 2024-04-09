@@ -52,7 +52,7 @@ public class GamePanelTest {
         gamePanel.stopGame(true);
         assertFalse(gamePanel.getGameTime().isRunning());
         assertFalse(gamePanel.getScoreboard().isVisible());
-        assertEquals(GameState.MENU, gamePanel.getGameState());
+        assertEquals(GameState.GAMEOVER, gamePanel.getGameState());
     }
 
     @Test
@@ -81,5 +81,15 @@ public class GamePanelTest {
         Item item = new Item(new ArrayList<>(), TileType.END);
         gamePanel.updateScore(item);
         assertEquals(0, gamePanel.getScore());
+    }
+
+    @Test
+    public void negativeScore_stopsGame() {
+        gamePanel.playGame();
+        assertEquals(GameState.PLAY, gamePanel.getGameState());
+        gamePanel.updateScore(new Item(new ArrayList<>(), TileType.LEFTOVER));
+        assertEquals(-20, gamePanel.getScore());
+        gamePanel.update();
+        assertEquals(GameState.GAMEOVER, gamePanel.getGameState());
     }
 }

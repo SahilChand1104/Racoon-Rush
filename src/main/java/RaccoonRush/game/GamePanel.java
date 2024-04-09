@@ -100,7 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
         gameTime.stopTimer();
         scoreboard.setVisible(false);
         menu.stopGame(winStatus);
-        gameState = GameState.MENU;
+        gameState = GameState.GAMEOVER;
     }
 
     /**
