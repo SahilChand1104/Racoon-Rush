@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
  * Represents a button component in the menu
  */
 public class MenuButton extends MenuComponent {
+
+    protected final BufferedImage unselectedImage;
     protected final BufferedImage selectedImage;
     private final ButtonType buttonType;
     private boolean selected;
@@ -19,12 +21,13 @@ public class MenuButton extends MenuComponent {
      * @param gamePanel     the gamePanel
      * @param x             the x position of the component
      * @param y             the y position of the component
-     * @param image         the image of the component
+     * @param unselectedImage         the image of the component
      * @param selectedImage the selected image of the component
      * @param buttonType    the type of the button component
      */
-    public MenuButton(GamePanel gamePanel, int x, int y, BufferedImage image, BufferedImage selectedImage, ButtonType buttonType) {
-        super(gamePanel, x, y, image);
+    public MenuButton(GamePanel gamePanel, int x, int y, BufferedImage unselectedImage, BufferedImage selectedImage, ButtonType buttonType) {
+        super(gamePanel, x, y);
+        this.unselectedImage = unselectedImage;
         this.selectedImage = selectedImage;
         this.buttonType = buttonType;
     }
@@ -35,7 +38,7 @@ public class MenuButton extends MenuComponent {
      */
     @Override
     public void draw(Graphics2D g2) {
-        g2.drawImage(selected ? selectedImage : image, x, y, null);
+        g2.drawImage(selected ? selectedImage : unselectedImage, x, y, null);
     }
 
     /**
@@ -58,5 +61,30 @@ public class MenuButton extends MenuComponent {
      */
     public ButtonType getButtonType() {
         return buttonType;
+    }
+
+    /**
+     * Returns the type of the component
+     * @return ComponentType
+     */
+    @Override
+    public ComponentType getType() {
+        return ComponentType.BUTTON;
+    }
+
+    /**
+     * Returns the unselected image of the component
+     * @return BufferedImage
+     */
+    public BufferedImage getUnselectedImage() {
+        return unselectedImage;
+    }
+
+    /**
+     * Returns the selected image of the component
+     * @return BufferedImage
+     */
+    public BufferedImage getSelectedImage() {
+        return selectedImage;
     }
 }

@@ -31,11 +31,11 @@ public class MenuTest {
         GamePanel gamePanel = new GamePanel();
         Menu menu = gamePanel.getMenu();
 
-        EnumMap<ComponentType, MenuComponent> components = menu.getComponents();
-        components.forEach((key, value) -> assertNotNull(value));
+        ArrayList<MenuComponent> components = menu.getComponents();
+        components.forEach(Assertions::assertNotNull);
         assertEquals(4, components.size());
-        assertEquals(0, components.get(ComponentType.BG).getX());
-        assertEquals(0, components.get(ComponentType.BG).getY());
+        assertEquals(0, components.getFirst().getX());
+        assertEquals(0, components.getFirst().getY());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class MenuTest {
         GamePanel gamePanel = new GamePanel();
         Menu menu = gamePanel.getMenu();
 
-        ArrayList<MenuButton> buttonComponents = menu.getButtonComponents();
+        ArrayList<MenuButton> buttonComponents = menu.getSelectables();
         buttonComponents.forEach(Assertions::assertNotNull);
         assertEquals(ButtonType.PLAY, buttonComponents.get(0).getButtonType());
         assertEquals(ButtonType.SETTINGS, buttonComponents.get(1).getButtonType());

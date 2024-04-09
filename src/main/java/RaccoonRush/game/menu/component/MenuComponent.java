@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 public class MenuComponent {
     protected final GamePanel gamePanel;
     protected final int x, y;
-    protected final BufferedImage image;
 
     /**
      * Constructor for the MenuComponent
@@ -19,13 +18,11 @@ public class MenuComponent {
      * @param gamePanel the gamePanel
      * @param x         the x position of the component
      * @param y         the y position of the component
-     * @param image     the image of the component
      */
-    public MenuComponent(GamePanel gamePanel, int x, int y, BufferedImage image) {
+    public MenuComponent(GamePanel gamePanel, int x, int y) {
         this.gamePanel = gamePanel;
         this.x = x;
         this.y = y;
-        this.image = image;
     }
 
     /**
@@ -33,7 +30,6 @@ public class MenuComponent {
      * @param g2 the graphics2D object
      */
     public void draw(Graphics2D g2) {
-        g2.drawImage(image, x, y, null);
     }
 
     /**
@@ -51,4 +47,10 @@ public class MenuComponent {
     public int getY() {
         return y;
     }
+
+    /**
+     * Returns the type of the component
+     * @return ComponentType
+     */
+    public ComponentType getType() { return ComponentType.NONE;}
 }

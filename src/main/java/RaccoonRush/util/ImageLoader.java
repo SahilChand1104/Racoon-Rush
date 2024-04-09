@@ -149,7 +149,7 @@ public class ImageLoader {
         leftoverImages.add(loadImageTile("/item/leftovers_v4.png"));
         // Load pizza image
         pizzaImages.add(loadImageTile("/item/golden_pizza_v1.png"));
-
+        /*
         // Load menu images and store them in EnumMaps corresponding to their type
         menuImages.put(ComponentType.BG, loadImage("/menu/menu_bg.png",
                 gamePanel.getConfig().screenWidth(), gamePanel.getConfig().screenHeight()));
@@ -159,6 +159,8 @@ public class ImageLoader {
         menuImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_0.png"));
         menuSelectedImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_1.png"));
         menuSelectedImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_1.png"));
+        */
+
     }
 
     /**
