@@ -3,6 +3,7 @@ package RaccoonRush.game.menu;
 import RaccoonRush.game.GameManager;
 import RaccoonRush.game.menu.component.*;
 import RaccoonRush.game.menu.component.MenuComponent;
+import RaccoonRush.game.menu.component.MenuLabel;
 import RaccoonRush.util.Config;
 import RaccoonRush.game.GamePanel;
 
@@ -201,25 +202,40 @@ public class Menu implements GameManager {
 
         instructions.draw(g2);
 
-        // Make the rest of the instructions use menu label objects
-        // Old code:
+        yAlign += 50;
 
-        g2.setFont(plainFont);
-        g2.setPaint(gp);
+        MenuLabel label2 = new MenuLabel(gamePanel, xAlign, yAlign, "Avoid collecting the radioactive waste", plainFont, gp);
+        label2.draw(g2);
 
-
-        g2.drawString("Collect all the donuts to win", xAlign, yAlign + 50);
-        g2.drawString("Avoid collecting the radioactive waste", xAlign, yAlign + 100);
-        g2.drawString("You lose if your score drops below 0!", xAlign, yAlign + 125);
         yAlign += 25;
-        g2.drawString("Use W A S D to move", xAlign, yAlign + 150);
-        g2.drawString("Press P to pause", xAlign, yAlign + 200);
-        g2.drawString("Try to catch Uncle Fatih's lost pizza as ", xAlign, yAlign + 250);
-        g2.drawString("it teleports around the map", xAlign, yAlign + 275);
 
-        g2.drawString("Press ESC to exit...", xAlign, yAlign + 350);
+        MenuLabel label3 = new MenuLabel(gamePanel, xAlign, yAlign, "You lose if your score drops below 0!", plainFont, gp);
+        label3.draw(g2);
 
-        // end of old code
+        yAlign += 25;
+
+        MenuLabel label4 = new MenuLabel(gamePanel, xAlign, yAlign, "Use W A S D to move", plainFont, gp);
+        label4.draw(g2);
+
+        yAlign += 50;
+
+        MenuLabel label5 = new MenuLabel(gamePanel, xAlign, yAlign, "Press P to pause", plainFont, gp);
+        label5.draw(g2);
+
+        yAlign += 50;
+
+        MenuLabel label6Line1 = new MenuLabel(gamePanel, xAlign, yAlign, "Try to catch Uncle Fatih's lost pizza", plainFont, gp);
+        label6Line1.draw(g2);
+
+        yAlign += 25; // Adjust as needed for spacing
+
+        MenuLabel label6Line2 = new MenuLabel(gamePanel, xAlign, yAlign, "as it teleports around the map", plainFont, gp);
+        label6Line2.draw(g2);
+
+        yAlign += 25;
+
+        MenuLabel label7 = new MenuLabel(gamePanel, xAlign, yAlign, "Press ESC to exit...", plainFont, gp);
+        label7.draw(g2);
     }
 
     /**
@@ -229,12 +245,10 @@ public class Menu implements GameManager {
     public void drawGameover(Graphics2D g2) {
         Config config = gamePanel.getConfig();
 
-        // Convert to menu label objects too:
+        Font font = g2.getFont().deriveFont(Font.BOLD, 24f);
+        FontMetrics fontMetrics = g2.getFontMetrics(font);
 
-        g2.setFont(font.deriveFont(Font.BOLD, 24f));
-        FontMetrics fontMetrics = g2.getFontMetrics();
-
-        g2.setColor(winStatus ? Color.GREEN : Color.RED);
+        Color textColor = winStatus ? Color.GREEN : Color.RED;
         String[] messages = winStatus ? new String[] {
                 "You win!",
                 "Score: " + gamePanel.getScore(),
@@ -244,24 +258,24 @@ public class Menu implements GameManager {
                 "Donuts remaining: " + gamePanel.getMapManager().getDonutsLeft(),
         };
 
-        for (int i = 0; i < messages.length; i++) {
-            g2.drawString(
-                    messages[i],
-                    (config.screenWidth() - fontMetrics.stringWidth(messages[i])) / 2,
-                    config.screenHeight() / 2 + fontMetrics.getHeight() * i
-            );
+        // Draw each message individually
+        int yPos = config.screenHeight() / 2;
+        for (String message : messages) {
+            int xPos = (config.screenWidth() - fontMetrics.stringWidth(message)) / 2;
+            MenuLabel label = new MenuLabel(gamePanel, xPos, yPos, message, font, textColor);
+            label.draw(g2);
+            yPos += fontMetrics.getHeight();
         }
 
+        // Draw exit message
         String exitMessage = "Press ESC to quit";
-        g2.drawString(
-                exitMessage,
-                (config.screenWidth() - fontMetrics.stringWidth(exitMessage)) / 2,
-                config.screenHeight() - config.tileSize() * 2
-        );
+        int exitXPos = (config.screenWidth() - fontMetrics.stringWidth(exitMessage)) / 2;
+        int exitYPos = config.screenHeight() - config.tileSize() * 2;
+        MenuLabel exitLabel = new MenuLabel(gamePanel, exitXPos, exitYPos, exitMessage, font, textColor);
+        exitLabel.draw(g2);
     }
 
     /**
-     * Returns the index of the currently selected button component
      * @return the index of the currently selected button component
      */
     public int getButtonComponentIndex() {return buttonComponentIndex;}
