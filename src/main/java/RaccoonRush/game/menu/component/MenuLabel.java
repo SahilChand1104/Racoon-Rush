@@ -12,17 +12,6 @@ public class MenuLabel extends MenuComponent {
 
     private final Paint paint;
 
-
-    /*
-    public MenuLabel(GamePanel gamePanel, int x, int y, String text, Font font, Color color) {
-        super(gamePanel, x, y);
-        this.text = text;
-        this.font = font;
-        this.color = color;
-    }
-
-     */
-
     public MenuLabel(GamePanel gamePanel, int x, int y, String text, Font font, Paint paint) {
         super(gamePanel, x, y);
         this.text = text;

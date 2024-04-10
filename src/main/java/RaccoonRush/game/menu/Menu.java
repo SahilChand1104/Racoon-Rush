@@ -133,6 +133,9 @@ public class Menu implements GameManager {
         }
     }
 
+    private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
     /**
      * Moves the selection up or down by deselecting the old button and selecting the new button
      * Guaranteed to be within bounds of the buttonComponents array
@@ -140,7 +143,7 @@ public class Menu implements GameManager {
      */
     private void moveSelection(int direction) {
         selectables.get(buttonComponentIndex).setSelected(false);
-        buttonComponentIndex = Math.clamp(buttonComponentIndex + direction, 0, selectables.size() - 1);
+        buttonComponentIndex = clamp(buttonComponentIndex + direction, 0, selectables.size() - 1);
         selectables.get(buttonComponentIndex).setSelected(true);
     }
 
