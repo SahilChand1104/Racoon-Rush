@@ -75,7 +75,7 @@ public class MenuButtonTest {
         Graphics2D g2 = image.createGraphics();
         menuButton.draw(g2);
 
-        assertEquals(image, menuButton.image);
+        assertEquals(image, menuButton.getUnselectedImage());
         assertEquals(0, menuButton.getX());
         assertEquals(0, menuButton.getY());
 
@@ -93,7 +93,7 @@ public class MenuButtonTest {
         menuButton.setSelected(true);
         menuButton.draw(g2);
 
-        assertEquals(selectedImage, menuButton.selectedImage);
+        assertEquals(selectedImage, menuButton.getSelectedImage());
         assertEquals(0, menuButton.getX());
         assertEquals(0, menuButton.getY());
 

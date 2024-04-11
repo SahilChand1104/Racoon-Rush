@@ -20,9 +20,6 @@ public class ImageLoader {
     private final ArrayList<EnumMap<Move, BufferedImage>> enemyRacoonImages;
     private final ArrayList<BufferedImage> backgroundImages;
     private final ArrayList<BufferedImage> wallImages;
-
-    private final EnumMap<ComponentType, BufferedImage> menuImages;
-    private final EnumMap<ComponentType, BufferedImage> menuSelectedImages;
     private final ArrayList<BufferedImage> treeImages;
     private final ArrayList<BufferedImage> donutImages;
     private final ArrayList<BufferedImage> leftoverImages;
@@ -42,9 +39,6 @@ public class ImageLoader {
         donutImages = new ArrayList<>();
         leftoverImages = new ArrayList<>();
         pizzaImages = new ArrayList<>();
-
-        menuImages = new EnumMap<>(ComponentType.class);
-        menuSelectedImages = new EnumMap<>(ComponentType.class);
         loadAllImages();
     }
 
@@ -150,15 +144,6 @@ public class ImageLoader {
         // Load pizza image
         pizzaImages.add(loadImageTile("/item/golden_pizza_v1.png"));
 
-        // Load menu images and store them in EnumMaps corresponding to their type
-        menuImages.put(ComponentType.BG, loadImage("/menu/menu_bg.png",
-                gamePanel.getConfig().screenWidth(), gamePanel.getConfig().screenHeight()));
-        menuImages.put(ComponentType.BANNER, loadImage("/menu/menu_title_v2.png",
-                gamePanel.getConfig().screenWidth()));
-        menuImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_0.png"));
-        menuImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_0.png"));
-        menuSelectedImages.put(ComponentType.PLAY, loadImage("/menu/menu_label_play_1.png"));
-        menuSelectedImages.put(ComponentType.SETTINGS, loadImage("/menu/menu_label_instructions_1.png"));
     }
 
     /**
@@ -223,23 +208,5 @@ public class ImageLoader {
      */
     public ArrayList<BufferedImage> getPizzaImages() {
         return pizzaImages;
-    }
-
-    /**
-     * This method returns the menu image based on its type.
-     * @param type The type of the menu component.
-     * @return The menu image.
-     */
-    public BufferedImage getMenuImage(ComponentType type) {
-        return menuImages.get(type);
-    }
-
-    /**
-     * This method returns the selected menu image based on its type.
-     * @param type The type of the selected menu component.
-     * @return The selected menu image.
-     */
-    public BufferedImage getMenuSelectedImage(ComponentType type) {
-        return menuSelectedImages.get(type);
     }
 }

@@ -1,13 +1,11 @@
 package RaccoonRush.game.menu;
 
 import RaccoonRush.game.GameManager;
+import RaccoonRush.game.menu.component.*;
+import RaccoonRush.game.menu.component.MenuComponent;
+import RaccoonRush.game.menu.component.MenuLabel;
 import RaccoonRush.util.Config;
 import RaccoonRush.game.GamePanel;
-import RaccoonRush.util.ImageLoader;
-import RaccoonRush.game.menu.component.ButtonType;
-import RaccoonRush.game.menu.component.ComponentType;
-import RaccoonRush.game.menu.component.MenuButton;
-import RaccoonRush.game.menu.component.MenuComponent;
 
 import java.awt.*;
 import java.io.IOException;
@@ -20,8 +18,8 @@ import java.util.EnumMap;
  */
 public class Menu implements GameManager {
     private final GamePanel gamePanel;
-    private final EnumMap<ComponentType, MenuComponent> components;
-    private final ArrayList<MenuButton> buttonComponents;
+    private final ArrayList<MenuComponent> components;
+    private final ArrayList<MenuButton> selectables;
     private int buttonComponentIndex;
     private MenuState menuState;
     private Font font;
@@ -33,8 +31,8 @@ public class Menu implements GameManager {
      */
     public Menu(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        components = new EnumMap<>(ComponentType.class);
-        buttonComponents = new ArrayList<>();
+        components = new ArrayList<>();
+        selectables = new ArrayList<>();
         loadComponents();
         buttonComponentIndex = 0;
         menuState = MenuState.MAIN;
@@ -45,12 +43,8 @@ public class Menu implements GameManager {
         }
     }
 
-    public EnumMap<ComponentType, MenuComponent> getComponents() {
-        return components;
-    }
-
-    public ArrayList<MenuButton> getButtonComponents() {
-        return buttonComponents;
+    public ArrayList<MenuButton> getSelectables() {
+        return selectables;
     }
 
     /**
@@ -58,33 +52,40 @@ public class Menu implements GameManager {
      */
     public void loadComponents() {
         Config config = gamePanel.getConfig();
-        ImageLoader imageLoader = gamePanel.getImageLoader();
+        MenuImageLoader imageLoader = new MenuImageLoader(gamePanel);
 
         MenuButton playButton = new MenuButton(
                 gamePanel,
-                (config.screenWidth() - imageLoader.getMenuImage(ComponentType.PLAY).getWidth()) / 2, config.tileSize() * 4,
-                imageLoader.getMenuImage(ComponentType.PLAY), imageLoader.getMenuSelectedImage(ComponentType.PLAY),
+                (config.screenWidth() - imageLoader.menuPlay.getWidth()) / 2, config.tileSize() * 4,
+                imageLoader.menuPlay, imageLoader.menuPlaySelected,
                 ButtonType.PLAY
         );
         playButton.setSelected(true);
 
         MenuButton instructionsButton = new MenuButton(
                 gamePanel,
-                (config.screenWidth() - imageLoader.getMenuImage(ComponentType.SETTINGS).getWidth()) / 2, config.tileSize() * 8,
-                imageLoader.getMenuImage(ComponentType.SETTINGS), imageLoader.getMenuSelectedImage(ComponentType.SETTINGS),
+                (config.screenWidth() - imageLoader.menuInstructions.getWidth()) / 2, config.tileSize() * 8,
+                imageLoader.menuInstructions, imageLoader.menuInstructionsSelected,
                 ButtonType.SETTINGS
         );
 
         // Add the selectable components to the array list
         // Load the selectable components in the order they appear on the screen, from top to bottom
-        buttonComponents.add(playButton);
-        buttonComponents.add(instructionsButton);
+        selectables.add(playButton);
+        selectables.add(instructionsButton);
 
-        // Add all components to the enum map
-        components.put(ComponentType.BG, new MenuComponent(gamePanel, 0, 0, imageLoader.getMenuImage(ComponentType.BG)));
-        components.put(ComponentType.BANNER, new MenuComponent(gamePanel, 0, config.tileSize(), imageLoader.getMenuImage(ComponentType.BANNER)));
-        components.put(ComponentType.PLAY, playButton);
-        components.put(ComponentType.SETTINGS, instructionsButton);
+        MenuBG bg = new MenuBG(gamePanel, 0, 0, imageLoader.menuBackground);
+
+        MenuBanner title = new MenuBanner(gamePanel, 0, config.tileSize(), imageLoader.menuTitle);
+
+        // Add the components to the array list
+        // Load the components in the order they appear on the screen, from back to front
+        components.add(bg); // Background should always be first
+        components.add(title);
+        components.add(playButton);
+        components.add(instructionsButton);
+
+
     }
 
     /**
@@ -98,7 +99,7 @@ public class Menu implements GameManager {
         if (menuKeyHandler.get(MenuKey.ESCAPE)) {
             escapePressed();
         } else if (menuKeyHandler.get(MenuKey.ENTER)) {
-            doAction(buttonComponents.get(buttonComponentIndex));
+            doAction(selectables.get(buttonComponentIndex));
         } else if (menuKeyHandler.get(MenuKey.UP)) {
             moveSelection(-1);
         } else if (menuKeyHandler.get(MenuKey.DOWN)) {
@@ -133,15 +134,18 @@ public class Menu implements GameManager {
         }
     }
 
+    private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
     /**
      * Moves the selection up or down by deselecting the old button and selecting the new button
      * Guaranteed to be within bounds of the buttonComponents array
      * @param direction the direction to move the selection in
      */
     private void moveSelection(int direction) {
-        buttonComponents.get(buttonComponentIndex).setSelected(false);
-        buttonComponentIndex = Math.clamp(buttonComponentIndex + direction, 0, buttonComponents.size() - 1);
-        buttonComponents.get(buttonComponentIndex).setSelected(true);
+        selectables.get(buttonComponentIndex).setSelected(false);
+        buttonComponentIndex = clamp(buttonComponentIndex + direction, 0, selectables.size() - 1);
+        selectables.get(buttonComponentIndex).setSelected(true);
     }
 
     /**
@@ -170,7 +174,8 @@ public class Menu implements GameManager {
      * @param g2 the graphics2D object
      */
     private void drawMain(Graphics2D g2) {
-        components.forEach((type, component) -> component.draw(g2));
+        components.forEach(component -> component.draw(g2));
+        //componentsEnum.forEach((type, component) -> component.draw(g2));
     }
 
     /**
@@ -179,25 +184,58 @@ public class Menu implements GameManager {
      */
     private void drawSettings(Graphics2D g2) {
         // Draw the background
-        components.get(ComponentType.BG).draw(g2);
+        components.getFirst().draw(g2);
+        // Draw the banner
+        //components.get(1).draw(g2);
+        //componentsEnum.get(ComponentType.BG).draw(g2);
         // Draw the instructions
+
         int xAlign = 100;
         int yAlign = 100;
-        g2.setFont(font.deriveFont(Font.BOLD, 40f));
-        GradientPaint gp = new GradientPaint(0, 0, Color.MAGENTA, 500, 0, Color.ORANGE);
-        g2.setPaint(gp);
-        g2.drawString("Instructions", xAlign, yAlign);
-        g2.setFont(font.deriveFont(Font.PLAIN, 20f));
-        g2.drawString("Collect all the donuts to win", xAlign, yAlign + 50);
-        g2.drawString("Avoid collecting the radioactive waste", xAlign, yAlign + 100);
-        g2.drawString("You lose if your score drops below 0!", xAlign, yAlign + 125);
-        yAlign += 25;
-        g2.drawString("Use W A S D to move", xAlign, yAlign + 150);
-        g2.drawString("Press P to pause", xAlign, yAlign + 200);
-        g2.drawString("Try to catch Uncle Fatih's lost pizza as ", xAlign, yAlign + 250);
-        g2.drawString("it teleports around the map", xAlign, yAlign + 275);
 
-        g2.drawString("Press ESC to exit...", xAlign, yAlign + 350);
+        Font boldFont = font.deriveFont(Font.BOLD, 40f);
+        Font plainFont = font.deriveFont(Font.PLAIN, 20f);
+        GradientPaint gp = new GradientPaint(0, 0, Color.MAGENTA, 500, 0, Color.ORANGE);
+        Color white = new Color(255, 255, 255);
+
+        MenuLabel instructions = new MenuLabel(gamePanel, xAlign, yAlign, "Instructions", boldFont, white);
+
+        instructions.draw(g2);
+
+        yAlign += 50;
+
+        MenuLabel label2 = new MenuLabel(gamePanel, xAlign, yAlign, "Avoid collecting the radioactive waste", plainFont, gp);
+        label2.draw(g2);
+
+        yAlign += 25;
+
+        MenuLabel label3 = new MenuLabel(gamePanel, xAlign, yAlign, "You lose if your score drops below 0!", plainFont, gp);
+        label3.draw(g2);
+
+        yAlign += 25;
+
+        MenuLabel label4 = new MenuLabel(gamePanel, xAlign, yAlign, "Use W A S D to move", plainFont, gp);
+        label4.draw(g2);
+
+        yAlign += 50;
+
+        MenuLabel label5 = new MenuLabel(gamePanel, xAlign, yAlign, "Press P to pause", plainFont, gp);
+        label5.draw(g2);
+
+        yAlign += 50;
+
+        MenuLabel label6Line1 = new MenuLabel(gamePanel, xAlign, yAlign, "Try to catch Uncle Fatih's lost pizza", plainFont, gp);
+        label6Line1.draw(g2);
+
+        yAlign += 25; // Adjust as needed for spacing
+
+        MenuLabel label6Line2 = new MenuLabel(gamePanel, xAlign, yAlign, "as it teleports around the map", plainFont, gp);
+        label6Line2.draw(g2);
+
+        yAlign += 25;
+
+        MenuLabel label7 = new MenuLabel(gamePanel, xAlign, yAlign, "Press ESC to exit...", plainFont, gp);
+        label7.draw(g2);
     }
 
     /**
@@ -207,10 +245,10 @@ public class Menu implements GameManager {
     public void drawGameover(Graphics2D g2) {
         Config config = gamePanel.getConfig();
 
-        g2.setFont(font.deriveFont(Font.BOLD, 24f));
-        FontMetrics fontMetrics = g2.getFontMetrics();
+        Font font = g2.getFont().deriveFont(Font.BOLD, 24f);
+        FontMetrics fontMetrics = g2.getFontMetrics(font);
 
-        g2.setColor(winStatus ? Color.GREEN : Color.RED);
+        Color textColor = winStatus ? Color.GREEN : Color.RED;
         String[] messages = winStatus ? new String[] {
                 "You win!",
                 "Score: " + gamePanel.getScore(),
@@ -220,28 +258,31 @@ public class Menu implements GameManager {
                 "Donuts remaining: " + gamePanel.getMapManager().getDonutsLeft(),
         };
 
-        for (int i = 0; i < messages.length; i++) {
-            g2.drawString(
-                    messages[i],
-                    (config.screenWidth() - fontMetrics.stringWidth(messages[i])) / 2,
-                    config.screenHeight() / 2 + fontMetrics.getHeight() * i
-            );
+        // Draw each message individually
+        int yPos = config.screenHeight() / 2;
+        for (String message : messages) {
+            int xPos = (config.screenWidth() - fontMetrics.stringWidth(message)) / 2;
+            MenuLabel label = new MenuLabel(gamePanel, xPos, yPos, message, font, textColor);
+            label.draw(g2);
+            yPos += fontMetrics.getHeight();
         }
 
+        // Draw exit message
         String exitMessage = "Press ESC to quit";
-        g2.drawString(
-                exitMessage,
-                (config.screenWidth() - fontMetrics.stringWidth(exitMessage)) / 2,
-                config.screenHeight() - config.tileSize() * 2
-        );
+        int exitXPos = (config.screenWidth() - fontMetrics.stringWidth(exitMessage)) / 2;
+        int exitYPos = config.screenHeight() - config.tileSize() * 2;
+        MenuLabel exitLabel = new MenuLabel(gamePanel, exitXPos, exitYPos, exitMessage, font, textColor);
+        exitLabel.draw(g2);
     }
 
     /**
-     * Returns the index of the currently selected button component
      * @return the index of the currently selected button component
      */
     public int getButtonComponentIndex() {return buttonComponentIndex;}
 
     public MenuState getMenuState() { return menuState; }
 
+    public ArrayList<MenuComponent> getComponents() {
+        return components;
+    }
 }
