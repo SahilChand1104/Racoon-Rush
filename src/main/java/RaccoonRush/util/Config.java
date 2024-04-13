@@ -60,10 +60,31 @@ public record Config(int originalTileSize, int scale, int maxScreenCol, int maxS
         return tileSize() * maxWorldRow;
     }
 
+    /**
+     * This accessor returns the player's invincibility duration for the game.
+     * It is calculated by multiplying FPS by 2.
+     * @return The player's invincibility duration.
+     */
     public int playerInvicibilityDuration() { return FPS() * 2; }
 
+    /**
+     * This accessor returns the enemy's ability duration for the game.
+     * It is calculated by multiplying FPS by 2.
+     * @return The enemy's ability duration.
+     */
     public int enemyAbilityDuration() { return FPS() * 2; }
+
+    /**
+     * This accessor returns the enemy's cooldown duration for the game.
+     * It is calculated by multiplying FPS by 10.
+     * @return The enemy's cooldown duration.
+     */
     public int enemyCooldownDuration() { return FPS() * 10; }
 
+    /**
+     * This accessor returns the max amount of pizza frames for the game.
+     * It is calculated by multiplying FPS by 3.
+     * @return The max amount of pizza frames.
+     */
     public int maxPizzaFrames() { return FPS() * 3; }
 }
