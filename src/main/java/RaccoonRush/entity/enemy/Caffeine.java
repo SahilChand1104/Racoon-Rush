@@ -1,6 +1,5 @@
 package RaccoonRush.entity.enemy;
 
-import RaccoonRush.game.GamePanel;
 import RaccoonRush.util.Move;
 
 import java.awt.image.BufferedImage;
@@ -8,9 +7,9 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 public class Caffeine extends Enemy {
-    public Caffeine(GamePanel gamePanel, ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction,
+    public Caffeine(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction,
                     int damage, int abilityDuration, int abilityCooldownDuration) {
-        super(gamePanel, images, worldX, worldY, speed, direction, damage, abilityDuration, abilityCooldownDuration);
+        super(images, worldX, worldY, speed, direction, damage, abilityDuration, abilityCooldownDuration);
     }
 
     @Override

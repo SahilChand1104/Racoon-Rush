@@ -4,13 +4,11 @@ import RaccoonRush.game.GameManager;
 import RaccoonRush.game.menu.component.*;
 import RaccoonRush.game.menu.component.MenuComponent;
 import RaccoonRush.game.menu.component.MenuLabel;
-import RaccoonRush.util.Config;
 import RaccoonRush.game.GamePanel;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EnumMap;
 
 /**
  * Class for the Menu, responsible for the main menu, settings menu, and gameover menu.
@@ -51,20 +49,17 @@ public class Menu implements GameManager {
      * Loads the menu components
      */
     public void loadComponents() {
-        Config config = gamePanel.getConfig();
-        MenuImageLoader imageLoader = new MenuImageLoader(gamePanel);
+        MenuImageLoader imageLoader = new MenuImageLoader();
 
         MenuButton playButton = new MenuButton(
-                gamePanel,
-                (config.screenWidth() - imageLoader.menuPlay.getWidth()) / 2, config.tileSize() * 4,
+                (GamePanel.config.screenWidth() - imageLoader.menuPlay.getWidth()) / 2, GamePanel.config.tileSize() * 4,
                 imageLoader.menuPlay, imageLoader.menuPlaySelected,
                 ButtonType.PLAY
         );
         playButton.setSelected(true);
 
         MenuButton instructionsButton = new MenuButton(
-                gamePanel,
-                (config.screenWidth() - imageLoader.menuInstructions.getWidth()) / 2, config.tileSize() * 8,
+                (GamePanel.config.screenWidth() - imageLoader.menuInstructions.getWidth()) / 2, GamePanel.config.tileSize() * 8,
                 imageLoader.menuInstructions, imageLoader.menuInstructionsSelected,
                 ButtonType.SETTINGS
         );
@@ -74,9 +69,9 @@ public class Menu implements GameManager {
         selectables.add(playButton);
         selectables.add(instructionsButton);
 
-        MenuBG bg = new MenuBG(gamePanel, 0, 0, imageLoader.menuBackground);
+        MenuBG bg = new MenuBG(0, 0, imageLoader.menuBackground);
 
-        MenuBanner title = new MenuBanner(gamePanel, 0, config.tileSize(), imageLoader.menuTitle);
+        MenuBanner title = new MenuBanner(0, GamePanel.config.tileSize(), imageLoader.menuTitle);
 
         // Add the components to the array list
         // Load the components in the order they appear on the screen, from back to front
@@ -84,8 +79,6 @@ public class Menu implements GameManager {
         components.add(title);
         components.add(playButton);
         components.add(instructionsButton);
-
-
     }
 
     /**
@@ -134,9 +127,6 @@ public class Menu implements GameManager {
         }
     }
 
-    private int clamp(int value, int min, int max) {
-        return Math.max(min, Math.min(max, value));
-    }
     /**
      * Moves the selection up or down by deselecting the old button and selecting the new button
      * Guaranteed to be within bounds of the buttonComponents array
@@ -144,7 +134,7 @@ public class Menu implements GameManager {
      */
     private void moveSelection(int direction) {
         selectables.get(buttonComponentIndex).setSelected(false);
-        buttonComponentIndex = clamp(buttonComponentIndex + direction, 0, selectables.size() - 1);
+        buttonComponentIndex = Math.clamp(buttonComponentIndex + direction, 0, selectables.size() - 1);
         selectables.get(buttonComponentIndex).setSelected(true);
     }
 
@@ -198,43 +188,43 @@ public class Menu implements GameManager {
         GradientPaint gp = new GradientPaint(0, 0, Color.MAGENTA, 500, 0, Color.ORANGE);
         Color white = new Color(255, 255, 255);
 
-        MenuLabel instructions = new MenuLabel(gamePanel, xAlign, yAlign, "Instructions", boldFont, white);
+        MenuLabel instructions = new MenuLabel(xAlign, yAlign, "Instructions", boldFont, white);
 
         instructions.draw(g2);
 
         yAlign += 50;
 
-        MenuLabel label2 = new MenuLabel(gamePanel, xAlign, yAlign, "Avoid collecting the radioactive waste", plainFont, gp);
+        MenuLabel label2 = new MenuLabel(xAlign, yAlign, "Avoid collecting the radioactive waste", plainFont, gp);
         label2.draw(g2);
 
         yAlign += 25;
 
-        MenuLabel label3 = new MenuLabel(gamePanel, xAlign, yAlign, "You lose if your score drops below 0!", plainFont, gp);
+        MenuLabel label3 = new MenuLabel(xAlign, yAlign, "You lose if your score drops below 0!", plainFont, gp);
         label3.draw(g2);
 
         yAlign += 25;
 
-        MenuLabel label4 = new MenuLabel(gamePanel, xAlign, yAlign, "Use W A S D to move", plainFont, gp);
+        MenuLabel label4 = new MenuLabel(xAlign, yAlign, "Use W A S D to move", plainFont, gp);
         label4.draw(g2);
 
         yAlign += 50;
 
-        MenuLabel label5 = new MenuLabel(gamePanel, xAlign, yAlign, "Press P to pause", plainFont, gp);
+        MenuLabel label5 = new MenuLabel(xAlign, yAlign, "Press P to pause", plainFont, gp);
         label5.draw(g2);
 
         yAlign += 50;
 
-        MenuLabel label6Line1 = new MenuLabel(gamePanel, xAlign, yAlign, "Try to catch Uncle Fatih's lost pizza", plainFont, gp);
+        MenuLabel label6Line1 = new MenuLabel(xAlign, yAlign, "Try to catch Uncle Fatih's lost pizza", plainFont, gp);
         label6Line1.draw(g2);
 
         yAlign += 25; // Adjust as needed for spacing
 
-        MenuLabel label6Line2 = new MenuLabel(gamePanel, xAlign, yAlign, "as it teleports around the map", plainFont, gp);
+        MenuLabel label6Line2 = new MenuLabel(xAlign, yAlign, "as it teleports around the map", plainFont, gp);
         label6Line2.draw(g2);
 
         yAlign += 25;
 
-        MenuLabel label7 = new MenuLabel(gamePanel, xAlign, yAlign, "Press ESC to exit...", plainFont, gp);
+        MenuLabel label7 = new MenuLabel(xAlign, yAlign, "Press ESC to exit...", plainFont, gp);
         label7.draw(g2);
     }
 
@@ -243,8 +233,6 @@ public class Menu implements GameManager {
      * @param g2 the graphics2D object
      */
     public void drawGameover(Graphics2D g2) {
-        Config config = gamePanel.getConfig();
-
         Font font = g2.getFont().deriveFont(Font.BOLD, 24f);
         FontMetrics fontMetrics = g2.getFontMetrics(font);
 
@@ -259,19 +247,19 @@ public class Menu implements GameManager {
         };
 
         // Draw each message individually
-        int yPos = config.screenHeight() / 2;
+        int yPos = GamePanel.config.screenHeight() / 2;
         for (String message : messages) {
-            int xPos = (config.screenWidth() - fontMetrics.stringWidth(message)) / 2;
-            MenuLabel label = new MenuLabel(gamePanel, xPos, yPos, message, font, textColor);
+            int xPos = (GamePanel.config.screenWidth() - fontMetrics.stringWidth(message)) / 2;
+            MenuLabel label = new MenuLabel(xPos, yPos, message, font, textColor);
             label.draw(g2);
             yPos += fontMetrics.getHeight();
         }
 
         // Draw exit message
         String exitMessage = "Press ESC to quit";
-        int exitXPos = (config.screenWidth() - fontMetrics.stringWidth(exitMessage)) / 2;
-        int exitYPos = config.screenHeight() - config.tileSize() * 2;
-        MenuLabel exitLabel = new MenuLabel(gamePanel, exitXPos, exitYPos, exitMessage, font, textColor);
+        int exitXPos = (GamePanel.config.screenWidth() - fontMetrics.stringWidth(exitMessage)) / 2;
+        int exitYPos = GamePanel.config.screenHeight() - GamePanel.config.tileSize() * 2;
+        MenuLabel exitLabel = new MenuLabel(exitXPos, exitYPos, exitMessage, font, textColor);
         exitLabel.draw(g2);
     }
 

@@ -8,12 +8,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Scoreboard class for the game
  */
 public class Scoreboard extends JPanel {
-    private final GamePanel gamePanel;
     private final JLabel scoreLabel;
     private final JLabel timerLabel;
     private final JLabel messageLabel;
@@ -21,9 +22,7 @@ public class Scoreboard extends JPanel {
     /**
      * Constructor for the Scoreboard
      */
-    public Scoreboard(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-
+    public Scoreboard() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.BLACK);
 
@@ -65,7 +64,7 @@ public class Scoreboard extends JPanel {
      */
     public void updateScore() {
         if (isVisible()) {
-            scoreLabel.setText("Score: " + gamePanel.getScore());
+            scoreLabel.setText("Score: " + GamePanel.getInstance().getScore());
         }
     }
 
@@ -77,6 +76,16 @@ public class Scoreboard extends JPanel {
         if (isVisible()) {
             timerLabel.setText("Time: " + timeInSeconds);
         }
+    }
+
+    /**
+     * Update the timer on the scoreboard
+     * @param timeInNanoseconds The new time in nanoseconds
+     */
+    public void updateTimer(long timeInNanoseconds) {
+        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+        String timeInSeconds = sdf.format(new Date(timeInNanoseconds / 1_000_000));
+        updateTimer(timeInSeconds);
     }
 
     /**

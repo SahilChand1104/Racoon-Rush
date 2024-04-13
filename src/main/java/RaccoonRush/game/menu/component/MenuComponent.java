@@ -1,26 +1,20 @@
 package RaccoonRush.game.menu.component;
 
-import RaccoonRush.game.GamePanel;
-
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 /**
  * Represents a component in the menu
  */
 public class MenuComponent {
-    protected final GamePanel gamePanel;
     protected final int x, y;
 
     /**
      * Constructor for the MenuComponent
      *
-     * @param gamePanel the gamePanel
      * @param x         the x position of the component
      * @param y         the y position of the component
      */
-    public MenuComponent(GamePanel gamePanel, int x, int y) {
-        this.gamePanel = gamePanel;
+    public MenuComponent(int x, int y) {
         this.x = x;
         this.y = y;
     }

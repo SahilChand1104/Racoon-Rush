@@ -6,15 +6,12 @@ import RaccoonRush.game.menu.component.MenuButton;
 import RaccoonRush.game.menu.component.MenuLabel;
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.game.menu.component.ButtonType;
-import RaccoonRush.game.menu.component.ComponentType;
-import RaccoonRush.game.menu.component.MenuButton;
 import RaccoonRush.game.menu.component.MenuComponent;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.EnumMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -203,11 +200,10 @@ public class MenuTest {
     }
     @Test
     void testMenuBannerDraw() {
-        GamePanel gamePanel = new GamePanel();
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
 
-        MenuBanner menuBanner = new MenuBanner(gamePanel, 10, 20, image);
+        MenuBanner menuBanner = new MenuBanner(10, 20, image);
         menuBanner.draw(g2);
 
         assertNotNull(menuBanner);
@@ -219,11 +215,10 @@ public class MenuTest {
 
     @Test
     void testMenuBGDraw() {
-        GamePanel gamePanel = new GamePanel();
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
 
-        MenuBG menuBG = new MenuBG(gamePanel, 30, 40, image);
+        MenuBG menuBG = new MenuBG(30, 40, image);
         menuBG.draw(g2);
 
         assertNotNull(menuBG);
@@ -235,12 +230,11 @@ public class MenuTest {
 
     @Test
     void testMenuButtonDrawUnselected() {
-        GamePanel gamePanel = new GamePanel();
         BufferedImage unselectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         BufferedImage selectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = unselectedImage.createGraphics();
 
-        MenuButton menuButton = new MenuButton(gamePanel, 10, 20, unselectedImage, selectedImage, ButtonType.PLAY);
+        MenuButton menuButton = new MenuButton(10, 20, unselectedImage, selectedImage, ButtonType.PLAY);
         menuButton.draw(g2);
 
         assertNotNull(menuButton);
@@ -253,12 +247,11 @@ public class MenuTest {
 
     @Test
     void testMenuButtonDrawSelected() {
-        GamePanel gamePanel = new GamePanel();
         BufferedImage unselectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         BufferedImage selectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = selectedImage.createGraphics();
 
-        MenuButton menuButton = new MenuButton(gamePanel, 30, 40, unselectedImage, selectedImage, ButtonType.SETTINGS);
+        MenuButton menuButton = new MenuButton(30, 40, unselectedImage, selectedImage, ButtonType.SETTINGS);
         menuButton.setSelected(true);
         menuButton.draw(g2);
 
@@ -272,7 +265,6 @@ public class MenuTest {
 
     @Test
     void testMenuLabelDraw() {
-        GamePanel gamePanel = new GamePanel();
         String text = "Test Label";
         Font font = new Font("Arial", Font.PLAIN, 12);
         Color color = Color.BLACK;
@@ -280,7 +272,7 @@ public class MenuTest {
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
 
-        MenuLabel menuLabel = new MenuLabel(gamePanel, 10, 20, text, font, color);
+        MenuLabel menuLabel = new MenuLabel(10, 20, text, font, color);
         menuLabel.draw(g2);
 
         assertNotNull(menuLabel);

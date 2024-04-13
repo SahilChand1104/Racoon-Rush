@@ -77,7 +77,7 @@ public class ScoreboardTest {
 
     @Test
     public void testPaintComponent() {
-        Scoreboard scoreboard = new Scoreboard(new GamePanel()); // assuming you have a GamePanel constructor
+        Scoreboard scoreboard = new Scoreboard(); // assuming you have a GamePanel constructor
         BufferedImage image = new BufferedImage(200, 100, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
 

@@ -1,7 +1,5 @@
 package RaccoonRush.game.menu.component;
 
-import RaccoonRush.game.GamePanel;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -16,9 +14,8 @@ public class MenuButtonTest {
     void testGetButtonTypePLAY() {
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         BufferedImage selectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        GamePanel gamePanel = new GamePanel();
 
-        MenuButton menuButton = new MenuButton(gamePanel, 0, 0, image, selectedImage, ButtonType.PLAY);
+        MenuButton menuButton = new MenuButton(0, 0, image, selectedImage, ButtonType.PLAY);
         assertEquals(ButtonType.PLAY, menuButton.getButtonType());
     }
 
@@ -26,9 +23,8 @@ public class MenuButtonTest {
     void testGetButtonTypeSETTINGS() {
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         BufferedImage selectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        GamePanel gamePanel = new GamePanel();
 
-        MenuButton menuButton = new MenuButton(gamePanel, 0, 0, image, selectedImage, ButtonType.SETTINGS);
+        MenuButton menuButton = new MenuButton(0, 0, image, selectedImage, ButtonType.SETTINGS);
         assertEquals(ButtonType.SETTINGS, menuButton.getButtonType());
     }
 
@@ -37,9 +33,8 @@ public class MenuButtonTest {
     void testSetSelected() {
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         BufferedImage selectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        GamePanel gamePanel = new GamePanel();
 
-        MenuButton menuButton = new MenuButton(gamePanel, 0, 0, image, selectedImage, ButtonType.PLAY);
+        MenuButton menuButton = new MenuButton(0, 0, image, selectedImage, ButtonType.PLAY);
 
         menuButton.setSelected(true);
         assertTrue(menuButton.isSelected());
@@ -52,14 +47,13 @@ public class MenuButtonTest {
     void testDrawPosition() {
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         BufferedImage selectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        GamePanel gamePanel = new GamePanel();
 
-        MenuButton menuButton = new MenuButton(gamePanel, 100, 20, image, selectedImage, ButtonType.PLAY);
+        MenuButton menuButton = new MenuButton(100, 20, image, selectedImage, ButtonType.PLAY);
 
         assertEquals(100, menuButton.getX());
         assertEquals(20, menuButton.getY());
 
-        MenuButton menuButton2 = new MenuButton(gamePanel, -50, 0, image, selectedImage, ButtonType.PLAY);
+        MenuButton menuButton2 = new MenuButton(-50, 0, image, selectedImage, ButtonType.PLAY);
 
         assertEquals(-50, menuButton2.getX());
         assertEquals(0, menuButton2.getY());
@@ -69,9 +63,8 @@ public class MenuButtonTest {
     void testDrawImage() {
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         BufferedImage selectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        GamePanel gamePanel = new GamePanel();
 
-        MenuButton menuButton = new MenuButton(gamePanel, 0, 0, image, selectedImage, ButtonType.PLAY);
+        MenuButton menuButton = new MenuButton(0, 0, image, selectedImage, ButtonType.PLAY);
         Graphics2D g2 = image.createGraphics();
         menuButton.draw(g2);
 
@@ -86,9 +79,8 @@ public class MenuButtonTest {
     void testDrawSelectedImage() {
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         BufferedImage selectedImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        GamePanel gamePanel = new GamePanel();
 
-        MenuButton menuButton = new MenuButton(gamePanel, 0, 0, image, selectedImage, ButtonType.PLAY);
+        MenuButton menuButton = new MenuButton(0, 0, image, selectedImage, ButtonType.PLAY);
         Graphics2D g2 = selectedImage.createGraphics();
         menuButton.setSelected(true);
         menuButton.draw(g2);

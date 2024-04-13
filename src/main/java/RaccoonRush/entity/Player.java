@@ -4,7 +4,6 @@ import RaccoonRush.entity.enemy.Enemy;
 import RaccoonRush.game.*;
 import RaccoonRush.game.menu.MenuKey;
 import RaccoonRush.util.CollisionDetector;
-import RaccoonRush.util.Config;
 import RaccoonRush.util.KeyHandler;
 import RaccoonRush.util.Move;
 
@@ -21,19 +20,23 @@ public class Player extends Entity implements GameManager {
     public final int screenX, screenY, invincibilityDuration;
     private int invincibilityFrames;
 
-    /**
-     * Constructor for the player
-     *
-     * @param gamePanel the gamePanel
-     */
-    public Player(GamePanel gamePanel, ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction) {
-        super(gamePanel, images, worldX, worldY, speed, direction);
 
-        // Centered in the middle of the map
-        Config config = gamePanel.getConfig();
-        screenX = config.screenWidth() / 2 - config.tileSize() / 2;
-        screenY = config.screenHeight() / 2 - config.tileSize() / 2;
-        invincibilityDuration = 120;
+    /**
+     * Constructor for the player entity
+     *
+     * @param images the images of the entity
+     * @param worldX the x coordinate in the world
+     * @param worldY the y coordinate in the world
+     * @param speed the speed of the entity
+     * @param direction the direction the entity is facing
+     */
+    public Player(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction) {
+        super(images, worldX, worldY, speed, direction);
+
+        // Centered in the bottom right of the screen
+        screenX = GamePanel.config.screenWidth() / 2 - GamePanel.config.tileSize() / 2;
+        screenY = GamePanel.config.screenHeight() / 2 - GamePanel.config.tileSize() / 2;
+        invincibilityDuration = GamePanel.config.FPS() * 2;
     }
 
     /**
@@ -41,6 +44,8 @@ public class Player extends Entity implements GameManager {
      */
     @Override
     public void update() {
+        GamePanel gamePanel = GamePanel.getInstance();
+
         // Use the Menu KeyHandler to check if the game needs to be paused
         if (gamePanel.getMenuKeyHandler().get(MenuKey.PAUSE)) {
             gamePanel.pauseGame();
@@ -78,13 +83,13 @@ public class Player extends Entity implements GameManager {
      */
     @Override
     public void draw(Graphics2D g2) {
-        int animationFrame = gamePanel.getKeyHandler().get(direction) ? gamePanel.getPlayerAnimationFrame() : 0;
+        int animationFrame = GamePanel.getInstance().getKeyHandler().get(direction) ? GamePanel.getInstance().getPlayerAnimationFrame() : 0;
         g2.drawImage(
                 images.get(animationFrame).get(direction),
                 screenX,
                 screenY,
-                gamePanel.getConfig().tileSize(),
-                gamePanel.getConfig().tileSize(),
+                GamePanel.config.tileSize(),
+                GamePanel.config.tileSize(),
                 null
         );
     }
@@ -101,7 +106,7 @@ public class Player extends Entity implements GameManager {
      * @param enemy the enemy that the player has collided with
      */
     public void onCollide(Enemy enemy) {
-        gamePanel.stopGame(false); // For now, lose game as per assignment instructions, but can be removed if desired
+        GamePanel.getInstance().stopGame(false); // For now, lose game as per assignment instructions, but can be removed if desired
         // updateScore(-enemy.getDamage());
         invincibilityFrames = invincibilityDuration;
     }

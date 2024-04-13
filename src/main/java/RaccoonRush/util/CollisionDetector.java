@@ -13,16 +13,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * It is used to detect collisions between the player and the map.
  */
 public class CollisionDetector {
-    private final GamePanel gamePanel;
-
-    /**
-     * This constructor initializes the collision detector with the current game panel.
-     * @param gamePanel The game panel.
-     */
-    public CollisionDetector(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-    }
-
     /**
      * @param entity The entity object.
      * @param direction The direction to move.
@@ -30,7 +20,6 @@ public class CollisionDetector {
      * @return true if the entity can move in the given direction.
      */
     public boolean move(Entity entity, Move direction) {
-        MapManager mapManager = gamePanel.getMapManager();
         int speed = entity.getSpeed();
         int offsetX = switch (direction) {
             case LEFT -> -speed;
@@ -47,6 +36,7 @@ public class CollisionDetector {
         int topRow = entity.topRow(offsetY);
         int bottomRow = entity.bottomRow(offsetY);
 
+        MapManager mapManager = GamePanel.getInstance().getMapManager();
         return switch (direction) {
             case UP -> mapManager.onCollide(topRow, leftColumn, entity) && mapManager.onCollide(topRow, rightColumn, entity);
             case DOWN -> mapManager.onCollide(bottomRow, leftColumn, entity) && mapManager.onCollide(bottomRow, rightColumn, entity);

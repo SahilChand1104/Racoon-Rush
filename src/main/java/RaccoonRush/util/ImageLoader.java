@@ -1,7 +1,6 @@
 package RaccoonRush.util;
 
 import RaccoonRush.game.GamePanel;
-import RaccoonRush.game.menu.component.ComponentType;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -15,7 +14,6 @@ import java.util.EnumMap;
  * It also stores the images in EnumMaps and ArrayLists for easy access.
  */
 public class ImageLoader {
-    private final GamePanel gamePanel;
     private final ArrayList<EnumMap<Move, BufferedImage>> playerImages;
     private final ArrayList<EnumMap<Move, BufferedImage>> enemyRacoonImages;
     private final ArrayList<BufferedImage> backgroundImages;
@@ -27,10 +25,8 @@ public class ImageLoader {
 
     /**
      * Constructor for the ImageLoader class.
-     * @param gamePanel The GamePanel object that the images are being loaded for.
      */
-    public ImageLoader(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
+    public ImageLoader() {
         playerImages = new ArrayList<>();
         enemyRacoonImages = new ArrayList<>();
         backgroundImages = new ArrayList<>();
@@ -100,8 +96,7 @@ public class ImageLoader {
      * @return The loaded and resized image.
      */
     private BufferedImage loadImageTile(String path) {
-        Config config = gamePanel.getConfig();
-        return resizeImage(loadImage(path), config.tileSize(), config.tileSize());
+        return resizeImage(loadImage(path), GamePanel.config.tileSize(), GamePanel.config.tileSize());
     }
 
     /**

@@ -1,6 +1,5 @@
 package RaccoonRush.entity;
 
-import RaccoonRush.util.Config;
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.util.Move;
 
@@ -13,7 +12,6 @@ import java.util.EnumMap;
  * Abstract class for the entities in the game
  */
 public abstract class Entity {
-    protected final GamePanel gamePanel;
     protected final ArrayList<EnumMap<Move, BufferedImage>> images;
     protected final Rectangle hitbox;
     protected int worldX, worldY, speed;
@@ -22,22 +20,20 @@ public abstract class Entity {
     /**
      * Constructor for the entity
      *
-     * @param gamePanel the gamePanel
      * @param images    the images of the entity
      * @param worldX    the x coordinate in the world
      * @param worldY    the y coordinate in the world
      * @param speed     the speed of the entity
      * @param direction the direction the entity is facing
      */
-    public Entity(GamePanel gamePanel, ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction) {
-        this.gamePanel = gamePanel;
+    public Entity(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction) {
         this.images = images;
         this.worldX = worldX;
         this.worldY = worldY;
         this.speed = speed;
         this.direction = direction;
-        Config config = gamePanel.getConfig();
-        hitbox = new Rectangle(config.tileSize() / 6, config.tileSize() / 3, config.tileSize() * 2 / 3, config.tileSize() * 2 / 3);
+        int tileSize = GamePanel.config.tileSize();
+        hitbox = new Rectangle(tileSize / 6, tileSize / 3, tileSize * 2 / 3, tileSize * 2 / 3);
     }
 
     /**
@@ -75,7 +71,7 @@ public abstract class Entity {
      * @return the tile index in the horizontal direction of the left side of the entity
      */
     public int leftColumn(int offsetX) {
-        return (worldX + hitbox.x + offsetX) / gamePanel.getConfig().tileSize();
+        return (worldX + hitbox.x + offsetX) / GamePanel.config.tileSize();
     }
 
     /**
@@ -84,7 +80,7 @@ public abstract class Entity {
      * @return the tile index in the horizontal direction of the right side of the entity
      */
     public int rightColumn(int offsetX) {
-        return (worldX + hitbox.x + hitbox.width + offsetX) / gamePanel.getConfig().tileSize();
+        return (worldX + hitbox.x + hitbox.width + offsetX) / GamePanel.config.tileSize();
     }
 
     /**
@@ -93,7 +89,7 @@ public abstract class Entity {
      * @return the tile index in the vertical direction of the top side of the entity
      */
     public int topRow(int offsetY) {
-        return (worldY + hitbox.y + offsetY) / gamePanel.getConfig().tileSize();
+        return (worldY + hitbox.y + offsetY) / GamePanel.config.tileSize();
     }
 
     /**
@@ -102,7 +98,7 @@ public abstract class Entity {
      * @return the tile index in the vertical direction of the bottom side of the entity
      */
     public int bottomRow(int offsetY) {
-        return (worldY + hitbox.y + hitbox.height + offsetY) / gamePanel.getConfig().tileSize();
+        return (worldY + hitbox.y + hitbox.height + offsetY) / GamePanel.config.tileSize();
     }
 
     /**

@@ -2,7 +2,6 @@ package RaccoonRush.map;
 
 import RaccoonRush.entity.Entity;
 import RaccoonRush.entity.Player;
-import RaccoonRush.util.Config;
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.game.GameManager;
 import RaccoonRush.map.tile.Item;
@@ -29,7 +28,7 @@ public class MapManager implements GameManager {
     public MapManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         itemManager = new ItemManager(gamePanel);
-        mapLoader = new MapLoader(gamePanel);
+        mapLoader = new MapLoader();
         // Background is made of 4 background tiles each 768x768 in size that are drawn in a 2x2 grid
         background = gamePanel.getImageLoader().getBackgroundImages().toArray(new BufferedImage[0]);
     }
@@ -43,8 +42,7 @@ public class MapManager implements GameManager {
      * @return screen coordinate
      */
     public int getScreenCoordinate(int index, int world, int screen) {
-        Config config = gamePanel.getConfig();
-        return index * config.tileSize() - world + screen;
+        return index * GamePanel.config.tileSize() - world + screen;
     }
 
     /**
@@ -52,13 +50,12 @@ public class MapManager implements GameManager {
      * @param g2 Graphics2D object
      */
     private void drawBackground(Graphics2D g2) {
-        Config config = gamePanel.getConfig();
         Player player = gamePanel.getEntityManager().getPlayer();
         int worldX = player.getWorldX();
         int worldY = player.getWorldY();
         int screenX = player.getScreenX();
         int screenY = player.getScreenY();
-        int size = config.screenWidth();
+        int size = GamePanel.config.screenWidth();
 
         g2.drawImage(background[0], getScreenCoordinate(0, worldX, screenX), getScreenCoordinate(0, worldY, screenY), size, size, null);
         g2.drawImage(background[1], getScreenCoordinate(0, worldX, screenX) + size, getScreenCoordinate(0, worldY, screenY), size, size, null);
@@ -73,13 +70,12 @@ public class MapManager implements GameManager {
      * @param j column index of the tile
      */
     private void drawTile(Graphics2D g2, int i, int j) {
-        Config config = gamePanel.getConfig();
         Player player = gamePanel.getEntityManager().getPlayer();
 
         int screenX = getScreenCoordinate(j, player.getWorldX(), player.getScreenX());
         int screenY = getScreenCoordinate(i, player.getWorldY(), player.getScreenY());
 
-        g2.drawImage(map[i][j].getImage(i, j, gamePanel.getItemAnimationFrame()), screenX, screenY, config.tileSize(), config.tileSize(), null);
+        g2.drawImage(map[i][j].getImage(i, j, gamePanel.getItemAnimationFrame()), screenX, screenY, GamePanel.config.tileSize(), GamePanel.config.tileSize(), null);
     }
 
     /**
@@ -90,8 +86,7 @@ public class MapManager implements GameManager {
      * @return start index
      */
     private int getStart(int world, int screen) {
-        Config config = gamePanel.getConfig();
-        return Math.max((world - screen) / config.tileSize(), 0);
+        return Math.max((world - screen) / GamePanel.config.tileSize(), 0);
     }
 
     /**
@@ -103,8 +98,7 @@ public class MapManager implements GameManager {
      * @return end index
      */
     private int getEnd(int world, int screen, int max) {
-        Config config = gamePanel.getConfig();
-        return Math.min((world + screen) / config.tileSize() + 2, max);
+        return Math.min((world + screen) / GamePanel.config.tileSize() + 2, max);
     }
 
     /**
@@ -119,12 +113,11 @@ public class MapManager implements GameManager {
      * @param g2 Graphics2D object
      */
     public void draw(Graphics2D g2) {
-        Config config = gamePanel.getConfig();
         Player player = gamePanel.getEntityManager().getPlayer();
         int startX = getStart(player.getWorldX(), player.getScreenX());
         int startY = getStart(player.getWorldY(), player.getScreenY());
-        int endX = getEnd(player.getWorldX(), player.getScreenX(), config.maxWorldCol());
-        int endY = getEnd(player.getWorldY(), player.getScreenY(), config.maxWorldRow());
+        int endX = getEnd(player.getWorldX(), player.getScreenX(), GamePanel.config.maxWorldCol());
+        int endY = getEnd(player.getWorldY(), player.getScreenY(), GamePanel.config.maxWorldRow());
 
         // Draw the background first before the tiles
         drawBackground(g2);
@@ -143,7 +136,7 @@ public class MapManager implements GameManager {
      * @param filePath path to the text file
      */
     public void loadMap(String filePath) {
-        map = mapLoader.loadMap(itemManager, filePath);
+        map = mapLoader.loadMap(itemManager, filePath, GamePanel.config.maxWorldCol(), GamePanel.config.maxWorldRow());
     }
 
     /**

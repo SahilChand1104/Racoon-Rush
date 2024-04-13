@@ -48,7 +48,7 @@ public class GameTimeTest {
 
     @Test
     public void testConstructor() throws InterruptedException {
-        GameTime gameTime = new GameTime(gamePanel);
+        GameTime gameTime = new GameTime(gamePanel.getScoreboard());
 
         gameTime.startTimer();
 
@@ -57,5 +57,4 @@ public class GameTimeTest {
         assertTrue(gameTime.isRunning(), "Timer should be running after starting");
         assertTrue(gameTime.getFormattedTime().matches("\\d\\d:\\d\\d"), "Formatted time should match pattern mm:ss");
     }
-
 }

@@ -1,29 +1,29 @@
 package RaccoonRush.game.menu.component;
 
-
-import RaccoonRush.game.GamePanel;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
 
 public class MenuBanner extends MenuComponent {
 
     protected final BufferedImage image;
     /**
-     * Constructor for the MenuBG
-     *
-     * @param gamePanel the gamePanel
+     * Constructor for the MenuBanner
      * @param x         the x position of the component
      * @param y         the y position of the component
      */
-    public MenuBanner(GamePanel gamePanel, int x, int y) {
-        super(gamePanel, x, y);
+    public MenuBanner(int x, int y) {
+        super(x, y);
         this.image = null;
     }
 
-    public MenuBanner(GamePanel gamePanel, int x, int y, BufferedImage image) {
-        super(gamePanel, x, y);
+    /**
+     * Constructor for a MenuBanner
+     * @param x         the x position of the component
+     * @param y         the y position of the component
+     * @param image     the image of the component
+     */
+    public MenuBanner(int x, int y, BufferedImage image) {
+        super(x, y);
         this.image = image;
     }
 

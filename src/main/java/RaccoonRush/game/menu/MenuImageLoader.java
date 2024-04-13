@@ -1,7 +1,6 @@
 package RaccoonRush.game.menu;
 
 import RaccoonRush.game.GamePanel;
-import RaccoonRush.util.ImageLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,18 +15,14 @@ public class MenuImageLoader {
     protected BufferedImage menuInstructions;
     protected BufferedImage menuInstructionsSelected;
 
-    private final GamePanel gamePanel;
 
-
-    MenuImageLoader(GamePanel gamePanel) {
-        //super(gamePanel);
-        this.gamePanel = gamePanel;
+    MenuImageLoader() {
         loadMenuImages();
     }
 
     public void loadMenuImages() {
-        menuBackground = loadImage("/menu/menu_bg.png", gamePanel.getConfig().screenWidth(), gamePanel.getConfig().screenHeight());
-        menuTitle = loadImage("/menu/menu_title_v2.png", gamePanel.getConfig().screenWidth());
+        menuBackground = loadImage("/menu/menu_bg.png", GamePanel.config.screenWidth(), GamePanel.config.screenHeight());
+        menuTitle = loadImage("/menu/menu_title_v2.png", GamePanel.config.screenWidth());
         menuPlay = loadImage("/menu/menu_label_play_0.png");
         menuPlaySelected = loadImage("/menu/menu_label_play_1.png");
         menuInstructions = loadImage("/menu/menu_label_instructions_0.png");
@@ -86,10 +81,4 @@ public class MenuImageLoader {
         resizedImage.getGraphics().drawImage(image, 0, 0, width, height, null);
         return resizedImage;
     }
-
-
-
-
-
-
 }

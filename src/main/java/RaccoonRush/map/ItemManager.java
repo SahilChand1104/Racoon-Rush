@@ -25,7 +25,7 @@ public class ItemManager {
         donutsLeft = 0;
         currentPizza = 0;
         pizzaFrames = 0;
-        nextPizzaFrames = gamePanel.getConfig().FPS() * 3;
+        nextPizzaFrames = GamePanel.config.FPS() * 3;
     }
 
     /**
@@ -36,7 +36,7 @@ public class ItemManager {
             pizzaList.get(currentPizza).setCollected(true);
             currentPizza = ThreadLocalRandom.current().nextInt(pizzaList.size());
             pizzaList.get(currentPizza).setCollected(false);
-            nextPizzaFrames = ThreadLocalRandom.current().nextInt(gamePanel.getConfig().FPS() / 2, gamePanel.getConfig().FPS() * 3);
+            nextPizzaFrames = ThreadLocalRandom.current().nextInt(GamePanel.config.FPS() / 2, GamePanel.config.FPS() * 3);
             pizzaFrames = 0;
         }
     }

@@ -16,7 +16,8 @@ import java.awt.*;
  * It is used to manage the game loop, the game state, and the game components.
  */
 public class GamePanel extends JPanel implements Runnable {
-    private final Config config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
+    private static GamePanel instance;
+    public static Config config;
     private final ImageLoader imageLoader;
     private final MapManager mapManager;
     private final EntityManager entityManager;
@@ -37,16 +38,18 @@ public class GamePanel extends JPanel implements Runnable {
      * Constructor for the GamePanel class
      */
     public GamePanel() {
-        imageLoader = new ImageLoader(this);
+        instance = this;
+        config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
+        imageLoader = new ImageLoader();
         keyHandler = new KeyHandler();
         mapManager = new MapManager(this);
         entityManager = new EntityManager(this);
-        collisionDetector = new CollisionDetector(this);
+        collisionDetector = new CollisionDetector();
         soundManager = new SoundManager();
-        scoreboard = new Scoreboard(this);
+        scoreboard = new Scoreboard();
+        gameTime = new GameTime(scoreboard);
         menuKeyHandler = new MenuKeyHandler();
         menu = new Menu(this);
-        gameTime = new GameTime(this);
         gameState = GameState.MENU;
 
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
@@ -193,19 +196,19 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
+     * Method to get the instance of the GamePanel
+     * @return the instance of the GamePanel
+     */
+    public static GamePanel getInstance() {
+        return instance;
+    }
+
+    /**
      * Method to get the game state
      * @return the game state
      */
     public GameState getGameState() {
         return gameState;
-    }
-
-    /**
-     * Method to get the game panel's constant values like tile size, screen width, screen height, etc.
-     * @return the config object
-     */
-    public Config getConfig() {
-        return config;
     }
 
     /**

@@ -1,7 +1,5 @@
 package RaccoonRush.game.menu.component;
 
-import RaccoonRush.game.GamePanel;
-
 import java.awt.*;
 
 public class MenuLabel extends MenuComponent {
@@ -12,8 +10,8 @@ public class MenuLabel extends MenuComponent {
 
     private final Paint paint;
 
-    public MenuLabel(GamePanel gamePanel, int x, int y, String text, Font font, Paint paint) {
-        super(gamePanel, x, y);
+    public MenuLabel(int x, int y, String text, Font font, Paint paint) {
+        super(x, y);
         this.text = text;
         this.font = font;
         this.paint = paint;
@@ -38,5 +36,4 @@ public class MenuLabel extends MenuComponent {
     public Font getFont() {
         return font;
     }
-
 }

@@ -1,7 +1,5 @@
 package RaccoonRush.game.menu.component;
 
-import RaccoonRush.game.GamePanel;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -18,15 +16,14 @@ public class MenuButton extends MenuComponent {
     /**
      * Constructor for the MenuButton
      *
-     * @param gamePanel     the gamePanel
      * @param x             the x position of the component
      * @param y             the y position of the component
      * @param unselectedImage         the image of the component
      * @param selectedImage the selected image of the component
      * @param buttonType    the type of the button component
      */
-    public MenuButton(GamePanel gamePanel, int x, int y, BufferedImage unselectedImage, BufferedImage selectedImage, ButtonType buttonType) {
-        super(gamePanel, x, y);
+    public MenuButton(int x, int y, BufferedImage unselectedImage, BufferedImage selectedImage, ButtonType buttonType) {
+        super(x, y);
         this.unselectedImage = unselectedImage;
         this.selectedImage = selectedImage;
         this.buttonType = buttonType;
@@ -53,7 +50,9 @@ public class MenuButton extends MenuComponent {
      * Returns whether the component is selected
      * @return boolean
      */
-    public boolean isSelected() {return selected;}
+    public boolean isSelected() {
+        return selected;
+    }
 
     /**
      * Returns the type of the component

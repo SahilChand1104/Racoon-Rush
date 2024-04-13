@@ -2,7 +2,6 @@ package RaccoonRush.map;
 
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.map.tile.Tile;
-import RaccoonRush.util.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,9 +50,9 @@ public class MapManagerTest {
 
     @Test
     public void testGetMap() {
-        MapLoader loader = new MapLoader(gamePanel);
+        MapLoader loader = new MapLoader();
         ItemManager items = new ItemManager(gamePanel);
-        Tile[][] tempMap = loader.loadMap(items,"/maps/world_map.txt");
+        Tile[][] tempMap = loader.loadMap(items,"/maps/world_map.txt", GamePanel.config.maxScreenCol(), GamePanel.config.maxScreenRow());
         for (int i = 0; i < tempMap.length; i++) {
             for (int j = 0; j < tempMap[i].length; j++) {
                 if (tempMap[i][j] != null) {
@@ -69,8 +68,7 @@ public class MapManagerTest {
         BufferedImage[] background = gamePanel.getImageLoader().getBackgroundImages().toArray(new BufferedImage[0]);
         Graphics2D g2 = background[0].createGraphics();
         mapManager.draw(g2);
-        Config config = gamePanel.getConfig();
-        assertEquals(config.screenWidth(), background[0].getWidth());
+        assertEquals(GamePanel.config.screenWidth(), background[0].getWidth());
     }
 
     @Test

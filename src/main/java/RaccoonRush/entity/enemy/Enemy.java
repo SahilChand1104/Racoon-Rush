@@ -3,7 +3,6 @@ package RaccoonRush.entity.enemy;
 import RaccoonRush.entity.Entity;
 import RaccoonRush.entity.Player;
 import RaccoonRush.util.CollisionDetector;
-import RaccoonRush.util.Config;
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.util.Move;
 
@@ -24,7 +23,6 @@ public abstract class Enemy extends Entity {
     /**
      * Constructor for the enemy
      *
-     * @param gamePanel               the gamePanel
      * @param images                  the images of the entity
      * @param worldX                  the x coordinate in the world
      * @param worldY                  the y coordinate in the world
@@ -34,9 +32,9 @@ public abstract class Enemy extends Entity {
      * @param abilityDuration         the duration of the ability
      * @param abilityCooldownDuration the cooldown duration of the ability
      */
-    public Enemy(GamePanel gamePanel, ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction,
+    public Enemy(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction,
                  int damage, int abilityDuration, int abilityCooldownDuration) {
-        super(gamePanel, images, worldX, worldY, speed, direction);
+        super(images, worldX, worldY, speed, direction);
         this.damage = damage;
         this.abilityDuration = abilityDuration;
         this.abilityCooldownDuration = abilityCooldownDuration;
@@ -60,22 +58,18 @@ public abstract class Enemy extends Entity {
      */
     @Override
     public void update() {
-        CollisionDetector collisionDetector = gamePanel.getCollisionDetector();
+        CollisionDetector collisionDetector = GamePanel.getInstance().getCollisionDetector();
         if (collisionDetector.move(this, direction)) {
-            switch (direction) {
-                case UP:
-                    worldY -= speed;
-                    break;
-                case DOWN:
-                    worldY += speed;
-                    break;
-                case LEFT:
-                    worldX -= speed;
-                    break;
-                case RIGHT:
-                    worldX += speed;
-                    break;
-            }
+            worldY += switch(direction) {
+                case UP -> -speed;
+                case DOWN -> speed;
+                default -> 0;
+            };
+            worldX += switch(direction) {
+                case LEFT -> -speed;
+                case RIGHT -> speed;
+                default -> 0;
+            };
         } else {
             direction = collisionDetector.nextDirection(this);
         }
@@ -102,13 +96,12 @@ public abstract class Enemy extends Entity {
      */
     @Override
     public void draw(Graphics2D g2) {
-        Config config = gamePanel.getConfig();
-        Player player = gamePanel.getEntityManager().getPlayer();
-        g2.drawImage(getImage(gamePanel.getPlayerAnimationFrame(), direction),
+        Player player = GamePanel.getInstance().getEntityManager().getPlayer();
+        g2.drawImage(getImage(GamePanel.getInstance().getPlayerAnimationFrame(), direction),
                 worldX - player.getWorldX() + player.getScreenX(),
                 worldY - player.getWorldY() + player.getScreenY(),
-                config.tileSize(),
-                config.tileSize(),
+                GamePanel.config.tileSize(),
+                GamePanel.config.tileSize(),
                 null
         );
     }

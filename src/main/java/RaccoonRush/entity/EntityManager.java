@@ -4,7 +4,6 @@ import RaccoonRush.entity.enemy.Enemy;
 import RaccoonRush.entity.enemy.EnemyType;
 import RaccoonRush.entity.enemy.Raccoon;
 import RaccoonRush.game.GameManager;
-import RaccoonRush.util.Config;
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.util.ImageLoader;
 import RaccoonRush.util.Move;
@@ -38,12 +37,10 @@ public class EntityManager implements GameManager {
      * @return the player
      */
     private Player createPlayer() {
-        Config config = gamePanel.getConfig();
         return new Player(
-                gamePanel,
                 gamePanel.getImageLoader().getPlayerImages(),
-                config.tileSize() * (config.maxWorldCol() - 2),
-                config.tileSize() * (config.maxWorldRow() - 2),
+                GamePanel.config.tileSize() * (GamePanel.config.maxWorldCol() - 2),
+                GamePanel.config.tileSize() * (GamePanel.config.maxWorldRow() - 2),
                 4,
                 Move.DOWN
         );
@@ -53,8 +50,7 @@ public class EntityManager implements GameManager {
      * Creates the enemy list
      */
     private void createEnemyList() {
-        Config config = gamePanel.getConfig();
-        createEnemy(EnemyType.RACOON, config.maxWorldCol() - 10, config.maxWorldRow() - 10);
+        createEnemy(EnemyType.RACOON, GamePanel.config.maxWorldCol() - 10, GamePanel.config.maxWorldRow() - 10);
         createEnemy(EnemyType.RACOON, 5, 5);
     }
 
@@ -65,12 +61,17 @@ public class EntityManager implements GameManager {
      * @param startY the starting y position
      */
     private void createEnemy(EnemyType type, int startX, int startY) {
-        Config config = gamePanel.getConfig();
         ImageLoader imageLoader = gamePanel.getImageLoader();
         enemyList.add(switch (type) {
             case RACOON -> new Raccoon(
-                    gamePanel, imageLoader.getEnemyRacoonImages(), startX * config.tileSize(), startY * config.tileSize(), 2, Move.LEFT,
-                    1, config.FPS() * 2, config.FPS() * 10
+                    imageLoader.getEnemyRacoonImages(),
+                    GamePanel.config.tileSize() * startX,
+                    GamePanel.config.tileSize() * startY,
+                    2,
+                    Move.LEFT,
+                    1,
+                    GamePanel.config.FPS() * 2,
+                    GamePanel.config.FPS() * 10
             );
             case CAFFEINE -> null;
         });

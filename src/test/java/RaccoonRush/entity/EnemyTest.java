@@ -2,7 +2,6 @@ package RaccoonRush.entity;
 
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.entity.enemy.Enemy;
-import RaccoonRush.util.Config;
 import RaccoonRush.util.Move;
 
 import java.awt.*;
@@ -36,11 +35,10 @@ public class EnemyTest {
         Graphics2D g2 = enemyImage.createGraphics();
         enemies.getLast().draw(g2);
         gamePanel.getEntityManager().draw(g2);
-        Config config = gamePanel.getConfig();
         assertEquals(enemyImage, enemies.getFirst().getImage(0, Move.UP));
         assertEquals(1056, enemies.getFirst().getWorldX());
         assertEquals(1056, enemies.getFirst().getWorldY());
-        assertEquals(48, config.tileSize());
+        assertEquals(48, GamePanel.config.tileSize());
     }
 
     @Test
