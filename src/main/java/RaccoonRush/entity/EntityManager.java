@@ -6,7 +6,6 @@ import RaccoonRush.entity.enemy.Raccoon;
 import RaccoonRush.game.GameManager;
 import RaccoonRush.game.GamePanel;
 import RaccoonRush.util.ImageLoader;
-import RaccoonRush.util.Move;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,20 +36,14 @@ public class EntityManager implements GameManager {
      * @return the player
      */
     private Player createPlayer() {
-        return new Player(
-                gamePanel.getImageLoader().getPlayerImages(),
-                GamePanel.config.tileSize() * (GamePanel.config.maxWorldCol() - 2),
-                GamePanel.config.tileSize() * (GamePanel.config.maxWorldRow() - 2),
-                4,
-                Move.DOWN
-        );
+        return new Player();
     }
 
     /**
      * Creates the enemy list
      */
     private void createEnemyList() {
-        createEnemy(EnemyType.RACOON, GamePanel.config.maxWorldCol() - 10, GamePanel.config.maxWorldRow() - 10);
+        createEnemy(EnemyType.RACOON, 22, 22);
         createEnemy(EnemyType.RACOON, 5, 5);
     }
 
@@ -65,13 +58,8 @@ public class EntityManager implements GameManager {
         enemyList.add(switch (type) {
             case RACOON -> new Raccoon(
                     imageLoader.getEnemyRacoonImages(),
-                    GamePanel.config.tileSize() * startX,
-                    GamePanel.config.tileSize() * startY,
-                    2,
-                    Move.LEFT,
-                    1,
-                    GamePanel.config.FPS() * 2,
-                    GamePanel.config.FPS() * 10
+                    startX * GamePanel.config.tileSize(),
+                    startY * GamePanel.config.tileSize()
             );
             case CAFFEINE -> null;
         });

@@ -17,9 +17,24 @@ import java.util.EnumMap;
  * This class should only have one instance
  */
 public class Player extends Entity implements GameManager {
-    public final int screenX, screenY, invincibilityDuration;
+    public final int screenX, screenY;
     private int invincibilityFrames;
 
+    /**
+     * Constructor for the player entity
+     */
+    public Player() {
+        super(
+            GamePanel.getInstance().getImageLoader().getPlayerImages(),
+            GamePanel.config.playerDefaultWorldX(),
+            GamePanel.config.playerDefaultWorldY(),
+            GamePanel.config.playerSpeed()
+        );
+
+        // Centered in the middle of the screen (since the player is always in the center)
+        screenX = GamePanel.config.screenWidth() / 2 - GamePanel.config.tileSize() / 2;
+        screenY = GamePanel.config.screenHeight() / 2 - GamePanel.config.tileSize() / 2;
+    }
 
     /**
      * Constructor for the player entity
@@ -28,15 +43,13 @@ public class Player extends Entity implements GameManager {
      * @param worldX the x coordinate in the world
      * @param worldY the y coordinate in the world
      * @param speed the speed of the entity
-     * @param direction the direction the entity is facing
      */
-    public Player(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction) {
-        super(images, worldX, worldY, speed, direction);
+    public Player(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed) {
+        super(images, worldX, worldY, speed);
 
-        // Centered in the bottom right of the screen
+        // Centered in the middle of the screen (since the player is always in the center)
         screenX = GamePanel.config.screenWidth() / 2 - GamePanel.config.tileSize() / 2;
         screenY = GamePanel.config.screenHeight() / 2 - GamePanel.config.tileSize() / 2;
-        invincibilityDuration = GamePanel.config.FPS() * 2;
     }
 
     /**
@@ -108,7 +121,7 @@ public class Player extends Entity implements GameManager {
     public void onCollide(Enemy enemy) {
         GamePanel.getInstance().stopGame(false); // For now, lose game as per assignment instructions, but can be removed if desired
         // updateScore(-enemy.getDamage());
-        invincibilityFrames = invincibilityDuration;
+        invincibilityFrames = GamePanel.config.playerInvincibilityDuration();
     }
 
     /**

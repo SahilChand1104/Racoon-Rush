@@ -13,9 +13,26 @@ import java.util.EnumMap;
  */
 public abstract class Entity {
     protected final ArrayList<EnumMap<Move, BufferedImage>> images;
-    protected final Rectangle hitbox;
     protected int worldX, worldY, speed;
     protected Move direction;
+    protected final Rectangle hitbox;
+
+    /**
+     * Constructor for the entity
+     *
+     * @param images    the images of the entity
+     * @param worldX    the x coordinate in the world
+     * @param worldY    the y coordinate in the world
+     * @param speed     the speed of the entity
+     */
+    public Entity(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed) {
+        this.images = images;
+        this.worldX = worldX;
+        this.worldY = worldY;
+        this.speed = speed;
+        direction = GamePanel.config.entityDirection();
+        hitbox = GamePanel.config.entityHitbox();
+    }
 
     /**
      * Constructor for the entity
@@ -25,15 +42,15 @@ public abstract class Entity {
      * @param worldY    the y coordinate in the world
      * @param speed     the speed of the entity
      * @param direction the direction the entity is facing
+     * @param hitbox    the hitbox of the entity
      */
-    public Entity(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction) {
+    public Entity(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction, Rectangle hitbox) {
         this.images = images;
         this.worldX = worldX;
         this.worldY = worldY;
         this.speed = speed;
         this.direction = direction;
-        int tileSize = GamePanel.config.tileSize();
-        hitbox = new Rectangle(tileSize / 6, tileSize / 3, tileSize * 2 / 3, tileSize * 2 / 3);
+        this.hitbox = hitbox;
     }
 
     /**
