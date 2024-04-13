@@ -70,8 +70,8 @@ public class EntityManager implements GameManager {
                     2,
                     Move.LEFT,
                     1,
-                    GamePanel.config.FPS() * 2,
-                    GamePanel.config.FPS() * 10
+                    GamePanel.config.enemyAbilityDuration(),
+                    GamePanel.config.enemyCooldownDuration()
             );
             case CAFFEINE -> null;
         });

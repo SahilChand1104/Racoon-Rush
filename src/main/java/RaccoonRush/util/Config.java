@@ -59,4 +59,11 @@ public record Config(int originalTileSize, int scale, int maxScreenCol, int maxS
     public int worldHeight() {
         return tileSize() * maxWorldRow;
     }
+
+    public int playerInvicibilityDuration() { return FPS() * 2; }
+
+    public int enemyAbilityDuration() { return FPS() * 2; }
+    public int enemyCooldownDuration() { return FPS() * 10; }
+
+    public int maxPizzaFrames() { return FPS() * 3; }
 }

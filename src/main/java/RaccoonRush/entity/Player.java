@@ -17,7 +17,7 @@ import java.util.EnumMap;
  * This class should only have one instance
  */
 public class Player extends Entity implements GameManager {
-    public final int screenX, screenY, invincibilityDuration;
+    public final int screenX, screenY;
     private int invincibilityFrames;
 
 
@@ -36,7 +36,6 @@ public class Player extends Entity implements GameManager {
         // Centered in the bottom right of the screen
         screenX = GamePanel.config.screenWidth() / 2 - GamePanel.config.tileSize() / 2;
         screenY = GamePanel.config.screenHeight() / 2 - GamePanel.config.tileSize() / 2;
-        invincibilityDuration = GamePanel.config.FPS() * 2;
     }
 
     /**
@@ -108,7 +107,7 @@ public class Player extends Entity implements GameManager {
     public void onCollide(Enemy enemy) {
         GamePanel.getInstance().stopGame(false); // For now, lose game as per assignment instructions, but can be removed if desired
         // updateScore(-enemy.getDamage());
-        invincibilityFrames = invincibilityDuration;
+        invincibilityFrames = GamePanel.config.playerInvicibilityDuration();
     }
 
     /**
