@@ -14,8 +14,11 @@ import java.awt.Rectangle;
  * @param maxWorldCol The maximum number of columns in the world.
  * @param maxWorldRow The maximum number of rows in the world.
  * @param FPS The frames per second for the game.
+ * @param animationFPS The frames per second for animations.
+ * @param playerSpeed The speed of the player.
+ * @param enemySpeed The speed of enemies.
  */
-public record Config(int originalTileSize, int scale, int maxScreenCol, int maxScreenRow, int maxWorldCol, int maxWorldRow, int FPS, int animationFPS) {
+public record Config(int originalTileSize, int scale, int maxScreenCol, int maxScreenRow, int maxWorldCol, int maxWorldRow, int FPS, int animationFPS, int playerSpeed, int enemySpeed, int enemyDamage, Move entityDirection) {
 
     /**
      * This accessor returns the tile size for the game.
@@ -63,65 +66,62 @@ public record Config(int originalTileSize, int scale, int maxScreenCol, int maxS
     }
 
     /**
+     * This accessor returns the hitbox of entities for the game.
+     * @return The hitbox of an entity.
+     */
+    public Rectangle entityHitbox() {
+        return new Rectangle(tileSize() / 6, tileSize() / 3, tileSize() * 2 / 3, tileSize() * 2 / 3);
+    }
+
+    /**
+     * This accessor returns the player's default world x position for the game.
+     * @return The player's default world x position.
+     */
+    public int playerDefaultWorldX() {
+        return tileSize() * (maxWorldCol - 2);
+    }
+
+    /**
+     * This accessor returns the player's default world y position for the game.
+     * @return The player's default world y position.
+     */
+    public int playerDefaultWorldY() {
+        return tileSize() * (maxWorldRow - 2);
+    }
+
+    /**
      * This accessor returns the player's invincibility duration for the game.
      * It is calculated by multiplying FPS by 2.
      * @return The player's invincibility duration.
      */
-    public int playerInvicibilityDuration() { return FPS() * 2; }
+    public int playerInvincibilityDuration() {
+        return FPS() * 2;
+    }
 
     /**
-     * This accessor returns the enemy raccoon's ability duration for the game.
+     * This accessor returns the enemy's ability duration for the game.
      * It is calculated by multiplying FPS by 2.
-     * @return The enemy raccoon's ability duration.
+     * @return The enemy ability duration.
      */
-    public int raccoonAbilityDuration() { return FPS() * 2; }
+    public int enemyAbilityDuration() {
+        return FPS() * 2;
+    }
 
     /**
-     * This accessor returns the enemy raccoon's cooldown duration for the game.
+     * This accessor returns the enemy's ability cooldown duration for the game.
      * It is calculated by multiplying FPS by 10.
-     * @return The enemy raccoon's cooldown duration.
+     * @return The enemy's ability cooldown duration.
      */
-    public int raccoonCooldownDuration() { return FPS() * 10; }
+    public int enemyAbilityCooldownDuration() {
+        return FPS() * 10;
+    }
 
     /**
      * This accessor returns the max amount of pizza frames for the game.
      * It is calculated by multiplying FPS by 3.
      * @return The max amount of pizza frames.
      */
-    public int maxPizzaFrames() { return FPS() * 3; }
-
-    /**
-     * This accessor returns the hitbox of entities for the game.
-     * @return The hitbox of an entity.
-     */
-    public Rectangle hitbox() {
-        return new Rectangle(hitboxX(), hitboxY(), hitboxDimensions(), hitboxDimensions());
-    }
-
-    /**
-     * This accessor returns the x coordinate of an entity's hitbox for the game.
-     * It is calculated by dividing tileSize() by 6.
-     * @return The x coordinate of an entity's hitbox.
-     */
-    public int hitboxX() {
-        return tileSize() / 6;
-    }
-
-    /**
-     * This accessor returns the y coordinate of an entity's hitbox for the game.
-     * It is calculated by dividing tileSize() by 3.
-     * @return The y coordinate of an entity's hitbox.
-     */
-    public int hitboxY() {
-        return tileSize() / 3;
-    }
-
-    /**
-     * This accessor returns the dimensions of an entity's hitbox for the game.
-     * It is calculated multiplying tileSize() by 2 and then dividing by 3.
-     * @return The dimensions of an entity's hitbox.
-     */
-    public int hitboxDimensions() {
-        return tileSize() * 2 / 3;
+    public int maxPizzaFrames() {
+        return FPS() * 3;
     }
 }

@@ -16,15 +16,9 @@ public class Raccoon extends Enemy {
      * @param images                  the images of the entity
      * @param worldX                  the x coordinate in the world
      * @param worldY                  the y coordinate in the world
-     * @param speed                   the speed of the entity
-     * @param direction               the direction the entity is facing
-     * @param damage                  the damage the enemy deals
-     * @param abilityDuration         the duration of the ability
-     * @param abilityCooldownDuration the cooldown duration of the ability
      */
-    public Raccoon(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction,
-                   int damage, int abilityDuration, int abilityCooldownDuration) {
-        super(images, worldX, worldY, speed, direction, damage, abilityDuration, abilityCooldownDuration);
+    public Raccoon(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY) {
+        super(images, worldX, worldY);
     }
 
     /**

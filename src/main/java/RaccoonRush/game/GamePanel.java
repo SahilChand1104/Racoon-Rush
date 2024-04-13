@@ -39,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
      */
     public GamePanel() {
         instance = this;
-        config = new Config(16, 3, 16, 12, 32, 32, 60, 5);
+        config = new Config(16, 3, 16, 12, 32, 32, 60, 5, 4, 2, 1, Move.DOWN);
         imageLoader = new ImageLoader();
         keyHandler = new KeyHandler();
         mapManager = new MapManager(this);

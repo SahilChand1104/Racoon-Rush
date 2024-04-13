@@ -15,6 +15,24 @@ public abstract class Entity {
     protected final ArrayList<EnumMap<Move, BufferedImage>> images;
     protected int worldX, worldY, speed;
     protected Move direction;
+    protected final Rectangle hitbox;
+
+    /**
+     * Constructor for the entity
+     *
+     * @param images    the images of the entity
+     * @param worldX    the x coordinate in the world
+     * @param worldY    the y coordinate in the world
+     * @param speed     the speed of the entity
+     */
+    public Entity(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed) {
+        this.images = images;
+        this.worldX = worldX;
+        this.worldY = worldY;
+        this.speed = speed;
+        direction = GamePanel.config.entityDirection();
+        hitbox = GamePanel.config.entityHitbox();
+    }
 
     /**
      * Constructor for the entity
@@ -24,13 +42,15 @@ public abstract class Entity {
      * @param worldY    the y coordinate in the world
      * @param speed     the speed of the entity
      * @param direction the direction the entity is facing
+     * @param hitbox    the hitbox of the entity
      */
-    public Entity(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction) {
+    public Entity(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction, Rectangle hitbox) {
         this.images = images;
         this.worldX = worldX;
         this.worldY = worldY;
         this.speed = speed;
         this.direction = direction;
+        this.hitbox = hitbox;
     }
 
     /**
@@ -59,7 +79,7 @@ public abstract class Entity {
      * @return the hitbox of the entity
      */
     public Rectangle getWorldHitbox() {
-        return new Rectangle(worldX + GamePanel.config.hitboxX(), worldY + GamePanel.config.hitboxY(), GamePanel.config.hitboxDimensions(), GamePanel.config.hitboxDimensions());
+        return new Rectangle(worldX + hitbox.x, worldY + hitbox.y, hitbox.width, hitbox.height);
     }
 
     /**
@@ -68,7 +88,7 @@ public abstract class Entity {
      * @return the tile index in the horizontal direction of the left side of the entity
      */
     public int leftColumn(int offsetX) {
-        return (worldX + GamePanel.config.hitboxX() + offsetX) / GamePanel.config.tileSize();
+        return (worldX + hitbox.x + offsetX) / GamePanel.config.tileSize();
     }
 
     /**
@@ -77,7 +97,7 @@ public abstract class Entity {
      * @return the tile index in the horizontal direction of the right side of the entity
      */
     public int rightColumn(int offsetX) {
-        return (worldX + GamePanel.config.hitboxX() + GamePanel.config.hitboxDimensions() + offsetX) / GamePanel.config.tileSize();
+        return (worldX + hitbox.x + hitbox.width + offsetX) / GamePanel.config.tileSize();
     }
 
     /**
@@ -86,7 +106,7 @@ public abstract class Entity {
      * @return the tile index in the vertical direction of the top side of the entity
      */
     public int topRow(int offsetY) {
-        return (worldY + GamePanel.config.hitboxY() + offsetY) / GamePanel.config.tileSize();
+        return (worldY + hitbox.y + offsetY) / GamePanel.config.tileSize();
     }
 
     /**
@@ -95,7 +115,7 @@ public abstract class Entity {
      * @return the tile index in the vertical direction of the bottom side of the entity
      */
     public int bottomRow(int offsetY) {
-        return (worldY + GamePanel.config.hitboxY() + GamePanel.config.hitboxDimensions() + offsetY) / GamePanel.config.tileSize();
+        return (worldY + hitbox.y + hitbox.height + offsetY) / GamePanel.config.tileSize();
     }
 
     /**

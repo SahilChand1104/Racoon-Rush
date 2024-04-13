@@ -26,15 +26,32 @@ public abstract class Enemy extends Entity {
      * @param images                  the images of the entity
      * @param worldX                  the x coordinate in the world
      * @param worldY                  the y coordinate in the world
+     */
+    public Enemy(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY) {
+        super(images, worldX, worldY, GamePanel.config.enemySpeed());
+        damage = GamePanel.config.enemyDamage();
+        abilityDuration = GamePanel.config.enemyAbilityDuration();
+        abilityCooldownDuration = GamePanel.config.enemyAbilityCooldownDuration();
+
+        abilityFrames = abilityDuration;
+        abilityCooldownFrames = abilityCooldownDuration;
+        abilityActive = false;
+    }
+
+    /**
+     * Constructor for the enemy
+     *
+     * @param images                  the images of the entity
+     * @param worldX                  the x coordinate in the world
+     * @param worldY                  the y coordinate in the world
      * @param speed                   the speed of the entity
-     * @param direction               the direction the entity is facing
      * @param damage                  the damage the enemy deals
      * @param abilityDuration         the duration of the ability
      * @param abilityCooldownDuration the cooldown duration of the ability
      */
-    public Enemy(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed, Move direction,
+    public Enemy(ArrayList<EnumMap<Move, BufferedImage>> images, int worldX, int worldY, int speed,
                  int damage, int abilityDuration, int abilityCooldownDuration) {
-        super(images, worldX, worldY, speed, direction);
+        super(images, worldX, worldY, speed);
         this.damage = damage;
         this.abilityDuration = abilityDuration;
         this.abilityCooldownDuration = abilityCooldownDuration;
