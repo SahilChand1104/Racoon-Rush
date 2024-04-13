@@ -68,18 +68,18 @@ public record Config(int originalTileSize, int scale, int maxScreenCol, int maxS
     public int playerInvicibilityDuration() { return FPS() * 2; }
 
     /**
-     * This accessor returns the enemy's ability duration for the game.
+     * This accessor returns the enemy raccoon's ability duration for the game.
      * It is calculated by multiplying FPS by 2.
-     * @return The enemy's ability duration.
+     * @return The enemy raccoon's ability duration.
      */
-    public int enemyAbilityDuration() { return FPS() * 2; }
+    public int raccoonAbilityDuration() { return FPS() * 2; }
 
     /**
-     * This accessor returns the enemy's cooldown duration for the game.
+     * This accessor returns the enemy raccoon's cooldown duration for the game.
      * It is calculated by multiplying FPS by 10.
-     * @return The enemy's cooldown duration.
+     * @return The enemy raccoon's cooldown duration.
      */
-    public int enemyCooldownDuration() { return FPS() * 10; }
+    public int raccoonCooldownDuration() { return FPS() * 10; }
 
     /**
      * This accessor returns the max amount of pizza frames for the game.
