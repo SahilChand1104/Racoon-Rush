@@ -70,8 +70,8 @@ public class EntityManager implements GameManager {
                     2,
                     Move.LEFT,
                     1,
-                    GamePanel.config.enemyAbilityDuration(),
-                    GamePanel.config.enemyCooldownDuration()
+                    GamePanel.config.raccoonAbilityDuration(),
+                    GamePanel.config.raccoonCooldownDuration()
             );
             case CAFFEINE -> null;
         });
