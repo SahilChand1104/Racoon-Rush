@@ -1,5 +1,7 @@
 package RaccoonRush.util;
 
+import java.awt.Rectangle;
+
 /**
  * This record represents the configuration for the game.
  * It is a compact form of class that holds immutable data.
@@ -87,4 +89,39 @@ public record Config(int originalTileSize, int scale, int maxScreenCol, int maxS
      * @return The max amount of pizza frames.
      */
     public int maxPizzaFrames() { return FPS() * 3; }
+
+    /**
+     * This accessor returns the hitbox of entities for the game.
+     * @return The hitbox of an entity.
+     */
+    public Rectangle hitbox() {
+        return new Rectangle(hitboxX(), hitboxY(), hitboxDimensions(), hitboxDimensions());
+    }
+
+    /**
+     * This accessor returns the x coordinate of an entity's hitbox for the game.
+     * It is calculated by dividing tileSize() by 6.
+     * @return The x coordinate of an entity's hitbox.
+     */
+    public int hitboxX() {
+        return tileSize() / 6;
+    }
+
+    /**
+     * This accessor returns the y coordinate of an entity's hitbox for the game.
+     * It is calculated by dividing tileSize() by 3.
+     * @return The y coordinate of an entity's hitbox.
+     */
+    public int hitboxY() {
+        return tileSize() / 3;
+    }
+
+    /**
+     * This accessor returns the dimensions of an entity's hitbox for the game.
+     * It is calculated multiplying tileSize() by 2 and then dividing by 3.
+     * @return The dimensions of an entity's hitbox.
+     */
+    public int hitboxDimensions() {
+        return tileSize() * 2 / 3;
+    }
 }

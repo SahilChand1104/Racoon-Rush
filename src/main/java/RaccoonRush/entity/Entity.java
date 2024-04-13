@@ -13,7 +13,6 @@ import java.util.EnumMap;
  */
 public abstract class Entity {
     protected final ArrayList<EnumMap<Move, BufferedImage>> images;
-    protected final Rectangle hitbox;
     protected int worldX, worldY, speed;
     protected Move direction;
 
@@ -32,8 +31,6 @@ public abstract class Entity {
         this.worldY = worldY;
         this.speed = speed;
         this.direction = direction;
-        int tileSize = GamePanel.config.tileSize();
-        hitbox = new Rectangle(tileSize / 6, tileSize / 3, tileSize * 2 / 3, tileSize * 2 / 3);
     }
 
     /**
@@ -62,7 +59,7 @@ public abstract class Entity {
      * @return the hitbox of the entity
      */
     public Rectangle getWorldHitbox() {
-        return new Rectangle(worldX + hitbox.x, worldY + hitbox.y, hitbox.width, hitbox.height);
+        return new Rectangle(worldX + GamePanel.config.hitboxX(), worldY + GamePanel.config.hitboxY(), GamePanel.config.hitboxDimensions(), GamePanel.config.hitboxDimensions());
     }
 
     /**
@@ -71,7 +68,7 @@ public abstract class Entity {
      * @return the tile index in the horizontal direction of the left side of the entity
      */
     public int leftColumn(int offsetX) {
-        return (worldX + hitbox.x + offsetX) / GamePanel.config.tileSize();
+        return (worldX + GamePanel.config.hitboxX() + offsetX) / GamePanel.config.tileSize();
     }
 
     /**
@@ -80,7 +77,7 @@ public abstract class Entity {
      * @return the tile index in the horizontal direction of the right side of the entity
      */
     public int rightColumn(int offsetX) {
-        return (worldX + hitbox.x + hitbox.width + offsetX) / GamePanel.config.tileSize();
+        return (worldX + GamePanel.config.hitboxX() + GamePanel.config.hitboxDimensions() + offsetX) / GamePanel.config.tileSize();
     }
 
     /**
@@ -89,7 +86,7 @@ public abstract class Entity {
      * @return the tile index in the vertical direction of the top side of the entity
      */
     public int topRow(int offsetY) {
-        return (worldY + hitbox.y + offsetY) / GamePanel.config.tileSize();
+        return (worldY + GamePanel.config.hitboxY() + offsetY) / GamePanel.config.tileSize();
     }
 
     /**
@@ -98,7 +95,7 @@ public abstract class Entity {
      * @return the tile index in the vertical direction of the bottom side of the entity
      */
     public int bottomRow(int offsetY) {
-        return (worldY + hitbox.y + hitbox.height + offsetY) / GamePanel.config.tileSize();
+        return (worldY + GamePanel.config.hitboxY() + GamePanel.config.hitboxDimensions() + offsetY) / GamePanel.config.tileSize();
     }
 
     /**
