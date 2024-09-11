@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CMPT276S24_group12: Raccoon Rush
 This is the github repository for Group 12, CMPT 276.  
 
@@ -44,3 +45,6 @@ mvn javadoc:javadoc
 and they will be located in `${basedir}/target/site/apidocs`. 
 
 If you do not wish to generate new Javadocs, you can also view the Javadoc artifacts in `${basedir}/Artifacts/Javadocs`.
+=======
+# Racoon-Rush
+>>>>>>> 778499a28833e33c8b74379a660f7120bdea7a2b
